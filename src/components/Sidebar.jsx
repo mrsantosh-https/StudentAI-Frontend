@@ -18,9 +18,8 @@ export default function Sidebar() {
         <NavLink to="/cover-letter">🤖 Cover Letter</NavLink>
         <NavLink to="/interview">🎤 AI Interview</NavLink>
         <NavLink to="/interview-history">📜 Interview History</NavLink>
-        <NavLink className="nav-link" to="/career-roadmap">
-          🗺 Career Roadmap
-        </NavLink>
+        <NavLink to="/career-roadmap">🗺 Career Roadmap</NavLink>
+        <NavLink to="/settings">⚙️ Settings</NavLink>
       </nav>
     </aside>
   );

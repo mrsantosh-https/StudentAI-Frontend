@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
+import { useUser } from "../context/UserContext";
 import DashboardCard from "../components/DashboardCard";
 import api from "../services/api";
 const user = JSON.parse(localStorage.getItem("user"));
@@ -66,6 +67,7 @@ const usageData = [
 ];
 
 export default function Dashboard() {
+  const { user } = useUser();
   const [analytics, setAnalytics] = useState({
     total_resumes: 0,
     profile_completion: 0,
@@ -97,7 +99,7 @@ export default function Dashboard() {
         <Topbar />
 
         <div className="dashboard-content">
-          <h2 className="fw-bold">Welcome, Mr. {user?.name || "User"} 👋</h2>
+          <h2 className="fw-bold">Welcome, {user?.name || "User"} 👋</h2>
           <p className="text-muted">
             Build resumes, prepare interviews, and grow your career with AI.
           </p>

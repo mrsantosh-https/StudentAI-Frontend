@@ -1,12 +1,11 @@
 import "./App.css";
 import Home from "./pages/Home";
-import { useState } from "react";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
-import { Toaster } from "react-hot-toast";
 import Interview from "./pages/Interview";
 import MyResumes from "./pages/MyResumes";
 import JobMatcher from "./pages/JobMatcher";
@@ -15,15 +14,36 @@ import ViewResume from "./pages/ViewResume";
 import CoverLetter from "./pages/CoverLetter";
 import CareerRoadmap from "./pages/CareerRoadmap";
 import ResumeBuilder from "./pages/ResumeBuilder";
+import { UserProvider } from "./context/UserContext";
 import InterviewHistory from "./pages/InterviewHistory";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Toaster } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
+ const hideNavbar =
+  location.pathname.startsWith("/dashboard") ||
+  location.pathname.startsWith("/profile") ||
+  location.pathname.startsWith("/resume-builder") ||
+  location.pathname.startsWith("/my-resumes") ||
+  location.pathname.startsWith("/view-resume") ||
+  location.pathname.startsWith("/edit-resume") ||
+  location.pathname.startsWith("/cover-letter") ||
+  location.pathname.startsWith("/interview") ||
+  location.pathname.startsWith("/career-roadmap") ||
+  location.pathname.startsWith("/job-tracker") ||
+  location.pathname.startsWith("/job-matcher") ||
+  location.pathname.startsWith("/dashboard") ||
+  location.pathname.startsWith("/profile") ||
+  location.pathname.startsWith("/settings") ||
+  location.pathname.startsWith("/interview-history");
+  
   return (
     <BrowserRouter>
-      <div className="app">
-        <Navbar />
+      <UserProvider>
+       <div className="app">
+        {!hideNavbar && <Navbar />}
         <Toaster position="top-right" />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -73,9 +93,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/interview"
+       
+           <Route
+            path="/interview/"
             element={
               <ProtectedRoute>
                 <Interview />
@@ -84,7 +104,7 @@ function App() {
           />
 
           <Route
-            path="/career-roadmap"
+            path="/career-roadmap/"
             element={
               <ProtectedRoute>
                 <CareerRoadmap />
@@ -93,7 +113,7 @@ function App() {
           />
 
           <Route
-            path="/job-tracker"
+            path="/job-tracker/"
             element={
               <ProtectedRoute>
                 <JobTracker />
@@ -102,7 +122,7 @@ function App() {
           />
 
           <Route
-            path="/job-matcher"
+            path="/job-matcher/"
             element={
               <ProtectedRoute>
                 <JobMatcher />
@@ -111,15 +131,43 @@ function App() {
           />
 
           <Route
-            path="/interview-history"
+            path="/interview-history/"
             element={
               <ProtectedRoute>
                 <InterviewHistory />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/view-resume/:id"
+            element={
+              <ProtectedRoute>
+                <InterviewHistory />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/edit-resume/:id"
+            element={
+              <ProtectedRoute>
+                <ResumeBuilder />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          
         </Routes>
       </div>
+      </UserProvider>
     </BrowserRouter>
   );
 }

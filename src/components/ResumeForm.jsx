@@ -1,4 +1,5 @@
 import { downloadPDF } from "../utils/pdf";
+
 export default function ResumeForm({
   formData,
   handleChange,
@@ -7,7 +8,6 @@ export default function ResumeForm({
 }) {
   return (
     <div className="card shadow-sm border-0 p-4">
-
       <h3 className="mb-4">Resume Details</h3>
 
       <input
@@ -15,7 +15,7 @@ export default function ResumeForm({
         name="fullName"
         placeholder="Full Name"
         className="form-control mb-3"
-        value={formData.fullName}
+        value={formData.fullName || ""}
         onChange={handleChange}
       />
 
@@ -24,7 +24,7 @@ export default function ResumeForm({
         name="email"
         placeholder="Email"
         className="form-control mb-3"
-        value={formData.email}
+        value={formData.email || ""}
         onChange={handleChange}
       />
 
@@ -33,104 +33,95 @@ export default function ResumeForm({
         name="phone"
         placeholder="Phone"
         className="form-control mb-3"
-        value={formData.phone}
+        value={formData.phone || ""}
         onChange={handleChange}
       />
-        <input
+
+      <input
         type="text"
         name="linkedin"
         placeholder="LinkedIn Profile URL"
         className="form-control mb-3"
-        value={formData.linkedin}
+        value={formData.linkedin || ""}
         onChange={handleChange}
-        />
+      />
 
-        <input
+      <input
         type="text"
         name="github"
         placeholder="GitHub Profile URL"
         className="form-control mb-3"
-        value={formData.github}
+        value={formData.github || ""}
         onChange={handleChange}
-        />
+      />
 
-        <input
+      <input
         type="text"
         name="portfolio"
         placeholder="Portfolio Website URL"
         className="form-control mb-3"
-        value={formData.portfolio}
+        value={formData.portfolio || ""}
         onChange={handleChange}
-        />
+      />
 
-        <textarea
+      <textarea
         name="summary"
         placeholder="Professional Summary"
         className="form-control mb-3"
         rows="3"
-        value={formData.summary}
+        value={formData.summary || ""}
         onChange={handleChange}
-        ></textarea>
+      />
+
       <textarea
         name="education"
         placeholder="Education"
         className="form-control mb-3"
         rows="3"
-        value={formData.education}
+        value={formData.education || ""}
         onChange={handleChange}
-      ></textarea>
+      />
 
       <textarea
         name="skills"
         placeholder="Skills"
         className="form-control mb-3"
         rows="3"
-        value={formData.skills}
+        value={formData.skills || ""}
         onChange={handleChange}
-      ></textarea>
+      />
 
       <textarea
         name="projects"
         placeholder="Projects"
         className="form-control mb-3"
         rows="3"
-        value={formData.projects}
+        value={formData.projects || ""}
         onChange={handleChange}
-      ></textarea>
+      />
 
       <textarea
         name="experience"
         placeholder="Experience"
         className="form-control mb-3"
         rows="3"
-        value={formData.experience}
+        value={formData.experience || ""}
         onChange={handleChange}
-      ></textarea>
+      />
+
       <div className="d-flex gap-3 mt-4">
-  <button
-  type="button"
-  className="btn btn-primary"
-  onClick={handleGenerateAI}
->
-  🤖 Generate AI Resume
-</button>
+        <button type="button" className="btn btn-primary" onClick={handleGenerateAI}>
+          🤖 Generate AI Resume
+        </button>
 
-  <button
-    type="button"
-    className="btn btn-success"
-    onClick={handleSaveResume}
-  >
-    💾 Save Resume
-  </button>
+        <button type="button" className="btn btn-success" onClick={handleSaveResume}>
+          💾 Save Resume
+        </button>
 
-   <button
-    type="button"
-    className="btn btn-danger"
-    onClick={downloadPDF}
-  >
-    📄 Download PDF
-  </button>
-</div>
+        <button type="button" className="btn btn-danger" onClick={downloadPDF}>
+          📄 Download PDF
+        </button>
+      </div>
     </div>
   );
 }

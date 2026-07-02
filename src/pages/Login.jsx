@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
 export default function Login() {
+  const { fetchUser } = useUser();                              
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -19,14 +21,14 @@ export default function Login() {
 
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-
+        await fetchUser();
         toast.success("Login Successful 🎉");
 
+        
         navigate("/dashboard");
-
       } catch (error) {
         console.error(error);
-
+        
         toast.error("Invalid Email or Password");
       }
     };

@@ -1,4 +1,5 @@
 import "../styles/hero.css";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -23,14 +24,10 @@ export default function Hero() {
             </p>
 
             <div className="hero-buttons">
-              <button className="btn btn-primary btn-lg">
-                Get Started
-              </button>
-
-              <button className="btn btn-outline-light btn-lg ms-3">
-                Watch Demo
-              </button>
-            </div>
+            <Link to="/signup" className="btn btn-primary btn-lg">
+              Get Started
+            </Link>
+          </div>
           </div>
 
           <div className="col-lg-6 text-center">

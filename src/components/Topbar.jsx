@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useState, useEffect } from "react";
+import { useUser } from "../context/UserContext";
 import "../styles/dashboardLayout.css";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 export default function Topbar() {
-  const [user, setUser] = useState(null);
+  const { user } = useUser();
   const [darkMode, setDarkMode] = useState(
       localStorage.getItem("darkMode") === "true"
     );
@@ -14,25 +16,12 @@ export default function Topbar() {
       localStorage.setItem("darkMode", darkMode);
     }, [darkMode]);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get("/profile");
-        setUser(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
   return (
     <div className="topbar">
       <div>
         <h4>Dashboard</h4>
         <p>
-          Welcome back,  <strong> Mr.{user?.name || "User"}</strong> 👋
+          Welcome back,  <strong>{user?.name || "User"}</strong> 👋
         </p>
       </div>
 
@@ -69,29 +58,31 @@ export default function Topbar() {
   <button className="upgrade-btn">Upgrade Pro</button>
 
   <button
-    className="logout-btn"
+  className="logout-btn"
   onClick={async () => {
-  const result = await Swal.fire({
-    title: "Logout?",
-    text: "You will be redirected to login page.",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonColor: "#2563eb",
-    cancelButtonColor: "#64748b",
-    confirmButtonText: "Logout",
-    cancelButtonText: "Cancel",
-    reverseButtons: true,
-  });
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#2563eb",
+      cancelButtonColor: "#6c757d",
+    });
 
-  if (!result.isConfirmed) return;
+    if (!result.isConfirmed) return;
 
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    toast.success("Logout successful");
+setTimeout(() => {
   window.location.href = "/login";
-}}
-  >
-    Logout
-  </button>
+}, 800);
+  }}
+>
+  Logout
+</button>
 </div>
     </div>
   );

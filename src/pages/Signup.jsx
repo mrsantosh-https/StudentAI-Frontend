@@ -10,7 +10,9 @@ export default function Signup() {
     name: "",
     email: "",
     password: "",
+    password_confirmation: "",
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({
@@ -26,13 +28,24 @@ export default function Signup() {
       await api.post("/register", formData);
 
       toast.success("Account Created Successfully 🎉");
-
+      setTimeout(() => {
       navigate("/login");
+    }, 1000);
     } catch (error) {
-      console.error(error);
+  console.error(error);
 
-      toast.error("Signup Failed");
-    }
+  if (error.response?.status === 422) {
+    const errors = error.response.data.errors;
+
+    Object.values(errors).forEach((messages) => {
+      toast.error(messages[0]);
+    });
+
+    return;
+  }
+
+  toast.error("Something went wrong!");
+}
   };
 
   return (
@@ -77,6 +90,18 @@ export default function Signup() {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
+              required
+          
+            />
+          
+            <input
+              type="password"
+              name="password_confirmation"
+              className="form-control mb-3"
+              placeholder="Confirm Password"
+              value={formData.password_confirmation}
+              onChange={handleChange}
+              autoComplete="new-password"
               required
             />
 

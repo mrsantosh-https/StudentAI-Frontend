@@ -3,7 +3,10 @@
     padding:40px;
     border-radius:12px;
     box-shadow:0 10px 30px rgba(0,0,0,.1);
-    min-height:850px;
+    min-height:1020px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .resume-preview h1{

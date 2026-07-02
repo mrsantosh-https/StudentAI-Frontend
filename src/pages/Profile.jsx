@@ -1,3 +1,4 @@
+import { useUser } from "../context/UserContext";
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
@@ -6,6 +7,7 @@ import "../styles/profile.css";
 import toast from "react-hot-toast";
 
 export default function Profile() {
+  const { fetchUser } = useUser();
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -39,7 +41,7 @@ export default function Profile() {
       const response = await api.put("/profile", profile);
 
       toast.success(response.data.message || "Profile updated successfully");
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+     await fetchUser();
     } catch (error) {
       console.error(error);
       toast.error("Profile update failed");
@@ -63,9 +65,11 @@ export default function Profile() {
 
       toast.success(response.data.message || "Photo uploaded successfully");
       fetchProfile();
+      await fetchUser();
     } catch (error) {
-      console.error(error);
-      toast.error("Photo upload failed");
+      console.log(error.response?.data);
+    console.log(error.response?.status);
+    toast.error("Upload failed");
     }
   };
 
@@ -76,7 +80,7 @@ export default function Profile() {
       <main className="dashboard-main">
         <Topbar />
 
-        <div className="dashboard-content">
+        <div className="dashboard-content text-center">
           <h2 className="fw-bold">👤 My Profile</h2>
           <p className="text-muted">Manage your personal information.</p>
 

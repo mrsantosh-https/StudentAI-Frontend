@@ -15,6 +15,7 @@ export default function MyResumes() {
     const response = await api.get("/resumes");
     setResumes(response.data);
     
+    
   };
 
   const handleDelete = async (id) => {
@@ -25,7 +26,6 @@ export default function MyResumes() {
   await api.delete(`/resumes/${id}`);
 
   toast.success("Resume deleted successfully");
-  toast.error("Delete failed");
   fetchResumes();
 };
 
