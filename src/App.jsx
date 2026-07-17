@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import AICareerCoach from "./pages/AICareerCoach";
 import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
@@ -17,6 +18,7 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import { UserProvider } from "./context/UserContext";
 import InterviewHistory from "./pages/InterviewHistory";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from "./pages/ForgotPassword";
 import { Toaster } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -24,6 +26,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function App() {
  const hideNavbar =
   location.pathname.startsWith("/dashboard") ||
+  location.pathname.startsWith("/settings ") ||
   location.pathname.startsWith("/profile") ||
   location.pathname.startsWith("/resume-builder") ||
   location.pathname.startsWith("/my-resumes") ||
@@ -37,8 +40,8 @@ function App() {
   location.pathname.startsWith("/dashboard") ||
   location.pathname.startsWith("/profile") ||
   location.pathname.startsWith("/settings") ||
+  location.pathname.startsWith("/ai-career-coach")
   location.pathname.startsWith("/interview-history");
-  
   return (
     <BrowserRouter>
       <UserProvider>
@@ -49,6 +52,15 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+          path="/ai-career-coach"
+          element={
+            <ProtectedRoute>
+              <AICareerCoach />
+            </ProtectedRoute>
+          }
+        />
           <Route
             path="/dashboard"
             element={

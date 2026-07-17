@@ -209,6 +209,119 @@
 .dark-mode .topbar-search::placeholder {
   color: #cbd5e1 !important;
 }
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-btn {
+  position: relative;
+  border: none;
+  background: #f3f4f6;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.16);
+  z-index: 9999;
+  padding: 12px;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-header h6 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.notification-item {
+  padding: 12px;
+  border-bottom: 1px solid #f1f1f1;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.notification-item:hover {
+  background: #f8fafc;
+}
+
+.notification-item.unread {
+  background: #eef4ff;
+  border-left: 4px solid #2563eb;
+}
+
+.notification-item strong {
+  display: block;
+  font-size: 14px;
+}
+
+.notification-item p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.notification-item small {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.no-notification {
+  text-align: center;
+  color: #6b7280;
+  padding: 20px;
+}
+
+.notification-item {
+  position: relative;
+}
+
+.notification-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
 
 @media (max-width: 992px) {
   .topbar {

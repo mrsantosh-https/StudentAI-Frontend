@@ -59,6 +59,9 @@ export default function Login() {
               autoComplete="current-password"
               required
             />
+            <Link to="/forgot-password" className="forgot-password-link">
+              Forgot Password?
+            </Link>
 
             <button type="submit" className="btn btn-primary w-100">
               Login

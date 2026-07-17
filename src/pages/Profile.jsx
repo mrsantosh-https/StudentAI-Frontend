@@ -72,6 +72,7 @@ export default function Profile() {
     toast.error("Upload failed");
     }
   };
+  
 
   return (
     <div className="dashboard-layout">
