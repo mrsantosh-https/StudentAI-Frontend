@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { FaMicrophoneAlt } from "react-icons/fa";
 import "../styles/dashboardLayout.css";
 
 export default function Sidebar() {
@@ -19,7 +20,25 @@ export default function Sidebar() {
         <NavLink to="/job-tracker">💼 Job Tracker</NavLink>
         <NavLink to="/job-matcher">🎯 Job Matcher</NavLink>
         <NavLink to="/cover-letter">🤖 Cover Letter</NavLink>
-        <NavLink to="/interview">🎤 AI Interview</NavLink>
+        <NavLink to="/interview">🎤 AI Interview Assistant</NavLink>
+        <NavLink
+          to="/mock-interview"
+          className={({ isActive }) =>
+            `sidebar-link ${isActive ? "active" : ""}`
+          }
+        >
+          <FaMicrophoneAlt className="me-2" />
+          <span>AI Mock Interview</span>
+        </NavLink>
+        <NavLink
+            to="/mock-interview-history"
+            className={({ isActive }) =>
+              `sidebar-link ${isActive ? "active" : ""}`
+            }
+          >
+             <FaMicrophoneAlt className="me-3" />
+            <span>AI Mock Interview History</span>
+          </NavLink>
         <NavLink to="/interview-history">📜 Interview History</NavLink>
         <NavLink to="/career-roadmap">🗺 Career Roadmap</NavLink>
         <NavLink to="/settings">⚙️ Settings</NavLink>

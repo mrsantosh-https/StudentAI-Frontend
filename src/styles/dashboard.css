@@ -117,9 +117,11 @@
 }
 
 /* Topbar Notification + Theme */
-.btn-light,
 .theme-toggle {
-  border-radius: 10px !important;
+  border-radius: 50% !important;
+}
+.btn-light{
+  border-radius: 25px ;
 }
 
 .theme-toggle {

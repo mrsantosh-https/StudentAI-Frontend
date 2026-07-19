@@ -19,6 +19,9 @@ import { UserProvider } from "./context/UserContext";
 import InterviewHistory from "./pages/InterviewHistory";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
+import MockInterview from "./pages/MockInterview";
+import MockInterviewHistory from "./pages/MockInterviewHistory";
+import MockInterviewResult from "./pages/MockInterviewResult";
 import { Toaster } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -40,8 +43,9 @@ function App() {
   location.pathname.startsWith("/dashboard") ||
   location.pathname.startsWith("/profile") ||
   location.pathname.startsWith("/settings") ||
-  location.pathname.startsWith("/ai-career-coach")
-  location.pathname.startsWith("/interview-history");
+  location.pathname.startsWith("/ai-career-coach")||
+  location.pathname.startsWith("/interview-history")||
+  location.pathname.startsWith("/mock-interview");
   return (
     <BrowserRouter>
       <UserProvider>
@@ -53,6 +57,31 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+         <Route
+              path="/mock-interview"
+              element={
+              <ProtectedRoute>
+                <MockInterview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mock-interview-history"
+            element={
+              <ProtectedRoute>
+                <MockInterviewHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mock-interview-result/:id"
+            element={
+              <ProtectedRoute>
+                  <MockInterviewResult />
+              </ProtectedRoute>
+            }
+          />
+          
           <Route
           path="/ai-career-coach"
           element={

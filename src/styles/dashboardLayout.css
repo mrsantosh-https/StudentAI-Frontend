@@ -108,14 +108,6 @@
   gap: 16px;
   flex-wrap: nowrap;
 }
-
-.topbar-search {
-  width: 340px;
-  height: 52px;
-  border-radius: 14px;
-  padding: 0 18px;
-}
-
 .theme-toggle,
 .notification-btn {
   width: 52px;
@@ -388,3 +380,4 @@
     padding: 11px 16px;
   }
 }
+
