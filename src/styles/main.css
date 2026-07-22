@@ -1,242 +1,234 @@
+/* =========================================
+   PUBLIC NAVBAR
+========================================= */
 
+.student-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 
-.navbar{
-    position: sticky !important;
-    top: 0 !important;;
-    z-index: index 1050 !important;;
-    background:#0f172a;;
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border-bottom:1px solid #e5e7eb;
-    padding:14px 35px;
-    transition:.3s;
+  width: 100%;
+  min-height: 72px;
+
+  padding: 12px 0;
+
+  background: #0f172a;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.18);
+
+  z-index: 9999;
 }
 
-/* Logo */
-
-.navbar-brand{
-
-    font-size:28px;
-
-    font-weight:800;
-
-    color:#e1e4ea !important;
-
-    letter-spacing:.5px;
-
-    transition:.3s;
+/* Bootstrap navbar class conflict fix */
+.navbar.student-navbar {
+  z-index: 9999 !important;
 }
 
-.navbar-brand span{
+/* =========================================
+   BRAND
+========================================= */
 
-    color:#039ff9;
+.student-navbar .navbar-brand {
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  text-decoration: none;
 }
 
-.navbar-brand:hover{
-
-    transform:scale(1.03);
-    background-color: #fff;
+.student-navbar .navbar-brand:hover {
+  color: #ffffff;
 }
 
-/* Nav Links */
-
-.nav-link{
-
-    font-weight:600;
-
-    color:#fff !important;
-
-    margin:0 10px;
-
-    position:relative;
-
-    transition:.3s;
+.student-navbar .navbar-brand span {
+  color: #38bdf8;
 }
 
-.nav-link:hover{
+/* =========================================
+   NAV LINKS
+========================================= */
 
-    color:#2563eb !important;
+.student-navbar .navbar-nav {
+  align-items: center;
 }
 
-.nav-link::after{
-
-    content:"";
-
-    position:absolute;
-
-    bottom:-6px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:0;
-
-    height:3px;
-
-    border-radius:20px;
-
-    background:#2563eb;
-
-    transition:.3s;
+.student-navbar .nav-item {
+  list-style: none;
 }
 
-.nav-link:hover::after{
+.student-navbar .nav-link {
+  position: relative;
+  padding: 8px 12px !important;
 
-    width:70%;
+  color: #e2e8f0;
+  font-size: 15px;
+  font-weight: 650;
+
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-/* Active Link */
-
-.nav-link.active{
-
-    color:#2563eb !important;
+.student-navbar .nav-link:hover {
+  color: #38bdf8;
+  transform: translateY(-1px);
 }
 
-.nav-link.active::after{
+.student-navbar .nav-link::after {
+  content: "";
 
-    width:70%;
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+
+  width: 0;
+  height: 2px;
+
+  border-radius: 10px;
+  background: #38bdf8;
+
+  transform: translateX(-50%);
+  transition: width 0.2s ease;
 }
 
-/* Buttons */
-
-.navbar .btn{
-
-    border-radius:50px;
-
-    padding:10px 22px;
-
-    font-weight:600;
-
-    transition:.3s;
-
-    color: #fff;
+.student-navbar .nav-link:hover::after {
+  width: 60%;
 }
 
-.btn-signup{
+/* =========================================
+   LOGIN BUTTON
+========================================= */
 
-    background:linear-gradient(135deg,#2563eb,#7c3aed);
+.student-navbar .login-btn {
+  padding: 9px 18px;
 
-    color:white;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 10px;
 
-    border:none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 750;
 
-    box-shadow:0 10px 25px rgba(37,99,235,.25);
+  background: transparent;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.nav-user{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
+.student-navbar .login-btn:hover {
+  color: #0f172a;
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-1px);
 }
 
-.nav-avatar{
+/* =========================================
+   GET STARTED BUTTON
+========================================= */
 
-    width:42px;
+.student-navbar .start-btn {
+  padding: 9px 18px;
 
-    height:42px;
+  border: none;
+  border-radius: 10px;
 
-    border-radius:50%;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
 
-    overflow:hidden;
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28);
 
-    background:linear-gradient(135deg,#2563eb,#7c3aed);
-
-    color:white;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-weight:bold;
-
-    box-shadow:0 8px 20px rgba(37,99,235,.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.nav-avatar img{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
+.student-navbar .start-btn:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.38);
 }
 
-/* ===========================
-   Dark Mode
-=========================== */
+/* =========================================
+   MOBILE TOGGLER
+========================================= */
 
-.dark-mode .navbar{
+.student-navbar .navbar-toggler {
+  padding: 7px 9px;
 
-    background:#0f172a;
+  border: none;
+  border-radius: 9px;
 
-    border-bottom:1px solid #1e293b;
+  box-shadow: none;
 }
 
-.dark-mode .navbar-brand{
-
-    color:#60a5fa !important;
+.student-navbar .navbar-toggler:focus {
+  box-shadow: none;
 }
 
-.dark-mode .nav-link{
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
 
-    color:#cbd5e1 !important;
+@media (max-width: 991px) {
+  .student-navbar {
+    min-height: 68px;
+    padding: 10px 0;
+  }
+
+  .student-navbar .navbar-collapse {
+    margin-top: 12px;
+    padding: 16px;
+
+    border-radius: 14px;
+    background: #111c33;
+    box-shadow: 0 14px 35px rgba(2, 6, 23, 0.3);
+  }
+
+  .student-navbar .navbar-nav {
+    align-items: flex-start;
+    gap: 4px !important;
+  }
+
+  .student-navbar .nav-link {
+    width: 100%;
+    padding: 10px 4px !important;
+  }
+
+  .student-navbar .nav-link::after {
+    display: none;
+  }
+
+  .student-navbar .collapse .d-flex {
+    width: 100%;
+    margin-top: 12px;
+    flex-direction: column;
+  }
+
+  .student-navbar .login-btn,
+  .student-navbar .start-btn {
+    width: 100%;
+  }
 }
 
-.dark-mode .nav-link:hover{
+/* =========================================
+   GLOBAL FIX
+========================================= */
 
-    color:#60a5fa !important;
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
 }
 
-.dark-mode .btn-login{
-
-    background:#1e293b;
-
-    color:white;
-
-    border:none;
-}
-
-.dark-mode .btn-login:hover{
-
-    background:#334155;
-}
-
-/* ===========================
-   Mobile
-=========================== */
-
-@media(max-width:991px){
-
-.navbar{
-
-padding:15px 20px;
-
-}
-
-.navbar-collapse{
-
-margin-top:20px;
-
-}
-
-.nav-link{
-
-margin:12px 0;
-
-}
-
-.navbar .btn{
-
-width:100%;
-
-margin-top:10px;
-
-}
-
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
 }

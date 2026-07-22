@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { FaBell, FaCheck, FaTrash } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
-
 import { useUser } from "../context/UserContext";
 import { API_URL } from "../services/api";
 import "../styles/dashboardLayout.css";
@@ -351,57 +350,30 @@ export default function Topbar() {
                 )}
               </div>
 
-              <div className="notification-list">
-                {notificationLoading ? (
-                  <div className="no-notification">
-                    Loading notifications...
+             <div className="notification-list">
+              {notifications.length === 0 ? (
+                <div className="no-notification">
+                  <p>No notifications yet</p>
+                </div>
+              ) : (
+                notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={`notification-item ${
+                      !notification.read_at ? "unread" : ""
+                    }`}
+                  >
+                    <strong>{notification.title}</strong>
+                    <p>{notification.message}</p>
+                    <small>{notification.created_at}</small>
+
+                    <button className="notification-delete">
+                      ✕
+                    </button>
                   </div>
-                ) : notifications.length === 0 ? (
-                  <div className="no-notification">
-                    <FaBell />
-                    <p>No notifications</p>
-                  </div>
-                ) : (
-                  notifications.map((item) => (
-                    <div
-                      key={item.id}
-                      className={`notification-item ${
-                        !item.is_read ? "unread" : ""
-                      }`}
-                    >
-                      <button
-                        type="button"
-                        className="notification-content"
-                        onClick={() =>
-                          markAsRead(item.id)
-                        }
-                      >
-                        <strong>{item.title}</strong>
-
-                        <p>{item.message}</p>
-
-                        <small>
-                          {formatNotificationTime(
-                            item.created_at
-                          )}
-                        </small>
-                      </button>
-
-                      <button
-                        type="button"
-                        className="notification-delete"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          deleteNotification(item.id);
-                        }}
-                        title="Delete notification"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
+                ))
+              )}
+            </div>
             </div>
           )}
         </div>

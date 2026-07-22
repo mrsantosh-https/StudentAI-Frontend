@@ -122,7 +122,7 @@ export default function MockInterviewHistory() {
 
   const handleDelete = async (id) => {
   const confirmed = window.confirm(
-    "Kya aap is mock interview history ko delete karna chahte hain?"
+    "Are you sure you want delete interview history?"
   );
 
   if (!confirmed) {
@@ -154,7 +154,7 @@ export default function MockInterviewHistory() {
 
     toast.error(
       error.response?.data?.message ||
-        "History delete nahi ho saki"
+        "History note deleted"
     );
   }
 };
@@ -270,11 +270,11 @@ export default function MockInterviewHistory() {
 
                 <div className="history-card-actions">
                     <Link
-  to={`/mock-interview-result/${item.id}`}
-  className="view-result-btn"
->
-  View Result
-</Link>
+                      to={`/mock-interview-result/${item.id}`}
+                      className="view-result-btn"
+                    >
+                      View Result
+                    </Link>
                     <button
                     type="button"
                     className="history-view-btn"

@@ -5,7 +5,9 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg student-navbar">
       <div className="container">
-        <a className="navbar-brand" href="/">Student<span>AI</span></a>
+        <Link className="navbar-brand" to="/">
+          Student<span>AI</span>
+        </Link>
 
         <button
           className="navbar-toggler bg-light"
@@ -18,7 +20,11 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="mainNavbar">
           <ul className="navbar-nav mx-auto gap-lg-3">
-            <a className="nav-link" href="/">Home</a>
+           <li className="nav-item">
+            <Link className="nav-link" to="/">
+              Home
+            </Link>
+          </li>
             <li className="nav-item"><a className="nav-link" href="#">Features</a></li>
             <li className="nav-item"><a className="nav-link" href="#">Pricing</a></li>
             <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>

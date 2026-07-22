@@ -10,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import Interview from "./pages/Interview";
 import MyResumes from "./pages/MyResumes";
 import JobMatcher from "./pages/JobMatcher";
+import VerifyOtp from "./pages/VerifyOtp";
+import ResetPassword from "./pages/ResetPassword";
 import JobTracker from "./pages/JobTracker";
 import ViewResume from "./pages/ViewResume";
 import CoverLetter from "./pages/CoverLetter";
@@ -204,6 +206,15 @@ function App() {
                 <Settings />
               </ProtectedRoute>
             }
+          />
+          
+          <Route
+            path="/verify-otp"
+            element={<VerifyOtp />}
+          />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
           />
           
         </Routes>

@@ -1,58 +1,106 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Swal from "sweetalert2";
+
 import {
-  FiSend,
+  FiClock,
   FiCopy,
-  FiThumbsUp,
+  FiMessageSquare,
+  FiRefreshCw,
+  FiSend,
   FiThumbsDown,
+  FiThumbsUp,
   FiTrash2,
 } from "react-icons/fi";
+
 import ReactMarkdown from "react-markdown";
+import toast from "react-hot-toast";
+
 import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
 import { useUser } from "../context/UserContext";
+import axios from "axios";
 import "../styles/aiCareerCoach.css";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+
+const SUGGESTIONS = [
+  {
+    label: "Web Developer Roadmap",
+    prompt: "Create a complete web developer roadmap for a fresher.",
+  },
+  {
+    label: "Interview Preparation",
+    prompt:
+      "Give me interview preparation tips for a fresher software developer.",
+  },
+  {
+    label: "Improve Resume",
+    prompt: "How can I improve my resume for a software developer job?",
+  },
+  {
+    label: "Project Suggestions",
+    prompt: "Suggest job-ready full-stack projects for my portfolio.",
+  },
+];
 
 export default function AICareerCoach() {
   const { user } = useUser();
 
   const welcomeMessage = useMemo(
     () => ({
+      id: "welcome-message",
       role: "ai",
-      text: `Hi ${user?.name || "User"} 👋 Main tumhara AI Career Assistant hoon. Resume, interview, roadmap ya jobs ke baare me pooch sakte ho.`,
+      text: `Hi ${
+        user?.name || "User"
+      } 👋 Main tumhara AI Career Coach hoon. Resume, jobs, interview preparation, career roadmap aur skills ke baare mein pooch sakte ho.`,
       chatId: null,
+      isWelcome: true,
     }),
-    [user?.name]
+    [user?.name],
   );
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([welcomeMessage]);
   const [input, setInput] = useState("");
+
   const [isTyping, setIsTyping] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [deletingChatId, setDeletingChatId] = useState(null);
 
   const [history, setHistory] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [historyLoading, setHistoryLoading] = useState(false);
+  const [selectedChatId, setSelectedChatId] = useState(null);
 
-  const [copiedIndex, setCopiedIndex] = useState(null);
-  const [likedChatId, setLikedChatId] = useState(null);
-  const [dislikedChatId, setDislikedChatId] = useState(null);
+  const [copiedMessageId, setCopiedMessageId] = useState(null);
+
+  const [feedbackState, setFeedbackState] = useState({});
 
   const chatEndRef = useRef(null);
+  const textareaRef = useRef(null);
 
-  useEffect(() => {
-    setMessages((currentMessages) => {
-      if (currentMessages.length === 0) {
-        return [welcomeMessage];
+  const getToken = useCallback(() => {
+    return localStorage.getItem("token");
+  }, []);
+
+  const getHeaders = useCallback(
+    (includeContentType = false) => {
+      const headers = {
+        Accept: "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      };
+
+      if (includeContentType) {
+        headers["Content-Type"] = "application/json";
       }
 
-      const onlyWelcomeMessage =
-        currentMessages.length === 1 &&
-        currentMessages[0]?.role === "ai" &&
-        currentMessages[0]?.chatId === null;
+      return headers;
+    },
+    [getToken],
+  );
 
-      return onlyWelcomeMessage ? [welcomeMessage] : currentMessages;
-    });
-  }, [welcomeMessage]);
+  /*
+  |--------------------------------------------------------------------------
+  | Scroll chat to bottom
+  |--------------------------------------------------------------------------
+  */
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({
@@ -61,202 +109,355 @@ export default function AICareerCoach() {
     });
   }, [messages, isTyping]);
 
-  const getToken = () => localStorage.getItem("token");
+  /*
+  |--------------------------------------------------------------------------
+  | Update welcome message after user data loads
+  |--------------------------------------------------------------------------
+  */
 
-  const fetchHistory = async () => {
-    setHistoryLoading(true);
+  useEffect(() => {
+    setMessages((currentMessages) => {
+      const hasOnlyWelcomeMessage =
+        currentMessages.length === 1 && currentMessages[0]?.isWelcome;
 
+      if (hasOnlyWelcomeMessage) {
+        return [welcomeMessage];
+      }
+
+      return currentMessages;
+    });
+  }, [welcomeMessage]);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Fetch history
+  |--------------------------------------------------------------------------
+  */
+
+  const fetchHistory = useCallback(async () => {
     try {
-      const token = getToken();
+      setHistoryLoading(true);
 
       const response = await fetch(`${API_URL}/ai-chats`, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        method: "GET",
+        headers: getHeaders(),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Chat history load nahi hui.");
+        throw new Error(
+          data.message || data.reply || "Chat history load nahi ho saki.",
+        );
       }
 
-      setHistory(Array.isArray(data.chats) ? data.chats : []);
+      const chats = Array.isArray(data.chats) ? data.chats : [];
+
+      setHistory(chats);
+
+      const feedbackMap = {};
+
+      chats.forEach((chat) => {
+        feedbackMap[chat.id] = {
+          liked: Boolean(chat.liked),
+          disliked: Boolean(chat.disliked),
+        };
+      });
+
+      setFeedbackState(feedbackMap);
+
+      return chats;
     } catch (error) {
-      console.error("History error:", error);
+      console.error("History load error:", error);
+
+      toast.error(error.message || "Chat history load nahi ho saki.");
+
+      return [];
     } finally {
       setHistoryLoading(false);
     }
-  };
+  }, [getHeaders]);
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [fetchHistory]);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Start new chat
+  |--------------------------------------------------------------------------
+  */
 
   const startNewChat = () => {
-    setSelectedChat(null);
-    setInput("");
-    setCopiedIndex(null);
-    setLikedChatId(null);
-    setDislikedChatId(null);
+    if (isTyping) {
+      toast.error("AI response complete hone ka wait karein.");
+      return;
+    }
+
+    setSelectedChatId(null);
     setMessages([welcomeMessage]);
+    setInput("");
+    setCopiedMessageId(null);
+
+    window.setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
   };
 
-  const openHistoryChat = (chat) => {
-    setSelectedChat(chat);
-    setInput("");
-    setCopiedIndex(null);
+  /*
+  |--------------------------------------------------------------------------
+  | Open saved chat
+  |--------------------------------------------------------------------------
+  */
 
-    setLikedChatId(chat.liked ? chat.id : null);
-    setDislikedChatId(chat.disliked ? chat.id : null);
+  const openHistoryChat = (chat) => {
+    if (isTyping) {
+      toast.error("AI response complete hone ka wait karein.");
+      return;
+    }
+
+    setSelectedChatId(chat.id);
+    setInput("");
+    setCopiedMessageId(null);
 
     setMessages([
       {
+        id: `user-${chat.id}`,
         role: "user",
-        text: chat.question || "Question not available",
+        text: chat.question || "Question available nahi hai.",
         chatId: chat.id,
+        isWelcome: false,
       },
       {
+        id: `ai-${chat.id}`,
         role: "ai",
-        text: chat.answer || "Answer not available",
+        text: chat.answer || "Answer available nahi hai.",
         chatId: chat.id,
+        isWelcome: false,
       },
     ]);
   };
 
-  const copyText = async (text, index) => {
+  /*
+  |--------------------------------------------------------------------------
+  | Copy response
+  |--------------------------------------------------------------------------
+  */
+
+  const copyText = async (text, messageId) => {
     try {
-      await navigator.clipboard.writeText(text);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement("textarea");
+
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+
+        document.body.appendChild(textarea);
+
+        textarea.focus();
+        textarea.select();
+
+        document.execCommand("copy");
+
+        document.body.removeChild(textarea);
+      }
+
+      setCopiedMessageId(messageId);
+
+      window.setTimeout(() => {
+        setCopiedMessageId(null);
+      }, 2000);
     } catch (error) {
-      const textarea = document.createElement("textarea");
-
-      textarea.value = text;
-      textarea.style.position = "fixed";
-      textarea.style.left = "-9999px";
-      textarea.style.top = "0";
-
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
+      console.error("Copy error:", error);
+      toast.error("Text copy nahi ho saka.");
     }
-
-    setCopiedIndex(index);
-
-    window.setTimeout(() => {
-      setCopiedIndex(null);
-    }, 2000);
   };
 
+  /*
+  |--------------------------------------------------------------------------
+  | Save like/dislike
+  |--------------------------------------------------------------------------
+  */
+
   const saveFeedback = async (chatId, type) => {
-  if (!chatId) {
-    console.error("Chat ID missing");
-    return;
-  }
-
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(
-      `${API_URL}/ai-chats/${chatId}/feedback`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ type }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Feedback save nahi hua");
+    if (!chatId) {
+      toast.error("Pehle chat save hone dein.");
+      return;
     }
-
-    if (type === "like") {
-      setLikedChatId((current) =>
-        current === chatId ? null : chatId
-      );
-      setDislikedChatId(null);
-    }
-
-    if (type === "dislike") {
-      setDislikedChatId((current) =>
-        current === chatId ? null : chatId
-      );
-      setLikedChatId(null);
-    }
-
-    setHistory((prev) =>
-      prev.map((chat) =>
-        chat.id === chatId
-          ? {
-              ...chat,
-              liked: type === "like",
-              disliked: type === "dislike",
-            }
-          : chat
-      )
-    );
-  } catch (error) {
-    console.error("Feedback error:", error);
-  }
-};
-  const deleteHistoryChat = async (event, chatId) => {
-    event.stopPropagation();
-
-    const confirmed = window.confirm(
-      "Kya aap is chat ko delete karna chahte hain?"
-    );
-
-    if (!confirmed) return;
 
     try {
-      const token = getToken();
-
-      const response = await fetch(`${API_URL}/ai-chats/${chatId}`, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await fetch(`${API_URL}/ai-chats/${chatId}/feedback`, {
+        method: "POST",
+        headers: getHeaders(true),
+        body: JSON.stringify({ type }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Chat delete nahi hui.");
+        throw new Error(data.message || "Feedback save nahi ho saka.");
       }
 
-      setHistory((previousHistory) =>
-        previousHistory.filter((chat) => chat.id !== chatId)
+      setFeedbackState((currentState) => ({
+        ...currentState,
+        [chatId]: {
+          liked: type === "like",
+          disliked: type === "dislike",
+        },
+      }));
+
+      setHistory((currentHistory) =>
+        currentHistory.map((chat) =>
+          chat.id === chatId
+            ? {
+                ...chat,
+                liked: type === "like",
+                disliked: type === "dislike",
+              }
+            : chat,
+        ),
       );
 
-      if (selectedChat?.id === chatId) {
-        startNewChat();
-      }
+      toast.success(type === "like" ? "Response liked" : "Feedback saved");
     } catch (error) {
-      console.error("Delete chat error:", error);
+      console.error("Feedback error:", error);
+
+      toast.error(error.message || "Feedback save nahi ho saka.");
     }
   };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete history
+  |--------------------------------------------------------------------------
+  */
+
+  const deleteHistoryChat = async (event, chatId) => {
+    event.stopPropagation();
+
+    const confirmed = window.confirm(
+      "Kya aap is chat ko delete karna chahte hain?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeletingChatId(chatId);
+
+      const response = await fetch(`${API_URL}/ai-chats/${chatId}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Chat delete nahi ho saki.");
+      }
+
+      setHistory((currentHistory) =>
+        currentHistory.filter((chat) => chat.id !== chatId),
+      );
+
+      setFeedbackState((currentState) => {
+        const updatedState = { ...currentState };
+        delete updatedState[chatId];
+        return updatedState;
+      });
+
+      if (selectedChatId === chatId) {
+        setSelectedChatId(null);
+        setMessages([welcomeMessage]);
+      }
+
+      toast.success("Chat deleted successfully");
+    } catch (error) {
+      console.error("Delete chat error:", error);
+
+      toast.error(error.message || "Chat delete nahi ho saki.");
+    } finally {
+      setDeletingChatId(null);
+    }
+  };
+
+ const clearAllHistory = async () => {
+  const result = await Swal.fire({
+    title: "Clear all history?",
+    text: "All AI conversations will be permanently deleted.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, clear all",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#ef4444",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.delete(
+      `${API_URL}/ai-chats/clear-all`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.data.success) {
+      setHistory([]);
+      setMessages([]);
+      setSelectedChatId(null);
+
+      toast.success(response.data.message);
+    }
+  } catch (error) {
+    console.error("Clear history error:", error.response?.data || error);
+
+    const message =
+      error.response?.data?.message ||
+      "Failed to clear history";
+
+    toast.error(message);
+  }
+};
+  /*
+  |--------------------------------------------------------------------------
+  | Send message
+  |--------------------------------------------------------------------------
+  */
 
   const sendMessage = async () => {
     const userText = input.trim();
 
-    if (!userText || isTyping) return;
+    if (!userText) {
+      return;
+    }
 
-    setMessages((previousMessages) => [
-      ...previousMessages,
+    if (isTyping) {
+      return;
+    }
+    
+
+    const temporaryUserMessageId = `user-${Date.now()}`;
+
+    setSelectedChatId(null);
+
+    setMessages((currentMessages) => [
+      ...currentMessages,
       {
+        id: temporaryUserMessageId,
         role: "user",
         text: userText,
         chatId: null,
+        isWelcome: false,
       },
     ]);
 
@@ -264,15 +465,9 @@ export default function AICareerCoach() {
     setIsTyping(true);
 
     try {
-      const token = getToken();
-
       const response = await fetch(`${API_URL}/ai-chat`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getHeaders(true),
         body: JSON.stringify({
           message: userText,
         }),
@@ -281,43 +476,149 @@ export default function AICareerCoach() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.reply || data.message || "AI request failed.");
+        throw new Error(
+          data.reply || data.message || "AI response generate nahi ho saka.",
+        );
       }
 
-      const reply = data.reply || "AI response empty hai.";
+      const reply = data.reply || "AI response empty receive hua.";
 
-      setMessages((previousMessages) => [
-        ...previousMessages,
+      /*
+       * Backend chat object return kare to uska ID milega.
+       * Agar old backend response hai to history reload karke ID find hogi.
+       */
+
+      let savedChat = data.chat || null;
+
+      if (!savedChat?.id) {
+        const updatedHistory = await fetchHistory();
+
+        savedChat =
+          updatedHistory.find(
+            (chat) => chat.question?.trim() === userText.trim(),
+          ) || null;
+      }
+
+      const savedChatId = savedChat?.id || data.chat_id || null;
+
+      setMessages((currentMessages) => [
+        ...currentMessages,
         {
+          id: savedChatId ? `ai-${savedChatId}` : `ai-${Date.now()}`,
           role: "ai",
           text: reply,
-          chatId: data.chat?.id || data.chat_id || null,
+          chatId: savedChatId,
+          isWelcome: false,
         },
       ]);
 
-      setSelectedChat(null);
+      if (savedChatId) {
+        setSelectedChatId(savedChatId);
+      }
+
       await fetchHistory();
     } catch (error) {
       console.error("AI chat error:", error);
 
-      setMessages((previousMessages) => [
-        ...previousMessages,
+      setMessages((currentMessages) => [
+        ...currentMessages,
         {
+          id: `error-${Date.now()}`,
           role: "ai",
-          text: error.message || "Server error. Please try again.",
+          text:
+            error.message || "Server error aaya hai. Please dobara try karein.",
           chatId: null,
+          isWelcome: false,
+          isError: true,
         },
       ]);
+
+      toast.error(error.message || "AI response generate nahi ho saka.");
     } finally {
       setIsTyping(false);
+
+      window.setTimeout(() => {
+        textareaRef.current?.focus();
+      }, 100);
     }
   };
 
+  /*
+  |--------------------------------------------------------------------------
+  | Keyboard submit
+  |--------------------------------------------------------------------------
+  */
+
   const handleKeyDown = (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       sendMessage();
     }
+  };
+
+  const handleInputChange = (e) => {
+  setInput(e.target.value);
+
+  e.target.style.height = "auto";
+  e.target.style.height = e.target.scrollHeight + "px";
+};
+
+  /*
+  |--------------------------------------------------------------------------
+  | Suggestion click
+  |--------------------------------------------------------------------------
+  */
+
+  const handleSuggestionClick = (prompt) => {
+    setInput(prompt);
+
+    window.setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 50);
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Format history date
+  |--------------------------------------------------------------------------
+  */
+
+  const formatHistoryDate = (date) => {
+    if (!date) {
+      return "";
+    }
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "";
+    }
+
+    return parsedDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Short history title
+  |--------------------------------------------------------------------------
+  */
+
+  const getHistoryTitle = (question) => {
+    const title = question?.trim() || "Untitled Chat";
+
+    if (title.length <= 42) {
+      return title;
+    }
+
+    return `${title.slice(0, 42)}...`;
   };
 
   return (
@@ -325,27 +626,46 @@ export default function AICareerCoach() {
       <Sidebar />
 
       <main className="dashboard-main">
+        <Topbar />
+
         <div className="dashboard-content">
           <div className="ai-box">
             <div className="ai-workspace">
+              {/* History sidebar */}
+
               <aside className="ai-history-sidebar">
                 <button
                   type="button"
                   className="new-chat-btn"
                   onClick={startNewChat}
+                  disabled={isTyping}
                 >
-                  + New Chat
+                  <FiMessageSquare />
+                  New Chat
                 </button>
 
                 <div className="history-heading">
                   <h6>Recent Chats</h6>
                   <span>{history.length}</span>
                 </div>
-
+                <button
+                  className="clear-history-btn"
+                  onClick={clearAllHistory}
+              >
+                  <FiTrash2 />
+                  Clear All
+              </button>
                 {historyLoading ? (
-                  <p className="empty-history">Loading chats...</p>
+                  <div className="empty-history">
+                    <FiRefreshCw className="history-loading-icon" />
+                    <p>Loading chats...</p>
+                  </div>
                 ) : history.length === 0 ? (
-                  <p className="empty-history">No chats yet</p>
+                  <div className="empty-history">
+                    <FiMessageSquare />
+                    <p>No chats yet</p>
+                    <small>Apna pehla career question poochiye.</small>
+                  </div>
                 ) : (
                   <div className="history-list">
                     {history.map((chat) => (
@@ -354,31 +674,43 @@ export default function AICareerCoach() {
                         role="button"
                         tabIndex={0}
                         className={`history-item ${
-                          selectedChat?.id === chat.id ? "active-history" : ""
+                          selectedChatId === chat.id ? "active-history" : ""
                         }`}
                         onClick={() => openHistoryChat(chat)}
                         onKeyDown={(event) => {
-                          if (event.key === "Enter") {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
                             openHistoryChat(chat);
                           }
                         }}
                       >
-                        <span className="history-icon"></span>
+
+
+                        <span className="history-icon">
+                          <FiMessageSquare />
+                        </span>
 
                         <div className="history-text">
-                          <p>{chat.question || "Untitled chat"}</p>
-                          
+                          <p>{getHistoryTitle(chat.question)}</p>
+
+                          <small>
+                            <FiClock />
+                            {formatHistoryDate(chat.created_at)}
+                          </small>
                         </div>
 
                         <button
                           type="button"
                           className="history-delete-btn"
                           aria-label="Delete chat"
-                          onClick={(event) =>
-                            deleteHistoryChat(event, chat.id)
-                          }
+                          disabled={deletingChatId === chat.id}
+                          onClick={(event) => deleteHistoryChat(event, chat.id)}
                         >
-                          <FiTrash2 />
+                          {deletingChatId === chat.id ? (
+                            <span className="delete-loader">...</span>
+                          ) : (
+                            <FiTrash2 />
+                          )}
                         </button>
                       </div>
                     ))}
@@ -386,54 +718,52 @@ export default function AICareerCoach() {
                 )}
               </aside>
 
+              {/* Main chat section */}
+
               <section className="ai-chat-section">
                 <div className="ai-top">
                   <div>
-                    <h2>🤖 AI Career Assistant</h2>
-                    
+                    <h2>🤖 AI Career Coach</h2>
+
+                    <p>Personalized guidance for your career journey</p>
                   </div>
 
-                  <span>Online</span>
+                  <span className="ai-online-status">
+                    <i></i>
+                    Online
+                  </span>
                 </div>
+
+                {/* Suggestions */}
 
                 <div className="ai-suggestion-box">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setInput("Create a web developer roadmap")
-                    }
-                  >
-                    Web Developer Roadmap
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setInput("Give me interview tips for fresher")
-                    }
-                  >
-                    Interview Tips
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setInput("How can I improve my resume?")
-                    }
-                  >
-                    Resume Improve
-                  </button>
+                  {SUGGESTIONS.map((suggestion) => (
+                    <button
+                      type="button"
+                      key={suggestion.label}
+                      disabled={isTyping}
+                      onClick={() => handleSuggestionClick(suggestion.prompt)}
+                    >
+                      {suggestion.label}
+                    </button>
+                  ))}
                 </div>
+
+                {/* Messages */}
 
                 <div className="ai-chat-area">
                   {messages.map((message, index) => {
                     const isAi = message.role === "ai";
-                    const messageChatId =
-                      message.chatId || selectedChat?.id || null;
+
+                    const messageId = message.id || `${message.role}-${index}`;
+
+                    const currentFeedback = message.chatId
+                      ? feedbackState[message.chatId]
+                      : null;
 
                     return (
                       <div
-                        key={`${message.role}-${index}`}
+                        key={messageId}
                         className={`chat-row ${
                           message.role === "user" ? "user" : "ai"
                         }`}
@@ -445,61 +775,63 @@ export default function AICareerCoach() {
                         </div>
 
                         <div className="chat-content">
-                          <div className="chat-bubble">
+                          <div
+                            className={`chat-bubble ${
+                              message.isError ? "error-message" : ""
+                            }`}
+                          >
                             {isAi && (
                               <div className="assistant-top">
-                                <strong>StudentAI Assistant</strong>
+                                <strong>StudentAI Career Coach</strong>
 
-                                <button
-                                  type="button"
-                                  aria-label="Copy response"
-                                  onClick={() =>
-                                    copyText(message.text, index)
-                                  }
-                                >
-                                  {copiedIndex === index ? (
-                                    <span>Copied</span>
-                                  ) : (
-                                    <FiCopy />
-                                  )}
-                                </button>
+                                {!message.isWelcome && (
+                                  <button
+                                    type="button"
+                                    aria-label="Copy response"
+                                    onClick={() =>
+                                      copyText(message.text, messageId)
+                                    }
+                                  >
+                                    {copiedMessageId === messageId ? (
+                                      <span>Copied</span>
+                                    ) : (
+                                      <FiCopy />
+                                    )}
+                                  </button>
+                                )}
                               </div>
                             )}
 
-                            <ReactMarkdown>
-                              {message.text}
-                            </ReactMarkdown>
+                            <ReactMarkdown>{message.text}</ReactMarkdown>
                           </div>
 
-                          {isAi && (
+                          {isAi && !message.isWelcome && (
                             <div className="chat-actions">
                               <button
                                 type="button"
                                 className={
-                                  copiedIndex === index
+                                  copiedMessageId === messageId
                                     ? "active-action"
                                     : ""
                                 }
                                 onClick={() =>
-                                  copyText(message.text, index)
+                                  copyText(message.text, messageId)
                                 }
                               >
                                 <FiCopy />
-                                {copiedIndex === index && (
-                                  <span>Copied</span>
-                                )}
+
+                                {copiedMessageId === messageId && <span></span>}
                               </button>
 
                               <button
                                 type="button"
+                                aria-label="Like response"
                                 className={
-                                  likedChatId === messageChatId
-                                    ? "active-action"
-                                    : ""
+                                  currentFeedback?.liked ? "active-action" : ""
                                 }
-                                disabled={!messageChatId}
+                                disabled={!message.chatId}
                                 onClick={() =>
-                                  saveFeedback(messageChatId, "like")
+                                  saveFeedback(message.chatId, "like")
                                 }
                               >
                                 <FiThumbsUp />
@@ -507,14 +839,15 @@ export default function AICareerCoach() {
 
                               <button
                                 type="button"
+                                aria-label="Dislike response"
                                 className={
-                                  dislikedChatId === messageChatId
+                                  currentFeedback?.disliked
                                     ? "active-action"
                                     : ""
                                 }
-                                disabled={!messageChatId}
+                                disabled={!message.chatId}
                                 onClick={() =>
-                                  saveFeedback(messageChatId, "dislike")
+                                  saveFeedback(message.chatId, "dislike")
                                 }
                               >
                                 <FiThumbsDown />
@@ -526,15 +859,23 @@ export default function AICareerCoach() {
                     );
                   })}
 
+                  {/* Typing loader */}
+
                   {isTyping && (
                     <div className="chat-row ai">
                       <div className="chat-avatar">🤖</div>
 
                       <div className="chat-content">
                         <div className="chat-bubble typing">
-                          <span></span>
-                          <span></span>
-                          <span></span>
+                          <div className="assistant-top">
+                            <strong>StudentAI Career Coach</strong>
+                          </div>
+
+                          <div className="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -543,24 +884,27 @@ export default function AICareerCoach() {
                   <div ref={chatEndRef}></div>
                 </div>
 
+                {/* Input */}
+
                 <div className="ai-input-area">
                   <textarea
+                    ref={textareaRef}
                     rows="1"
-                    placeholder="Ask your career question..."
                     value={input}
-                    onChange={(event) => setInput(event.target.value)}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     disabled={isTyping}
-                  />
+                    />
 
                   <button
-                    type="button"
+                    className="send-btn"
                     onClick={sendMessage}
                     disabled={isTyping || !input.trim()}
-                    aria-label="Send message"
                   >
                     <FiSend />
                   </button>
+
+                  <span className="input-counter">{input.length}/2000</span>
                 </div>
               </section>
             </div>

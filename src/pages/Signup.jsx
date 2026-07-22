@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../services/api";
+import "../styles/signup.css";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -12,115 +13,236 @@ export default function Signup() {
     password: "",
     password_confirmation: "",
   });
-  const [errors, setErrors] = useState({});
+
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value,
+    }));
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    if (formData.name.trim().length < 3) {
+      toast.error("Name kam se kam 3 characters ka hona chahiye.");
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      toast.error("Password kam se kam 8 characters ka hona chahiye.");
+      return;
+    }
+
+    if (formData.password !== formData.password_confirmation) {
+      toast.error("Password aur confirm password match nahi karte.");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      await api.post("/register", formData);
+      await api.post("/register", {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
+      });
 
       toast.success("Account Created Successfully 🎉");
+
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+      });
+
       setTimeout(() => {
-      navigate("/login");
-    }, 1000);
+        navigate("/login", {
+          replace: true,
+        });
+      }, 1000);
     } catch (error) {
-  console.error(error);
+      console.error(
+        "Signup error:",
+        error.response?.data || error
+      );
 
-  if (error.response?.status === 422) {
-    const errors = error.response.data.errors;
+      if (error.response?.status === 422) {
+        const validationErrors =
+          error.response?.data?.errors || {};
 
-    Object.values(errors).forEach((messages) => {
-      toast.error(messages[0]);
-    });
+        const firstError = Object.values(validationErrors)
+          .flat()
+          .find(Boolean);
 
-    return;
-  }
+        toast.error(
+          firstError ||
+            error.response?.data?.message ||
+            "Please check your details."
+        );
 
-  toast.error("Something went wrong!");
-}
+        return;
+      }
+
+      toast.error(
+        error.response?.data?.message ||
+          "Account create nahi ho saka."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-md-5">
-          <form
-            onSubmit={handleSignup}
-            className="card shadow border-0 p-4"
-          >
-            <h2 className="text-center mb-4">
-              Create Account
-            </h2>
+    <div className="signup-page">
+      <form
+        onSubmit={handleSignup}
+        className="signup-card"
+      >
+        <div className="signup-header">
+          <div className="signup-logo">StudentAI</div>
 
-            <input
-              type="text"
-              name="name"
-              autoComplete="name"
-              className="form-control mb-3"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+          <h2>Create Account</h2>
 
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              className="form-control mb-3"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+          <p>
+            StudentAI join karein aur apni career journey
+            start karein.
+          </p>
+        </div>
 
+        <div className="signup-field">
+          <label htmlFor="name">
+            Full Name
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            name="name"
+            className="form-control"
+            placeholder="Enter your full name"
+            value={formData.name}
+            onChange={handleChange}
+            autoComplete="name"
+            minLength={3}
+            disabled={loading}
+            required
+          />
+        </div>
+
+        <div className="signup-field">
+          <label htmlFor="email">
+            Email Address
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className="form-control"
+            placeholder="Enter your email address"
+            value={formData.email}
+            onChange={handleChange}
+            autoComplete="email"
+            disabled={loading}
+            required
+          />
+        </div>
+
+        <div className="signup-field">
+          <label htmlFor="password">
+            Password
+          </label>
+
+          <div className="signup-password-wrapper">
             <input
-              type="password"
+              id="password"
+              type={showPassword ? "text" : "password"}
               name="password"
-              autoComplete="password"
-              className="form-control mb-3"
-              placeholder="Password"
+              className="form-control"
+              placeholder="Create a strong password"
               value={formData.password}
               onChange={handleChange}
-              required
-          
-            />
-          
-            <input
-              type="password"
-              name="password_confirmation"
-              className="form-control mb-3"
-              placeholder="Confirm Password"
-              value={formData.password_confirmation}
-              onChange={handleChange}
               autoComplete="new-password"
+              minLength={8}
+              disabled={loading}
               required
             />
 
             <button
-              type="submit"
-              className="btn btn-primary w-100"
+              type="button"
+              className="signup-password-toggle"
+              onClick={() =>
+                setShowPassword((previous) => !previous)
+              }
+              disabled={loading}
+              aria-label={
+                showPassword
+                  ? "Hide password"
+                  : "Show password"
+              }
             >
-              Signup
+              {showPassword ? "Hide" : "Show"}
             </button>
+          </div>
 
-            <p className="text-center mt-3">
-              Already have an account?{" "}
-              <Link to="/login">
-                Login
-              </Link>
-            </p>
-          </form>
+          <small>
+            Minimum 8 characters
+          </small>
         </div>
-      </div>
+
+        <div className="signup-field">
+          <label htmlFor="password_confirmation">
+            Confirm Password
+          </label>
+
+          <input
+            id="password_confirmation"
+            type={showPassword ? "text" : "password"}
+            name="password_confirmation"
+            className="form-control"
+            placeholder="Confirm your password"
+            value={formData.password_confirmation}
+            onChange={handleChange}
+            autoComplete="new-password"
+            minLength={8}
+            disabled={loading}
+            required
+          />
+
+          {formData.password_confirmation &&
+            formData.password !==
+              formData.password_confirmation && (
+              <small className="signup-error-text">
+                Passwords match nahi karte.
+              </small>
+            )}
+        </div>
+
+        <button
+          type="submit"
+          className="signup-submit-btn"
+          disabled={loading}
+        >
+          {loading
+            ? "Creating Account..."
+            : "Create Account"}
+        </button>
+
+        <p className="signup-login-text">
+          Already have an account?{" "}
+          <Link to="/login">
+            Login
+          </Link>
+        </p>
+      </form>
     </div>
   );
 }

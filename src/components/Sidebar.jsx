@@ -21,6 +21,7 @@ export default function Sidebar() {
         <NavLink to="/job-matcher">🎯 Job Matcher</NavLink>
         <NavLink to="/cover-letter">🤖 Cover Letter</NavLink>
         <NavLink to="/interview">🎤 AI Interview Assistant</NavLink>
+        <NavLink to="/interview-history">📜 Interview History</NavLink>
         <NavLink
           to="/mock-interview"
           className={({ isActive }) =>
@@ -39,7 +40,6 @@ export default function Sidebar() {
              <FaMicrophoneAlt className="me-3" />
             <span>AI Mock Interview History</span>
           </NavLink>
-        <NavLink to="/interview-history">📜 Interview History</NavLink>
         <NavLink to="/career-roadmap">🗺 Career Roadmap</NavLink>
         <NavLink to="/settings">⚙️ Settings</NavLink>
       </nav>

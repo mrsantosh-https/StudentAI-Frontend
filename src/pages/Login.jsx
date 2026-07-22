@@ -3,76 +3,105 @@ import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import toast from "react-hot-toast";
 import api from "../services/api";
+import "../styles/login.css";
 
 export default function Login() {
-  const { fetchUser } = useUser();                              
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { fetchUser } = useUser();
   const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-      e.preventDefault();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-      try {
-        const response = await api.post("/login", {
-          email,
-          password,
-        });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        await fetchUser();
-        toast.success("Login Successful 🎉");
+    try {
+      const response = await api.post("/login", {
+        email: email.trim(),
+        password,
+      });
 
-        
-        navigate("/dashboard");
-      } catch (error) {
-        console.error(error);
-        
-        toast.error("Invalid Email or Password");
+      const token = response.data.token;
+      const user = response.data.user;
+
+      if (!token) {
+        toast.error("Login token backend se nahi mila");
+        return;
       }
-    };
+
+      localStorage.setItem("token", token);
+
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      await fetchUser();
+
+      toast.success("Login Successful 🎉");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error);
+
+      toast.error(
+        error.response?.data?.message || "Invalid Email or Password"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-md-5">
-          <form onSubmit={handleLogin} className="card shadow border-0 p-4">
-            <h2 className="text-center mb-4">Login</h2>
+    <div className="login-page">
+      <form onSubmit={handleLogin} className="login-card">
+        <h2>Welcome Back</h2>
 
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-control mb-3"
-              placeholder="Email address"
-              autoComplete="email"
-              required
-            />
+        <p className="login-subtitle">
+          Apne StudentAI account me login karein.
+        </p>
 
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-control mb-3"
-              placeholder="Password"
-              autoComplete="current-password"
-              required
-            />
-            <Link to="/forgot-password" className="forgot-password-link">
-              Forgot Password?
-            </Link>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="form-control mb-3"
+          placeholder="Email address"
+          autoComplete="email"
+          required
+        />
 
-            <button type="submit" className="btn btn-primary w-100">
-              Login
-            </button>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-control mb-3"
+          placeholder="Password"
+          autoComplete="current-password"
+          required
+        />
 
-            <p className="text-center mt-3">
-              Don&apos;t have an account? <Link to="/signup">Signup</Link>
-            </p>
-          </form>
+        <div className="login-options">
+          <Link to="/forgot-password" className="forgot-password-link">
+            Forgot Password?
+          </Link>
         </div>
-      </div>
+
+        <button
+          type="submit"
+          className="btn btn-primary w-100"
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        <p className="signup-text">
+          Don&apos;t have an account?{" "}
+          <Link to="/signup">Signup</Link>
+        </p>
+      </form>
     </div>
   );
 }
