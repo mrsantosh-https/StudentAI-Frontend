@@ -5,6 +5,8 @@ export default function ResumeForm({
   handleChange,
   handleGenerateAI,
   handleSaveResume,
+  generatingSummary,
+  savingResume,
 }) {
   return (
     <div className="card shadow-sm border-0 p-4">
@@ -38,7 +40,7 @@ export default function ResumeForm({
       />
 
       <input
-        type="text"
+        type="url"
         name="linkedin"
         placeholder="LinkedIn Profile URL"
         className="form-control mb-3"
@@ -47,7 +49,7 @@ export default function ResumeForm({
       />
 
       <input
-        type="text"
+        type="url"
         name="github"
         placeholder="GitHub Profile URL"
         className="form-control mb-3"
@@ -56,7 +58,7 @@ export default function ResumeForm({
       />
 
       <input
-        type="text"
+        type="url"
         name="portfolio"
         placeholder="Portfolio Website URL"
         className="form-control mb-3"
@@ -68,7 +70,7 @@ export default function ResumeForm({
         name="summary"
         placeholder="Professional Summary"
         className="form-control mb-3"
-        rows="3"
+        rows="4"
         value={formData.summary || ""}
         onChange={handleChange}
       />
@@ -95,7 +97,7 @@ export default function ResumeForm({
         name="projects"
         placeholder="Projects"
         className="form-control mb-3"
-        rows="3"
+        rows="4"
         value={formData.projects || ""}
         onChange={handleChange}
       />
@@ -104,21 +106,57 @@ export default function ResumeForm({
         name="experience"
         placeholder="Experience"
         className="form-control mb-3"
-        rows="3"
+        rows="4"
         value={formData.experience || ""}
         onChange={handleChange}
       />
 
-      <div className="d-flex gap-3 mt-4">
-        <button type="button" className="btn btn-primary" onClick={handleGenerateAI}>
-          🤖 Generate AI Resume
+      <div className="d-grid gap-2 mt-4">
+        <button
+          type="button"
+          className="btn btn-outline-primary"
+          onClick={handleGenerateAI}
+          disabled={generatingSummary}
+        >
+          {generatingSummary ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              />
+              Generating Summary...
+            </>
+          ) : (
+            "✨ Generate Summary with AI"
+          )}
         </button>
 
-        <button type="button" className="btn btn-success" onClick={handleSaveResume}>
-          💾 Save Resume
-        </button>
+        <button
+            type="button"
+            className="btn btn-success"
+            onClick={handleSaveResume}
+            disabled={savingResume || generatingSummary}
+          >
+            {savingResume ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  aria-hidden="true"
+                />
+                Saving...
+              </>
+            ) : (
+              "💾 Save Resume"
+            )}
+          </button>
 
-        <button type="button" className="btn btn-danger" onClick={downloadPDF}>
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={downloadPDF}
+          disabled={generatingSummary}
+        >
           📄 Download PDF
         </button>
       </div>

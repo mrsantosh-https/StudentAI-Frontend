@@ -6,7 +6,7 @@ import api from "../services/api";
 import "../styles/login.css";
 
 export default function Login() {
-  const { fetchUser } = useUser();
+  const { fetchUser,setUser } = useUser();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -26,8 +26,8 @@ export default function Login() {
       const token = response.data.token;
       const user = response.data.user;
 
-      if (!token) {
-        toast.error("Login token backend se nahi mila");
+      if (!token ||!user) {
+        toast.error("Login response invalid");
         return;
       }
 

@@ -1,23 +1,54 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
-  useCallback,
 } from "react";
 import api from "../services/api";
 
-const UserContext = createContext();
+const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUserState] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("user");
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (error) {
+      console.error("Saved user parse error:", error);
+      localStorage.removeItem("user");
+      return null;
+    }
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => Boolean(localStorage.getItem("token"))
+  );
+
   const [loading, setLoading] = useState(true);
+
+  const setUser = useCallback((userData) => {
+    setUserState(userData);
+
+    if (userData) {
+      localStorage.setItem(
+        "user",
+        JSON.stringify(userData)
+      );
+
+      setIsAuthenticated(true);
+    } else {
+      localStorage.removeItem("user");
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   const fetchUser = useCallback(async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setUser(null);
+      setUserState(null);
+      setIsAuthenticated(false);
       setLoading(false);
       return null;
     }
@@ -25,20 +56,27 @@ export function UserProvider({ children }) {
     try {
       setLoading(true);
 
+      api.defaults.headers.common.Authorization =
+        `Bearer ${token}`;
+
       const response = await api.get("/profile", {
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
       const userData =
-        response.data.user ??
-        response.data.data ??
+        response.data?.user ??
+        response.data?.data ??
         response.data;
 
-      setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
+      setUserState(userData);
+      setIsAuthenticated(true);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(userData)
+      );
 
       return userData;
     } catch (error) {
@@ -47,7 +85,9 @@ export function UserProvider({ children }) {
         error.response?.data || error
       );
 
-      setUser(null);
+      setUserState(null);
+      setIsAuthenticated(false);
+
       localStorage.removeItem("user");
 
       if (error.response?.status === 401) {
@@ -61,8 +101,41 @@ export function UserProvider({ children }) {
     }
   }, []);
 
+  const loginUser = useCallback(
+    ({ token, user: userData }) => {
+      localStorage.setItem("token", token);
+
+      api.defaults.headers.common.Authorization =
+        `Bearer ${token}`;
+
+      setUser(userData);
+      setIsAuthenticated(true);
+    },
+    [setUser]
+  );
+
+  const logoutUser = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    delete api.defaults.headers.common.Authorization;
+
+    setUserState(null);
+    setIsAuthenticated(false);
+  }, []);
+
   useEffect(() => {
-    fetchUser();
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      api.defaults.headers.common.Authorization =
+        `Bearer ${token}`;
+
+      fetchUser();
+    } else {
+      setLoading(false);
+      setIsAuthenticated(false);
+    }
   }, [fetchUser]);
 
   return (
@@ -71,6 +144,9 @@ export function UserProvider({ children }) {
         user,
         setUser,
         fetchUser,
+        loginUser,
+        logoutUser,
+        isAuthenticated,
         loading,
       }}
     >

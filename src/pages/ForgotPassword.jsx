@@ -38,7 +38,7 @@ export default function ForgotPassword() {
         throw new Error(
           data.message ||
             data.errors?.email?.[0] ||
-            "OTP send nahi ho saka."
+            "OTP not sent."
         );
       }
 
@@ -64,7 +64,7 @@ export default function ForgotPassword() {
 
         <h2 className="mb-2">Forgot Password</h2>
         <p className="text-muted">
-          Registered email enter karein. Hum OTP bhejenge.
+        Enter Registered email .
         </p>
 
         {message && (
