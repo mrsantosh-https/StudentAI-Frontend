@@ -1,10 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
-});
+import api from "../services/api";
 
 export async function generateSummary(userData) {
   try {
@@ -30,21 +24,37 @@ Return only the professional summary.
 
 export async function generateCoverLetter(data) {
   try {
-    const prompt = `
-Generate a professional cover letter.
+    const payload = {
+      company: data?.company?.trim() || "",
+      role: data?.role?.trim() || "",
+      details: data?.details?.trim() || "",
+    };
 
-Company: ${data.company}
-Job Role: ${data.role}
-Skills and Experience: ${data.details}
+    console.log("Cover letter payload:", payload);
 
-Return only the cover letter.
-`;
+    const response = await api.post("/ai/cover-letter", payload);
 
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    return response.data?.cover_letter || "";
   } catch (error) {
-    console.error(error);
-    return "Failed to generate cover letter.";
+    console.error(
+      "Cover letter generation error:",
+      error.response?.data || error
+    );
+
+    const validationErrors = error.response?.data?.errors;
+
+    if (validationErrors) {
+      const message = Object.values(validationErrors)
+        .flat()
+        .join(" ");
+
+      throw new Error(message);
+    }
+
+    throw new Error(
+      error.response?.data?.message ||
+        "Failed to generate cover letter."
+    );
   }
 }
 
@@ -160,84 +170,44 @@ Return:
   return "Failed to improve resume.";
 }
 }
-export async function matchJobDescription(resumeData, jobDescription) {
+
+export async function matchJobDescription(resumeId, jobDescription) {
   try {
-    const prompt = `
-Compare this resume with the job description.
+    const response = await api.post("/ai/job-match", {
+      resume_id: Number(resumeId),
+      job_description: jobDescription.trim(),
+    });
 
-Resume:
-Name: ${resumeData.full_name}
-Summary: ${resumeData.summary}
-Skills: ${resumeData.skills}
-Projects: ${resumeData.projects}
-Experience: ${resumeData.experience}
-
-Job Description:
-${jobDescription}
-
-Return exactly in this format:
-
-Match Score: __/100
-
-Matching Skills:
--
-
-Missing Skills:
--
-
-Resume Improvement Tips:
--
-
-Final Verdict:
-`;
-
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    return response.data;
   } catch (error) {
-    console.error(error);
-    return "Failed to match job description.";
+    console.error("Job Matcher Error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      resumeId,
+      jobDescriptionLength: jobDescription?.trim()?.length,
+    });
+
+    throw error;
   }
 }
-export async function generateCareerRoadmap(goal) {
+export async function generateCareerRoadmap(data) {
   try {
-    const prompt = `
-Create a 6-month career roadmap for: ${goal}
+    const response = await api.post("/ai/career-roadmap", {
+      goal: data.goal,
+      currentSkills: data.currentSkills,
+      experience: data.experience,
+    });
 
-Return in this format:
-
-Goal:
-
-Month 1:
--
-
-Month 2:
--
-
-Month 3:
--
-
-Month 4:
--
-
-Month 5:
--
-
-Month 6:
--
-
-Projects to Build:
--
-
-Skills to Focus:
--
-
-Final Advice:
-`;
-
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    return response.data.roadmap;
   } catch (error) {
-    console.error(error);
-    return "Failed to generate career roadmap.";
+    console.error(
+      "Career roadmap error:",
+      error.response?.data || error
+    );
+
+    throw new Error(
+      error.response?.data?.message ||
+      "Failed to generate roadmap."
+    );
   }
 }

@@ -538,42 +538,7 @@ body.dark-mode .no-notification::before {
   background: #1e293b;
 }
 
-/* =========================================
-   RESPONSIVE
-========================================= */
 
-@media (max-width: 576px) {
-  .theme-toggle,
-  .notification-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    font-size: 18px;
-  }
-
-  .notification-dropdown {
-    position: fixed;
-    top: 72px;
-    left: 12px;
-    right: 12px;
-    width: auto;
-    max-height: calc(100vh - 92px);
-    border-radius: 18px;
-  }
-
-  .notification-dropdown::before {
-    display: none;
-  }
-
-  .notification-list {
-    max-height: calc(100vh - 165px);
-  }
-
-  .notification-delete {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
 .profile-circle {
   width: 52px;
@@ -639,70 +604,436 @@ body.dark-mode .no-notification::before {
   color: #cbd5e1 !important;
 }
 
+/* ==========================================================
+   SIDEBAR MENU BUTTON
+========================================================== */
 
-@media (max-width: 992px) {
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .topbar-actions {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .topbar-search {
-    width: 100%;
-  }
+.menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.16);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-@media (max-width: 992px) {
-  .topbar-search {
-    width: 100%;
-  }
-
-  .topbar-actions {
-    width: 100%;
-  }
+.menu-btn:hover {
+  transform: translateY(-2px);
+  background: #eff6ff;
+  color: #2563eb;
 }
 
-@media (max-width: 768px) {
-  .dashboard-layout {
-    flex-direction: column;
-  }
+.sidebar-overlay {
+  display: none;
+}
 
+/* ==========================================================
+   COMPLETE RESPONSIVE LAYOUT
+========================================================== */
+
+/* Desktop / small laptop */
+
+@media (max-width: 1200px) {
   .sidebar {
-    position: static;
-    width: 100%;
-    height: auto;
+    width: 240px;
+    padding: 24px 18px;
   }
 
   .dashboard-main {
-    margin-left: 0;
-    width: 100%;
+    width: calc(100% - 240px);
+    margin-left: 240px;
   }
 
   .dashboard-content {
-    padding: 18px;
+    padding: 24px;
   }
 
   .topbar {
-    border-radius: 0 0 22px 22px;
-    padding: 20px;
-    align-items: flex-start;
+    padding: 22px 28px;
+  }
+}
+
+/* Tablet and mobile slide sidebar */
+
+@media (max-width: 992px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
-  .topbar h4 {
-    font-size: 1.5rem;
+  .dashboard-layout {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: -280px;
+    width: 260px;
+    height: 100dvh;
+    padding: 78px 18px 22px;
+    overflow: visible;
+    background: linear-gradient(180deg, #f2f2f4, #3a65c4);
+    border-right: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 8px 0 30px rgba(15, 23, 42, 0.24);
+    z-index: 10000;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-logo {
+    margin-bottom: 22px;
+  }
+
+  .sidebar-menu {
+    max-height: calc(100dvh - 125px);
+    padding-right: 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15, 23, 42, 0.35) transparent;
+  }
+
+  .sidebar-menu::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .sidebar-menu::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.35);
+  }
+
+  /*
+    The button is inside Sidebar.jsx.
+    Fixed positioning keeps it visible while the sidebar is closed.
+  */
+
+  .menu-btn {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    z-index: 10002;
+  }
+
+  .sidebar.open .menu-btn {
+    left: 198px;
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    display: block;
+    background: rgba(2, 6, 23, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 9999;
+    animation: sidebarOverlayFade 0.25s ease;
+  }
+
+  @keyframes sidebarOverlayFade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .dashboard-main,
+  .main-content {
+    width: 100% !important;
+    min-width: 0;
+    min-height: 100vh;
+    margin-left: 0 !important;
+  }
+
+  .dashboard-content {
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .topbar {
+    width: auto;
+    min-width: 0;
+    margin: 16px 16px 24px 76px;
+    padding: 18px 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .topbar > * {
+    min-width: 0;
   }
 
   .topbar-actions {
-    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .notification-dropdown {
+    width: 340px;
+  }
+
+  .dark-mode .sidebar {
+    background: linear-gradient(180deg, #020617, #0f172a) !important;
+  }
+
+  .dark-mode .menu-btn {
+    border-color: #334155;
+    background: #1e293b;
+    color: #f8fafc;
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 16px;
+  }
+
+  .topbar {
+    margin: 14px 14px 22px 72px;
+    padding: 17px;
+    border-radius: 18px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .topbar h4 {
+    margin: 0;
+    font-size: 22px;
+    overflow-wrap: anywhere;
+  }
+
+  .topbar-actions {
+    justify-content: space-between;
   }
 
   .upgrade-btn,
   .logout-btn {
-    padding: 11px 16px;
+    flex: 1 1 145px;
+    min-width: 0;
   }
 }
 
+/* Mobile */
+
+@media (max-width: 576px) {
+  .sidebar {
+    left: -255px;
+    width: 240px;
+    padding: 72px 14px 18px;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar.open .menu-btn {
+    left: 184px;
+  }
+
+  .sidebar-logo {
+    margin-bottom: 18px;
+    font-size: 1.5rem;
+  }
+
+  .sidebar-menu {
+    max-height: calc(100dvh - 112px);
+    gap: 7px;
+  }
+
+  .sidebar-menu a {
+    padding: 11px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+  }
+
+  .sidebar-menu a:hover,
+  .sidebar-menu a.active {
+    transform: none;
+  }
+
+  .menu-btn {
+    top: 12px;
+    left: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    font-size: 22px;
+  }
+
+  .dashboard-content {
+    padding: 10px;
+  }
+
+  .topbar {
+    margin: 10px 10px 18px 64px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .topbar h4 {
+    font-size: 19px;
+  }
+
+  .topbar-actions {
+    gap: 9px;
+  }
+
+  .theme-toggle,
+  .notification-btn {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    font-size: 18px;
+  }
+
+  .profile-circle {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    font-size: 16px;
+  }
+
+  .upgrade-btn,
+  .logout-btn {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 100%;
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+
+  .notification-dropdown {
+    position: fixed;
+    top: 68px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-height: calc(100dvh - 84px);
+  }
+
+  .notification-list {
+    max-height: calc(100dvh - 155px);
+  }
+}
+
+/* Extra-small mobile */
+
+@media (max-width: 400px) {
+  .sidebar {
+    left: -235px;
+    width: 220px;
+  }
+
+  .sidebar.open .menu-btn {
+    left: 164px;
+  }
+
+  .sidebar-menu a {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .topbar {
+    margin: 8px 8px 16px 60px;
+    padding: 12px;
+  }
+
+  .topbar h4 {
+    font-size: 17px;
+  }
+
+  .topbar-actions {
+    gap: 7px;
+  }
+
+  .notification-item {
+    padding: 12px 34px 12px 12px;
+  }
+
+  .notification-item strong {
+    font-size: 13px;
+  }
+
+  .notification-item p {
+    font-size: 12px;
+  }
+}
+
+/* Short landscape phones */
+
+@media (max-height: 650px) and (orientation: landscape) and (max-width: 992px) {
+  .sidebar {
+    padding-top: 66px;
+  }
+
+  .sidebar-menu {
+    max-height: calc(100dvh - 78px);
+  }
+
+  .notification-dropdown {
+    max-height: 78dvh;
+  }
+}
+
+/* Touch devices */
+
+@media (hover: none) {
+  .sidebar-menu a:hover,
+  .upgrade-btn:hover,
+  .logout-btn:hover,
+  .theme-toggle:hover,
+  .notification-btn:hover,
+  .menu-btn:hover {
+    transform: none;
+  }
+
+  .notification-delete {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .menu-btn,
+  .sidebar-overlay,
+  .sidebar-menu a,
+  .upgrade-btn,
+  .logout-btn,
+  .theme-toggle,
+  .notification-btn,
+  .notification-dropdown,
+  .notification-item {
+    animation: none !important;
+    transition: none !important;
+  }
+}

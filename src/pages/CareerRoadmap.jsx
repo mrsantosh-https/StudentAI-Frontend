@@ -1,23 +1,38 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
+import "../styles/carrierRoadmap.css";
 import { generateCareerRoadmap } from "../services/gemini";
+import ReactMarkdown from "react-markdown";
 
 export default function CareerRoadmap() {
   const [goal, setGoal] = useState("");
   const [roadmap, setRoadmap] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
    
-  const handleGenerate = async () => {
+ const handleGenerate = async () => {
   if (!goal) {
     alert("Please select a career goal");
     return;
   }
 
-  setLoading(true);
-  const result = await generateCareerRoadmap(goal);
-  setRoadmap(result);
-  setLoading(false);
+  try {
+    setLoading(true);
+    setCopied(false);
+
+    const result = await generateCareerRoadmap({
+      goal,
+      currentSkills: "HTML, CSS, JavaScript, React, PHP, Laravel",
+      experience: "Fresher",
+    });
+
+    setRoadmap(result);
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    setLoading(false);
+  }
 };
   return (
     <div className="dashboard-layout">
@@ -64,12 +79,40 @@ export default function CareerRoadmap() {
             </button>
         
           </div>
-          {roadmap && (
-            <div className="card border-0 shadow p-4 mt-4">
-                <h4>Generated Roadmap</h4>
-                <hr />
-                <div style={{ whiteSpace: "pre-line" }}>{roadmap}</div>
+  
+            {roadmap && (
+              <div className="roadmap-result-card mt-4">
+                <div className="roadmap-result-header">
+                  <div>
+                    <span className="roadmap-badge">AI Generated</span>
+                    <h3>🗺 Your Career Roadmap</h3>
+                    <p>{goal} ke liye personalized learning plan</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="roadmap-copy-btn"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(roadmap);
+                        setCopied(true);
+
+                        setTimeout(() => {
+                          setCopied(false);
+                        }, 2000);
+                      } catch (err) {
+                        console.error("Copy failed:", err);
+                      }
+                    }}
+                  >
+                    {copied ? "✅ Copied" : "📋 Copy"}
+                  </button>
+                </div>
+
+            <div className="roadmap-content markdown-body">
+            <ReactMarkdown>{roadmap}</ReactMarkdown>
             </div>
+              </div>
             )}
         </div>
       </main>

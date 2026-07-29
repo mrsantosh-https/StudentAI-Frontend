@@ -11,3 +11,70 @@
     line-height:1.8;
     padding-right:10px;
 }
+
+/* =========================
+   Responsive Fix Only
+========================= */
+
+@media (max-width: 992px) {
+
+    .feedback-card{
+        height:460px;
+    }
+
+    .feedback-content{
+        line-height:1.7;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .feedback-card{
+
+        height:420px;
+
+    }
+
+    .feedback-content{
+
+        padding-right:6px;
+        line-height:1.6;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .feedback-card{
+
+        height:380px;
+
+    }
+
+    .feedback-content{
+
+        padding-right:4px;
+        font-size:14px;
+
+    }
+
+}
+
+@media (max-width:400px){
+
+    .feedback-card{
+
+        height:340px;
+
+    }
+
+    .feedback-content{
+
+        font-size:13px;
+        line-height:1.5;
+
+    }
+
+}

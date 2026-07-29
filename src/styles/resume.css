@@ -1,122 +1,721 @@
-.resume-preview{
-    background:#fff;
-    padding:40px;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,.1);
-    min-height:1020px;
-    height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+/* =========================================================
+   RESUME PREVIEW
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.resume-preview h1{
-    font-size:32px;
-    font-weight:800;
-    text-transform:uppercase;
+.resume-preview {
+  width: 100%;
+  min-width: 0;
+  min-height: 1020px;
+  height: calc(100vh - 110px);
+  padding: 40px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
 }
 
-.resume-preview h3{
-    margin-top:25px;
-    font-size:18px;
-    border-bottom:2px solid #0f172a;
-    padding-bottom:5px;
-    text-transform:uppercase;
+.resume-preview::-webkit-scrollbar {
+  width: 7px;
 }
 
-.resume-preview p{
-    color:#444;
-    line-height:1.7;
-}
-.skills-container{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:15px;
+.resume-preview::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.skill-tag{
-    background:#0ea5e9;
-    color:white;
-    padding:8px 16px;
-    border-radius:30px;
-    font-size:14px;
-    font-weight:600;
-}
-.project-list {
-  margin-top: 15px;
+.resume-preview::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #94a3b8;
 }
 
-.resume-project {
-  background: #f8fafc;
-  border-left: 4px solid #0ea5e9;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-}
-.education-list {
-  margin-top: 15px;
+.resume-preview::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 
-.resume-education {
-  background: #f8fafc;
-  border-left: 4px solid #0f172a;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-}
+/* =========================================================
+   RESUME HEADER
+========================================================= */
+
+.resume-preview h1,
 .resume-header h1 {
+  margin: 0;
+  color: #0f172a;
   font-size: 34px;
   font-weight: 800;
+  line-height: 1.2;
   text-transform: uppercase;
   letter-spacing: 1px;
+  overflow-wrap: anywhere;
+}
+
+.resume-header {
+  width: 100%;
+  min-width: 0;
 }
 
 .resume-header p {
-  margin: 4px 0;
+  margin: 5px 0;
   color: #475569;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
+.resume-preview > p {
+  color: #444444;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   GENERAL RESUME HEADINGS
+========================================================= */
+
+.resume-preview h3 {
+  margin: 25px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #0f172a;
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.resume-preview p {
+  color: #444444;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* =========================================================
+   RESUME SECTION
+========================================================= */
+
 .resume-section {
+  width: 100%;
+  min-width: 0;
   margin-top: 24px;
 }
 
 .resume-section h4 {
+  margin: 0 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #0f172a;
+  color: #0f172a;
   font-size: 17px;
   font-weight: 800;
+  line-height: 1.4;
   text-transform: uppercase;
-  border-bottom: 2px solid #0f172a;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
+  overflow-wrap: anywhere;
 }
 
 .resume-section p {
+  margin-top: 0;
   color: #334155;
+  font-size: 14px;
   line-height: 1.7;
 }
+
+/* =========================================================
+   SKILLS
+========================================================= */
+
+.skills-container {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 8px 16px;
+  overflow: hidden;
+  border-radius: 30px;
+  background: #0ea5e9;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* =========================================================
+   PROJECT LIST
+========================================================= */
+
+.project-list,
+.education-list {
+  width: 100%;
+  min-width: 0;
+  margin-top: 15px;
+}
+
+.resume-project,
+.resume-education {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f8fafc;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.resume-project {
+  border-left: 4px solid #0ea5e9;
+}
+
+.resume-education {
+  border-left: 4px solid #0f172a;
+}
+
+.resume-project:last-child,
+.resume-education:last-child {
+  margin-bottom: 0;
+}
+
+.resume-project h4,
+.resume-project h5,
+.resume-education h4,
+.resume-education h5 {
+  margin-top: 0;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}
+
+.resume-project p,
+.resume-education p {
+  margin-bottom: 6px;
+}
+
+/* =========================================================
+   ATS CARD
+========================================================= */
+
 .ats-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
   border-radius: 22px;
   background: #ffffff;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
 .ats-result {
-  white-space: pre-line;
-  line-height: 1.8;
-  color: #334155;
-  background: #f8fafc;
+  width: 100%;
+  min-width: 0;
+  max-height: 460px;
   padding: 20px;
-  border-radius: 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
   border-left: 5px solid #2563eb;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
 }
+
+.ats-result::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ats-result::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #94a3b8;
+}
+
+/* =========================================================
+   JOB MATCH CARD
+========================================================= */
+
 .job-match-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
   border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
 .job-match-result {
-  white-space: pre-line;
-  line-height: 1.8;
-  color: #334155;
-  background: #f8fafc;
+  width: 100%;
+  min-width: 0;
+  max-height: 460px;
   padding: 20px;
-  border-radius: 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
   border-left: 5px solid #16a34a;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+}
+
+.job-match-result::-webkit-scrollbar {
+  width: 6px;
+}
+
+.job-match-result::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #94a3b8;
+}
+
+/* =========================================================
+   RESUME ACTION BUTTONS
+========================================================= */
+
+.resume-actions {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.resume-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: normal;
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.resume-actions .btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.resume-actions .btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.resume-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Improve Resume Button Full Width */
+
+.resume-actions .btn-info {
+  grid-column: 1 / -1;
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark .resume-preview,
+.dark .resume-preview,
+body.dark-mode .resume-preview {
+  border-color: #334155;
+  background: #1e293b;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .resume-preview h1,
+.dark .resume-preview h1,
+body.dark-mode .resume-preview h1,
+body.dark .resume-header h1,
+.dark .resume-header h1,
+body.dark-mode .resume-header h1,
+body.dark .resume-preview h3,
+.dark .resume-preview h3,
+body.dark-mode .resume-preview h3,
+body.dark .resume-section h4,
+.dark .resume-section h4,
+body.dark-mode .resume-section h4 {
+  color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+body.dark .resume-preview p,
+.dark .resume-preview p,
+body.dark-mode .resume-preview p,
+body.dark .resume-header p,
+.dark .resume-header p,
+body.dark-mode .resume-header p,
+body.dark .resume-section p,
+.dark .resume-section p,
+body.dark-mode .resume-section p {
+  color: #cbd5e1;
+}
+
+body.dark .resume-project,
+.dark .resume-project,
+body.dark-mode .resume-project,
+body.dark .resume-education,
+.dark .resume-education,
+body.dark-mode .resume-education {
+  background: #0f172a;
+}
+
+body.dark .resume-project h4,
+.dark .resume-project h4,
+body.dark-mode .resume-project h4,
+body.dark .resume-project h5,
+.dark .resume-project h5,
+body.dark-mode .resume-project h5,
+body.dark .resume-education h4,
+.dark .resume-education h4,
+body.dark-mode .resume-education h4,
+body.dark .resume-education h5,
+.dark .resume-education h5,
+body.dark-mode .resume-education h5 {
+  color: #f8fafc;
+}
+
+body.dark .ats-card,
+.dark .ats-card,
+body.dark-mode .ats-card,
+body.dark .job-match-card,
+.dark .job-match-card,
+body.dark-mode .job-match-card {
+  border-color: #334155;
+  background: #1e293b;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+body.dark .ats-result,
+.dark .ats-result,
+body.dark-mode .ats-result,
+body.dark .job-match-result,
+.dark .job-match-result,
+body.dark-mode .job-match-result {
+  background: #0f172a;
+  color: #cbd5e1;
+}
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+  .resume-preview {
+    min-height: 900px;
+    height: calc(100vh - 100px);
+    padding: 32px;
+  }
+
+  .resume-preview h1,
+  .resume-header h1 {
+    font-size: 30px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+  .resume-preview {
+    min-height: 780px;
+    height: auto;
+    max-height: none;
+    padding: 28px;
+    overflow-y: visible;
+  }
+
+  .resume-preview h1,
+  .resume-header h1 {
+    font-size: 28px;
+  }
+
+  .ats-result,
+  .job-match-result {
+    max-height: 400px;
+  }
+}
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+  .resume-preview {
+    min-height: auto;
+    padding: 24px 20px;
+    border-radius: 14px;
+  }
+
+  .resume-preview h1,
+  .resume-header h1 {
+    font-size: 25px;
+    letter-spacing: 0.6px;
+  }
+
+  .resume-preview h3 {
+    margin-top: 22px;
+    font-size: 17px;
+  }
+
+  .resume-section {
+    margin-top: 21px;
+  }
+
+  .resume-section h4 {
+    font-size: 16px;
+  }
+
+  .skill-tag {
+    padding: 7px 13px;
+    font-size: 13px;
+  }
+
+  .resume-project,
+  .resume-education {
+    padding: 13px 14px;
+  }
+
+  .ats-result,
+  .job-match-result {
+    max-height: 350px;
+    padding: 17px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+  .resume-preview {
+    width: 100%;
+    padding: 20px 15px;
+    border-radius: 12px;
+  }
+
+  .resume-preview h1,
+  .resume-header h1 {
+    font-size: 22px;
+    line-height: 1.3;
+    letter-spacing: 0.4px;
+  }
+
+  .resume-header p,
+  .resume-preview p,
+  .resume-section p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .resume-preview h3 {
+    margin-top: 20px;
+    padding-bottom: 5px;
+    font-size: 15px;
+  }
+
+  .resume-section {
+    margin-top: 19px;
+  }
+
+  .resume-section h4 {
+    margin-bottom: 9px;
+    font-size: 15px;
+  }
+
+  .skills-container {
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .skill-tag {
+    min-height: 32px;
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+
+  .resume-project,
+  .resume-education {
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .ats-card,
+  .job-match-card {
+    border-radius: 16px;
+  }
+
+  .ats-result,
+  .job-match-result {
+    max-height: 320px;
+    padding: 15px;
+    border-left-width: 4px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .resume-actions {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-top: 15px;
+  }
+
+  .resume-actions .btn-info {
+    grid-column: auto;
+  }
+
+  .resume-actions .btn {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+  .resume-preview {
+    padding: 17px 12px;
+  }
+
+  .resume-preview h1,
+  .resume-header h1 {
+    font-size: 20px;
+  }
+
+  .resume-preview h3,
+  .resume-section h4 {
+    font-size: 14px;
+  }
+
+  .skill-tag {
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+
+  .resume-project,
+  .resume-education {
+    padding: 10px;
+  }
+
+  .ats-result,
+  .job-match-result {
+    padding: 13px;
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   PRINT / PDF MODE
+========================================================= */
+
+@media print {
+  .resume-preview {
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    padding: 20px;
+    overflow: visible;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #ffffff;
+  }
+
+  .resume-actions,
+  .ats-card,
+  .job-match-card {
+    display: none !important;
+  }
+
+  .resume-preview h1,
+  .resume-header h1 {
+    color: #000000;
+  }
+
+  .resume-preview h3,
+  .resume-section h4 {
+    color: #000000;
+    border-color: #000000;
+  }
+
+  .resume-preview p,
+  .resume-header p,
+  .resume-section p {
+    color: #222222;
+  }
+
+  .resume-project,
+  .resume-education {
+    break-inside: avoid;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .resume-actions .btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-preview,
+  .resume-actions .btn,
+  .result-progress-fill {
+    animation: none !important;
+    transition: none !important;
+  }
 }

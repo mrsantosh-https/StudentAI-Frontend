@@ -34,3 +34,121 @@
     border-radius:20px;
     box-shadow:0 15px 40px rgba(0,0,0,.35);
 }
+
+/* =========================
+   Responsive Fix Only
+========================= */
+
+@media (max-width: 992px) {
+
+    .hero{
+        min-height:auto;
+        padding:70px 0;
+    }
+
+    .hero-title{
+        font-size:3rem;
+    }
+
+    .hero-image{
+        width:100%;
+        margin-top:40px;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .hero{
+
+        min-height:auto;
+        padding:60px 0;
+        text-align:center;
+
+    }
+
+    .hero-badge{
+
+        font-size:13px;
+        padding:8px 16px;
+
+    }
+
+    .hero-title{
+
+        font-size:2.5rem;
+
+    }
+
+    .hero-text{
+
+        font-size:1rem;
+        margin:20px 0;
+
+    }
+
+    .hero-image{
+
+        width:100%;
+        margin-top:30px;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .hero{
+
+        padding:50px 0;
+
+    }
+
+    .hero-title{
+
+        font-size:2rem;
+
+    }
+
+    .hero-text{
+
+        font-size:15px;
+
+    }
+
+    .hero-badge{
+
+        font-size:12px;
+        padding:7px 14px;
+
+    }
+
+}
+
+@media (max-width:400px){
+
+    .hero{
+
+        padding:40px 0;
+
+    }
+
+    .hero-title{
+
+        font-size:1.8rem;
+
+    }
+
+    .hero-text{
+
+        font-size:14px;
+
+    }
+
+    .hero-image{
+
+        border-radius:16px;
+
+    }
+
+}

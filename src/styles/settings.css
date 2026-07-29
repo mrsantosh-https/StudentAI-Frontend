@@ -1,51 +1,87 @@
-/* =========================
-   Settings Page
-========================= */
+/* ===========================
+   SETTINGS PAGE
+=========================== */
 
 .settings-header{
-    margin-bottom:30px;
+    margin-bottom:35px;
 }
 
 .settings-header h2{
-    font-weight:700;
+    font-size:32px;
+    font-weight:800;
     color:#0f172a;
+    margin-bottom:8px;
 }
 
 .settings-header p{
     color:#64748b;
+    font-size:15px;
 }
 
-/* Card */
+/* ===========================
+   Card
+=========================== */
 
 .settings-card{
 
-    border:none;
-
-    border-radius:18px;
-
-    padding:28px;
-
-    background:#fff;
-
-    transition:.35s;
-
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    position:relative;
+    overflow:hidden;
 
     height:100%;
+
+    padding:30px;
+
+    border-radius:22px;
+
+    border:1px solid #e5e7eb;
+
+    background:#ffffff;
+
+    transition:.35s ease;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+}
+
+.settings-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    width:4px;
+    height:100%;
+
+    background:#2563eb;
+
+    transform:scaleY(0);
+
+    transition:.35s;
 }
 
 .settings-card:hover{
 
     transform:translateY(-6px);
 
-    box-shadow:0 18px 40px rgba(37,99,235,.12);
+    border-color:#bfdbfe;
+
+    box-shadow:0 18px 40px rgba(37,99,235,.14);
+}
+
+.settings-card:hover::before{
+
+    transform:scaleY(1);
 }
 
 .settings-card h5{
 
-    font-weight:700;
+    margin-bottom:10px;
 
-    margin-bottom:12px;
+    font-size:19px;
+
+    font-weight:700;
 
     color:#0f172a;
 }
@@ -54,10 +90,49 @@
 
     color:#64748b;
 
-    margin-bottom:22px;
+    line-height:1.7;
+
+    margin-bottom:24px;
 }
 
-/* Buttons */
+/* ===========================
+   Icon
+=========================== */
+
+.settings-icon{
+
+    width:65px;
+    height:65px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:18px;
+
+    font-size:28px;
+
+    color:#2563eb;
+
+    background:#eff6ff;
+
+    margin-bottom:20px;
+
+    transition:.3s;
+}
+
+.settings-card:hover .settings-icon{
+
+    transform:rotate(-8deg) scale(1.05);
+
+    background:#2563eb;
+
+    color:white;
+}
+
+/* ===========================
+   Buttons
+=========================== */
 
 .settings-btn{
 
@@ -65,31 +140,46 @@
 
     border-radius:12px;
 
-    padding:10px 18px;
+    padding:11px 22px;
 
-    font-weight:600;
+    font-weight:700;
 
-    transition:.3s;
+    transition:.3s ease;
 }
 
 .settings-btn:hover{
 
     transform:translateY(-2px);
+
+    box-shadow:0 10px 25px rgba(37,99,235,.18);
 }
 
-/* Danger */
+/* ===========================
+   Danger Card
+=========================== */
 
 .danger-card{
 
     background:#fff5f5;
 
+    border:1px solid #fecaca;
+
     border-left:6px solid #ef4444;
 
-    border-radius:18px;
+    border-radius:22px;
 
-    padding:28px;
+    padding:30px;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.05);
+    transition:.35s;
+
+    box-shadow:0 10px 24px rgba(239,68,68,.08);
+}
+
+.danger-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 18px 35px rgba(239,68,68,.15);
 }
 
 .danger-card h5{
@@ -99,45 +189,37 @@
     font-weight:700;
 }
 
-/* Icon Circle */
+/* ===========================
+   Dark Mode
+=========================== */
 
-.settings-icon{
+.dark-mode .settings-header h2{
 
-    width:60px;
-
-    height:60px;
-
-    border-radius:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:28px;
-
-    margin-bottom:18px;
-
-    background:#dbeafe;
-
-    color:#2563eb;
+    color:#f8fafc;
 }
 
+.dark-mode .settings-header p{
 
-
-/* Dark Mode */
+    color:#cbd5e1;
+}
 
 .dark-mode .settings-card{
 
     background:#1e293b;
 
-    color:white;
+    border:1px solid #334155;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+
+.dark-mode .settings-card:hover{
+
+    border-color:#2563eb;
 }
 
 .dark-mode .settings-card h5{
 
-    color:white;
+    color:#f8fafc;
 }
 
 .dark-mode .settings-card p{
@@ -145,19 +227,94 @@
     color:#cbd5e1;
 }
 
-.dark-mode .danger-card{
+.dark-mode .settings-icon{
 
-    background:#3b1111;
+    background:#0f172a;
 
-    border-left-color:#ef4444;
+    color:#60a5fa;
 }
 
-.dark-mode .settings-header h2{
+.dark-mode .settings-card:hover .settings-icon{
+
+    background:#2563eb;
 
     color:white;
 }
 
-.dark-mode .settings-header p{
+.dark-mode .danger-card{
 
-    color:#cbd5e1;
+    background:#3b1111;
+
+    border:1px solid #7f1d1d;
+
+    border-left:6px solid #ef4444;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:768px){
+
+.settings-header h2{
+
+    font-size:28px;
+}
+
+.settings-card{
+
+    padding:22px;
+}
+
+.settings-icon{
+
+    width:55px;
+    height:55px;
+
+    font-size:24px;
+}
+
+.settings-btn{
+
+    width:100%;
+}
+
+}
+
+@media(max-width:576px){
+
+.settings-header{
+
+    text-align:center;
+}
+
+.settings-header h2{
+
+    font-size:24px;
+}
+
+.settings-card{
+
+    border-radius:18px;
+
+    padding:20px;
+}
+
+.settings-card h5{
+
+    font-size:17px;
+}
+
+.settings-card p{
+
+    font-size:14px;
+}
+
+.danger-card{
+
+    border-radius:18px;
+
+    padding:20px;
+}
+
 }

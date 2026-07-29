@@ -1,15 +1,43 @@
-* {
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* =========================================
+   MAIN LAYOUT
+========================================= */
+
 .mock-history-layout {
   display: flex;
+  width: 100%;
   min-height: 100vh;
   background: #f4f7fb;
 }
 
 .mock-history-main {
   flex: 1;
+  width: calc(100% - 260px);
   min-width: 0;
   min-height: 100vh;
   margin-left: 260px;
@@ -22,6 +50,10 @@
   padding: 32px 28px 50px;
 }
 
+/* =========================================
+   PAGE HEADER
+========================================= */
+
 .mock-history-header {
   display: flex;
   align-items: center;
@@ -30,38 +62,74 @@
   margin-bottom: 26px;
 }
 
+.mock-history-header > div {
+  min-width: 0;
+}
+
 .mock-history-header h1 {
   margin: 0;
   color: #111827;
   font-size: 30px;
   font-weight: 750;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .mock-history-header p {
   margin: 7px 0 0;
   color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
+/* =========================================
+   REFRESH BUTTON
+========================================= */
+
 .refresh-history-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 44px;
   padding: 11px 18px;
   border: none;
   border-radius: 10px;
   background: #4f46e5;
   color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
-  transition: 0.2s ease;
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.2);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .refresh-history-btn:hover:not(:disabled) {
   background: #4338ca;
   transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(79, 70, 229, 0.28);
+}
+
+.refresh-history-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .refresh-history-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  box-shadow: none;
 }
+
+/* =========================================
+   STATS SECTION
+========================================= */
 
 .mock-history-stats {
   display: grid;
@@ -71,12 +139,26 @@
 }
 
 .history-stat-card {
+  display: flex;
+  min-width: 0;
   min-height: 125px;
   padding: 22px;
+  flex-direction: column;
+  justify-content: center;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   background: #ffffff;
   box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.history-stat-card:hover {
+  border-color: #c7d2fe;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
 }
 
 .history-stat-card span {
@@ -84,12 +166,21 @@
   margin-bottom: 10px;
   color: #6b7280;
   font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .history-stat-card strong {
   color: #111827;
   font-size: 28px;
+  font-weight: 750;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
+
+/* =========================================
+   SEARCH TOOLBAR
+========================================= */
 
 .mock-history-toolbar {
   display: flex;
@@ -100,14 +191,30 @@
 }
 
 .mock-history-toolbar input {
+  display: block;
   width: min(100%, 520px);
   height: 46px;
+  min-width: 0;
   padding: 0 15px;
   border: 1px solid #d1d5db;
   border-radius: 11px;
   outline: none;
   background: #ffffff;
+  color: #111827;
+  font-family: inherit;
   font-size: 15px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.mock-history-toolbar input::placeholder {
+  color: #9ca3af;
+}
+
+.mock-history-toolbar input:hover {
+  border-color: #9ca3af;
 }
 
 .mock-history-toolbar input:focus {
@@ -116,11 +223,17 @@
 }
 
 .mock-history-toolbar span {
+  flex-shrink: 0;
   color: #6b7280;
   font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
-/* Equal-height history cards */
+/* =========================================
+   HISTORY GRID
+========================================= */
+
 .mock-history-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -128,58 +241,82 @@
   align-items: stretch;
 }
 
+/* =========================================
+   HISTORY CARD
+========================================= */
+
 .mock-history-card {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  min-width: 0;
   height: 100%;
   min-height: 340px;
   padding: 22px;
+  flex-direction: column;
   border: 1px solid #e5e7eb;
   border-radius: 17px;
   background: #ffffff;
   box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .mock-history-card:hover {
+  border-color: #c7d2fe;
   transform: translateY(-3px);
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.11);
 }
 
+/* =========================================
+   CARD TOP
+========================================= */
+
 .history-card-top {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 15px;
   margin-bottom: 18px;
 }
 
 .history-card-top > div:first-child {
-  min-width: 0;
   flex: 1;
+  min-width: 0;
 }
 
 .history-role {
   display: block;
+  width: 100%;
   margin-bottom: 6px;
+  overflow: hidden;
   color: #111827;
   font-size: 18px;
   font-weight: 700;
-  overflow: hidden;
+  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .history-card-top p {
+  width: 100%;
   margin: 0;
+  overflow: hidden;
   color: #6b7280;
   font-size: 14px;
-  overflow: hidden;
+  line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* =========================================
+   SCORE BADGE
+========================================= */
+
 .history-score {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 68px;
@@ -187,7 +324,10 @@
   flex-shrink: 0;
   padding: 0 11px;
   border-radius: 999px;
+  font-size: 14px;
   font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .score-high {
@@ -205,12 +345,19 @@
   color: #b91c1c;
 }
 
+/* =========================================
+   QUESTION BOX
+========================================= */
+
 .history-question {
   flex: 1;
+  width: 100%;
+  min-width: 0;
   min-height: 120px;
   max-height: 120px;
   padding: 16px;
   overflow: hidden;
+  border: 1px solid transparent;
   border-radius: 12px;
   background: #f8fafc;
 }
@@ -221,6 +368,7 @@
   color: #6366f1;
   font-size: 12px;
   font-weight: 750;
+  line-height: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -230,11 +378,17 @@
   margin: 0;
   overflow: hidden;
   color: #374151;
+  font-size: 14px;
   line-height: 1.6;
   text-overflow: ellipsis;
+  overflow-wrap: anywhere;
   word-break: break-word;
   -webkit-box-orient: vertical;
 }
+
+/* =========================================
+   CARD FOOTER
+========================================= */
 
 .history-card-footer {
   display: flex;
@@ -246,46 +400,80 @@
 }
 
 .history-card-footer span {
+  min-width: 0;
   color: #9ca3af;
   font-size: 13px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .history-card-footer button {
+  flex-shrink: 0;
+  padding: 5px 0;
   border: none;
   background: transparent;
   color: #4f46e5;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 700;
+  line-height: 1.4;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .history-card-footer button:hover {
   color: #3730a3;
+  transform: translateX(1px);
 }
+
+/* =========================================
+   VIEW RESULT BUTTON
+========================================= */
 
 .view-result-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 38px;
+  flex-shrink: 0;
   padding: 9px 14px;
   border: none;
   border-radius: 9px;
   background: #4f46e5;
   color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 700;
+  line-height: 1;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
-  transition: 0.2s ease;
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.2);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .view-result-btn:hover {
   background: #4338ca;
   color: #ffffff;
   transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.28);
 }
 
+.view-result-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   EMPTY / LOADING STATE
+========================================= */
+
 .history-state-box {
+  width: 100%;
   padding: 70px 20px;
   border: 1px dashed #cbd5e1;
   border-radius: 18px;
@@ -296,15 +484,22 @@
 .history-state-box h2 {
   margin: 10px 0 7px;
   color: #111827;
+  font-size: 22px;
+  line-height: 1.4;
 }
 
 .history-state-box p {
-  margin: 0;
+  max-width: 560px;
+  margin: 0 auto;
   color: #6b7280;
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 .empty-history-icon {
   font-size: 48px;
+  line-height: 1;
 }
 
 .history-loader {
@@ -323,6 +518,10 @@
   }
 }
 
+/* =========================================
+   MODAL OVERLAY
+========================================= */
+
 .history-modal-overlay {
   position: fixed;
   inset: 0;
@@ -331,58 +530,123 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  overflow-y: auto;
   background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(4px);
 }
+
+/* =========================================
+   MODAL
+========================================= */
 
 .history-modal {
   width: min(100%, 720px);
   max-height: 88vh;
-  overflow-y: auto;
+  margin: auto;
   padding: 26px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 18px;
   background: #ffffff;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
 }
+
+.history-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.history-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.history-modal::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #94a3b8;
+}
+
+/* =========================================
+   MODAL HEADER
+========================================= */
 
 .history-modal-header {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+}
+
+.history-modal-header > div {
+  min-width: 0;
 }
 
 .history-modal-header h2 {
   margin: 0;
   color: #111827;
+  font-size: 23px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .history-modal-header p {
   margin: 5px 0 0;
   color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .history-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 38px;
   height: 38px;
   flex-shrink: 0;
+  padding: 0;
   border: none;
   border-radius: 50%;
   background: #f1f5f9;
   color: #334155;
   font-size: 25px;
+  line-height: 1;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
+.history-modal-close:hover {
+  background: #e2e8f0;
+  transform: rotate(4deg);
+}
+
+/* =========================================
+   MODAL SCORE
+========================================= */
+
 .history-modal-score {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin: 20px 0;
   padding: 8px 14px;
   border-radius: 999px;
   background: #eef2ff;
   color: #4338ca;
+  font-size: 14px;
   font-weight: 750;
+  line-height: 1;
 }
 
+/* =========================================
+   DETAIL SECTION
+========================================= */
+
 .history-detail-section {
+  width: 100%;
   margin-bottom: 18px;
   padding: 18px;
   border: 1px solid #e5e7eb;
@@ -394,14 +658,17 @@
   margin: 0 0 9px;
   color: #111827;
   font-size: 16px;
+  line-height: 1.4;
 }
 
 .history-detail-section p {
   margin: 0;
   color: #475569;
+  font-size: 14px;
   line-height: 1.7;
   white-space: pre-line;
   overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .feedback-detail {
@@ -409,18 +676,42 @@
   background: #ecfdf5;
 }
 
+/* =========================================
+   MODAL DONE BUTTON
+========================================= */
+
 .history-modal-done {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 46px;
+  padding: 11px 18px;
   border: none;
   border-radius: 10px;
   background: #4f46e5;
   color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.2);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Dark mode */
+.history-modal-done:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(79, 70, 229, 0.28);
+}
+
+/* =========================================
+   DARK MODE
+========================================= */
+
 body.dark .mock-history-layout,
 .dark .mock-history-layout,
 body.dark .mock-history-main,
@@ -438,6 +729,21 @@ body.dark .history-modal,
 .dark .history-modal {
   border-color: #334155;
   background: #1e293b;
+}
+
+body.dark .history-stat-card,
+.dark .history-stat-card,
+body.dark .mock-history-card,
+.dark .mock-history-card {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.24);
+}
+
+body.dark .history-stat-card:hover,
+.dark .history-stat-card:hover,
+body.dark .mock-history-card:hover,
+.dark .mock-history-card:hover {
+  border-color: #4f46e5;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34);
 }
 
 body.dark .mock-history-header h1,
@@ -466,7 +772,11 @@ body.dark .mock-history-toolbar span,
 body.dark .history-modal-header p,
 .dark .history-modal-header p,
 body.dark .history-detail-section p,
-.dark .history-detail-section p {
+.dark .history-detail-section p,
+body.dark .history-state-box p,
+.dark .history-state-box p,
+body.dark .history-card-footer span,
+.dark .history-card-footer span {
   color: #cbd5e1;
 }
 
@@ -482,6 +792,18 @@ body.dark .mock-history-toolbar input::placeholder,
   color: #94a3b8;
 }
 
+body.dark .mock-history-toolbar input:hover,
+.dark .mock-history-toolbar input:hover {
+  border-color: #64748b;
+}
+
+body.dark .mock-history-toolbar input:focus,
+.dark .mock-history-toolbar input:focus {
+  border-color: #818cf8;
+  background: #334155;
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15);
+}
+
 body.dark .history-question,
 .dark .history-question,
 body.dark .history-detail-section,
@@ -493,6 +815,11 @@ body.dark .history-detail-section,
 body.dark .history-question p,
 .dark .history-question p {
   color: #e2e8f0;
+}
+
+body.dark .history-question span,
+.dark .history-question span {
+  color: #a5b4fc;
 }
 
 body.dark .feedback-detail,
@@ -507,40 +834,167 @@ body.dark .history-modal-close,
   color: #f8fafc;
 }
 
-/* Tablet */
-@media (max-width: 992px) {
+body.dark .history-modal-close:hover,
+.dark .history-modal-close:hover {
+  background: #475569;
+}
+
+body.dark .history-modal-score,
+.dark .history-modal-score {
+  background: #312e81;
+  color: #c7d2fe;
+}
+
+body.dark .history-state-box,
+.dark .history-state-box {
+  border-color: #475569;
+}
+
+body.dark .history-loader,
+.dark .history-loader {
+  border-color: #475569;
+  border-top-color: #818cf8;
+}
+
+/* =========================================
+   LARGE LAPTOP
+========================================= */
+
+@media (max-width: 1200px) {
+  .mock-history-page {
+    max-width: 1050px;
+    padding: 30px 24px 45px;
+  }
+
+  .mock-history-grid {
+    gap: 18px;
+  }
+
+  .mock-history-card {
+    padding: 20px;
+  }
+}
+
+/* =========================================
+   TABLET / SIDEBAR COLLAPSE
+========================================= */
+
+@media (max-width: 991.98px) {
   .mock-history-main {
+    width: 100%;
     margin-left: 0;
+  }
+
+  .mock-history-page {
+    max-width: 100%;
+    padding: 26px 20px 40px;
   }
 
   .mock-history-grid {
     grid-template-columns: 1fr;
   }
-}
 
-/* Mobile */
-@media (max-width: 700px) {
-  .mock-history-page {
-    padding: 24px 14px 40px;
+  .mock-history-card {
+    min-height: 300px;
   }
 
-  .mock-history-header,
+  .history-question {
+    min-height: 105px;
+    max-height: 105px;
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+  .mock-history-page {
+    padding: 24px 16px 36px;
+  }
+
+  .mock-history-header {
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .mock-history-header h1 {
+    font-size: 27px;
+  }
+
+  .mock-history-stats {
+    gap: 14px;
+  }
+
+  .history-stat-card {
+    min-height: 112px;
+    padding: 19px;
+  }
+
+  .history-stat-card strong {
+    font-size: 25px;
+  }
+
   .mock-history-toolbar {
+    gap: 14px;
+  }
+
+  .mock-history-card {
+    padding: 20px;
+  }
+
+  .history-modal {
+    padding: 22px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+  .mock-history-page {
+    padding: 22px 14px 34px;
+  }
+
+  .mock-history-header {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .mock-history-header h1 {
+    font-size: 25px;
+  }
+
+  .refresh-history-btn {
+    width: 100%;
   }
 
   .mock-history-stats {
     grid-template-columns: 1fr;
   }
 
+  .history-stat-card {
+    min-height: 100px;
+  }
+
+  .mock-history-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .mock-history-toolbar input {
     width: 100%;
   }
 
+  .mock-history-toolbar span {
+    white-space: normal;
+  }
+
   .mock-history-card {
-    min-height: 320px;
+    min-height: 310px;
     padding: 18px;
+    border-radius: 15px;
   }
 
   .history-card-footer {
@@ -548,7 +1002,337 @@ body.dark .history-modal-close,
     flex-direction: column;
   }
 
+  .history-card-footer span {
+    width: 100%;
+  }
+
+  .history-card-footer button,
   .view-result-btn {
     width: 100%;
+  }
+
+  .history-card-footer button {
+    min-height: 40px;
+    border-radius: 8px;
+    background: #eef2ff;
+  }
+
+  body.dark .history-card-footer button,
+  .dark .history-card-footer button {
+    background: #312e81;
+    color: #c7d2fe;
+  }
+
+  .history-modal-overlay {
+    align-items: flex-start;
+    padding: 14px;
+  }
+
+  .history-modal {
+    width: 100%;
+    max-height: calc(100vh - 28px);
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .history-modal-header h2 {
+    font-size: 21px;
+  }
+
+  .history-detail-section {
+    padding: 16px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+  .mock-history-page {
+    padding: 20px 12px 30px;
+  }
+
+  .mock-history-header {
+    margin-bottom: 20px;
+  }
+
+  .mock-history-header h1 {
+    font-size: 23px;
+  }
+
+  .mock-history-header p {
+    font-size: 14px;
+  }
+
+  .refresh-history-btn {
+    min-height: 42px;
+    font-size: 13px;
+  }
+
+  .mock-history-stats {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .history-stat-card {
+    min-height: 92px;
+    padding: 17px;
+    border-radius: 14px;
+  }
+
+  .history-stat-card span {
+    margin-bottom: 7px;
+    font-size: 13px;
+  }
+
+  .history-stat-card strong {
+    font-size: 23px;
+  }
+
+  .mock-history-toolbar {
+    margin-bottom: 18px;
+  }
+
+  .mock-history-toolbar input {
+    height: 44px;
+    padding: 0 13px;
+    font-size: 14px;
+  }
+
+  .mock-history-toolbar span {
+    font-size: 13px;
+  }
+
+  .mock-history-grid {
+    gap: 15px;
+  }
+
+  .mock-history-card {
+    min-height: 290px;
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .history-card-top {
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .history-role {
+    font-size: 16px;
+  }
+
+  .history-card-top p {
+    font-size: 13px;
+  }
+
+  .history-score {
+    min-width: 60px;
+    height: 34px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+
+  .history-question {
+    min-height: 112px;
+    max-height: 112px;
+    padding: 14px;
+  }
+
+  .history-question span {
+    font-size: 11px;
+  }
+
+  .history-question p {
+    font-size: 13px;
+  }
+
+  .history-card-footer {
+    gap: 10px;
+    padding-top: 15px;
+  }
+
+  .view-result-btn {
+    min-height: 40px;
+    font-size: 13px;
+  }
+
+  .history-state-box {
+    padding: 48px 16px;
+    border-radius: 15px;
+  }
+
+  .history-state-box h2 {
+    font-size: 19px;
+  }
+
+  .history-state-box p {
+    font-size: 14px;
+  }
+
+  .empty-history-icon {
+    font-size: 40px;
+  }
+
+  .history-modal-overlay {
+    padding: 10px;
+  }
+
+  .history-modal {
+    max-height: calc(100vh - 20px);
+    padding: 17px;
+    border-radius: 13px;
+  }
+
+  .history-modal-header {
+    gap: 12px;
+  }
+
+  .history-modal-header h2 {
+    font-size: 19px;
+  }
+
+  .history-modal-header p {
+    font-size: 13px;
+  }
+
+  .history-modal-close {
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+  }
+
+  .history-modal-score {
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .history-detail-section {
+    margin-bottom: 14px;
+    padding: 14px;
+  }
+
+  .history-detail-section h3 {
+    font-size: 15px;
+  }
+
+  .history-detail-section p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .history-modal-done {
+    min-height: 44px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   EXTRA SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+  .mock-history-page {
+    padding: 16px 9px 26px;
+  }
+
+  .mock-history-header h1 {
+    font-size: 21px;
+  }
+
+  .mock-history-header p {
+    font-size: 13px;
+  }
+
+  .history-stat-card {
+    padding: 15px;
+  }
+
+  .history-stat-card strong {
+    font-size: 21px;
+  }
+
+  .mock-history-card {
+    padding: 14px;
+  }
+
+  .history-role {
+    font-size: 15px;
+  }
+
+  .history-score {
+    min-width: 55px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .history-question {
+    padding: 12px;
+  }
+
+  .history-modal {
+    padding: 14px;
+  }
+
+  .history-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .history-detail-section {
+    padding: 12px;
+  }
+}
+
+/* =========================================
+   LANDSCAPE MOBILE
+========================================= */
+
+@media (max-height: 650px) and (orientation: landscape) {
+  .mock-history-page {
+    padding-top: 18px;
+  }
+
+  .mock-history-header {
+    margin-bottom: 16px;
+  }
+
+  .history-modal-overlay {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .history-modal {
+    max-height: calc(100vh - 20px);
+  }
+}
+
+/* =========================================
+   TOUCH DEVICE FIX
+========================================= */
+
+@media (hover: none) {
+  .history-stat-card:hover,
+  .mock-history-card:hover,
+  .refresh-history-btn:hover,
+  .view-result-btn:hover,
+  .history-modal-done:hover,
+  .history-modal-close:hover {
+    transform: none;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .mock-history-layout *,
+  .mock-history-layout *::before,
+  .mock-history-layout *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

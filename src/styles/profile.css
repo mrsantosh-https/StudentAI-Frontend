@@ -1,16 +1,35 @@
-/* ===========================
-   Profile Dashboard
-=========================== */
+/* =========================================================
+   PROFILE DASHBOARD
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.profile-card,
+.profile-photo-card {
+  width: calc(100% - 32px);
+  max-width: 900px;
+}
+
+/* =========================================================
+   PROFILE FORM CARD
+========================================================= */
 
 .profile-card {
-  max-width: 900px;
   margin: 30px auto;
   padding: 32px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
   border-radius: 24px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
   box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
-  transition: all .3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .profile-card:hover {
@@ -18,306 +37,578 @@
   box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
 }
 
-/* ===========================
-   Photo Card
-=========================== */
+/* =========================================================
+   PROFILE PHOTO CARD
+========================================================= */
 
 .profile-photo-card {
-  max-width: 900px;
-  margin: 0 auto 25px;
+  margin: 30px auto 25px;
   padding: 35px 30px;
+  overflow: hidden;
   border-radius: 24px;
-
   background: linear-gradient(
     135deg,
     #2563eb 0%,
     #4f46e5 45%,
     #7c3aed 100%
   );
-
-  color: #fff;
-
-  box-shadow: 0 20px 45px rgba(37, 99, 235, .25);
-
+  color: #ffffff;
   text-align: center;
+  box-shadow: 0 20px 45px rgba(37, 99, 235, 0.25);
 }
 
-/* ===========================
-   Profile Image
-=========================== */
+/* =========================================================
+   PROFILE IMAGE
+========================================================= */
 
 .profile-img {
+  display: block;
   width: 150px;
   height: 150px;
-
+  max-width: 100%;
+  margin: 0 auto;
   object-fit: cover;
-
+  border: 6px solid rgba(255, 255, 255, 0.95);
   border-radius: 50%;
-  border: 6px solid rgba(255,255,255,.95);
-
-  box-shadow:
-      0 15px 35px rgba(0,0,0,.25);
-
-  transition: .35s ease;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
-.profile-img:hover{
-    transform: scale(1.05);
+.profile-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
 }
 
-/* Avatar */
+/* =========================================================
+   PROFILE INITIAL AVATAR
+========================================================= */
 
 .profile-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 150px;
   height: 150px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 6px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #ffffff;
+  font-size: 55px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.profile-initial:hover {
+  transform: scale(1.05);
+}
 
-  margin:auto;
+/* =========================================================
+   USER INFORMATION
+========================================================= */
 
-  border-radius:50%;
+.profile-name {
+  margin: 18px 0 5px;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
 
-  font-size:55px;
-  font-weight:700;
+.profile-email {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 
-  color:#fff;
+/* =========================================================
+   LABELS
+========================================================= */
 
-  background:linear-gradient(
-      135deg,
-      #2563eb,
-      #7c3aed
+.profile-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.profile-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 13px 16px;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  outline: none;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.profile-input::placeholder {
+  color: #94a3b8;
+}
+
+.profile-input:hover {
+  border-color: #2563eb;
+}
+
+.profile-input:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+textarea.profile-input {
+  min-height: 120px;
+  resize: vertical;
+}
+
+select.profile-input {
+  cursor: pointer;
+}
+
+/* =========================================================
+   FILE UPLOAD
+========================================================= */
+
+.profile-input[type="file"] {
+  padding: 9px;
+  cursor: pointer;
+}
+
+.profile-input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 9px 15px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.profile-input[type="file"]::file-selector-button:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.profile-btn:hover:not(:disabled) {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.35);
+}
+
+.profile-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.profile-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* =========================================================
+   SECONDARY BUTTON
+========================================================= */
+
+.profile-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 26px;
+  border: 2px solid #2563eb;
+  border-radius: 50px;
+  background: #ffffff;
+  color: #2563eb;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.profile-btn-outline:hover {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.profile-btn-outline:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   FORM SPACING
+========================================================= */
+
+.profile-card .row {
+  row-gap: 18px;
+}
+
+.profile-card .form-group,
+.profile-card .mb-3,
+.profile-card .mb-4 {
+  min-width: 0;
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark .profile-card,
+.dark .profile-card,
+body.dark-mode .profile-card {
+  border-color: #334155;
+  background: #1e293b;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.28);
+}
+
+body.dark .profile-card:hover,
+.dark .profile-card:hover,
+body.dark-mode .profile-card:hover {
+  border-color: #475569;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.38);
+}
+
+body.dark .profile-card label,
+.dark .profile-card label,
+body.dark-mode .profile-card label {
+  color: #e2e8f0;
+}
+
+body.dark .profile-input,
+.dark .profile-input,
+body.dark-mode .profile-input {
+  border-color: #334155;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+body.dark .profile-input::placeholder,
+.dark .profile-input::placeholder,
+body.dark-mode .profile-input::placeholder {
+  color: #64748b;
+}
+
+body.dark .profile-input:hover,
+.dark .profile-input:hover,
+body.dark-mode .profile-input:hover {
+  border-color: #3b82f6;
+}
+
+body.dark .profile-input:focus,
+.dark .profile-input:focus,
+body.dark-mode .profile-input:focus {
+  border-color: #3b82f6;
+  background: #0f172a;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.16);
+}
+
+body.dark .profile-btn-outline,
+.dark .profile-btn-outline,
+body.dark-mode .profile-btn-outline {
+  border-color: #475569;
+  background: #1e293b;
+  color: #ffffff;
+}
+
+body.dark .profile-btn-outline:hover,
+.dark .profile-btn-outline:hover,
+body.dark-mode .profile-btn-outline:hover {
+  border-color: #2563eb;
+  background: #2563eb;
+}
+
+body.dark .profile-photo-card,
+.dark .profile-photo-card,
+body.dark-mode .profile-photo-card {
+  background: linear-gradient(
+    135deg,
+    #1e3a8a,
+    #312e81,
+    #581c87
   );
-
-  box-shadow:
-      0 15px 35px rgba(37,99,235,.35);
 }
 
-/* ===========================
-   User Info
-=========================== */
+/* =========================================================
+   LAPTOP
+========================================================= */
 
-.profile-name{
-    margin-top:18px;
-    font-size:30px;
-    font-weight:700;
+@media (max-width: 1024px) {
+  .profile-card,
+  .profile-photo-card {
+    max-width: 820px;
+  }
+
+  .profile-card {
+    padding: 28px;
+  }
+
+  .profile-photo-card {
+    padding: 32px 26px;
+  }
 }
 
-.profile-email{
-    opacity:.9;
-    font-size:15px;
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+  .profile-card,
+  .profile-photo-card {
+    width: calc(100% - 28px);
+  }
+
+  .profile-card {
+    margin: 22px auto;
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  .profile-photo-card {
+    margin: 22px auto 20px;
+    padding: 28px 22px;
+    border-radius: 20px;
+  }
+
+  .profile-name {
+    font-size: 25px;
+  }
+
+  .profile-img,
+  .profile-initial {
+    width: 125px;
+    height: 125px;
+  }
+
+  .profile-initial {
+    font-size: 46px;
+  }
+
+  .profile-btn,
+  .profile-btn-outline {
+    width: 100%;
+  }
 }
 
-/* ===========================
-   Labels
-=========================== */
+/* =========================================================
+   MOBILE
+========================================================= */
 
-.profile-card label{
-    font-size:14px;
-    font-weight:600;
-    color:#475569;
-    margin-bottom:8px;
+@media (max-width: 576px) {
+  .profile-card,
+  .profile-photo-card {
+    width: calc(100% - 20px);
+  }
+
+  .profile-card {
+    margin: 16px auto;
+    padding: 20px 16px;
+    border-radius: 17px;
+  }
+
+  .profile-photo-card {
+    margin: 16px auto;
+    padding: 25px 16px;
+    border-radius: 17px;
+  }
+
+  .profile-img,
+  .profile-initial {
+    width: 110px;
+    height: 110px;
+    border-width: 5px;
+  }
+
+  .profile-initial {
+    font-size: 40px;
+  }
+
+  .profile-name {
+    margin-top: 15px;
+    font-size: 22px;
+  }
+
+  .profile-email {
+    font-size: 14px;
+  }
+
+  .profile-card label {
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  .profile-input {
+    min-height: 46px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  textarea.profile-input {
+    min-height: 105px;
+  }
+
+  .profile-input[type="file"] {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .profile-input[type="file"]::file-selector-button {
+    margin-right: 8px;
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+
+  .profile-btn,
+  .profile-btn-outline {
+    min-height: 46px;
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  .profile-card .row {
+    row-gap: 14px;
+  }
 }
 
-/* ===========================
-   Inputs
-=========================== */
+/* =========================================================
+   EXTRA SMALL MOBILE
+========================================================= */
 
-.profile-input{
-    width:100%;
+@media (max-width: 400px) {
+  .profile-card,
+  .profile-photo-card {
+    width: calc(100% - 16px);
+  }
 
-    border:1px solid #dbe3ef;
+  .profile-card {
+    padding: 18px 13px;
+  }
 
-    border-radius:14px;
+  .profile-photo-card {
+    padding: 22px 13px;
+  }
 
-    padding:13px 16px;
+  .profile-img,
+  .profile-initial {
+    width: 96px;
+    height: 96px;
+  }
 
-    font-size:15px;
+  .profile-initial {
+    font-size: 35px;
+  }
 
-    transition:.25s;
+  .profile-name {
+    font-size: 20px;
+  }
 
-    background:#f8fafc;
+  .profile-email {
+    font-size: 13px;
+  }
+
+  .profile-input {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
 }
 
-.profile-input:hover{
-    border-color:#2563eb;
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .profile-card:hover,
+  .profile-img:hover,
+  .profile-initial:hover,
+  .profile-btn:hover,
+  .profile-btn-outline:hover {
+    transform: none;
+  }
 }
 
-.profile-input:focus{
-
-    background:#fff;
-
-    border-color:#2563eb;
-
-    outline:none;
-
-    box-shadow:
-        0 0 0 4px rgba(37,99,235,.12);
-}
-
-/* ===========================
-   File Upload
-=========================== */
-
-.profile-input[type=file]{
-    cursor:pointer;
-}
-
-/* ===========================
-   Buttons
-=========================== */
-
-.profile-btn{
-
-    border:none;
-
-    border-radius:50px;
-
-    padding:13px 28px;
-
-    font-size:15px;
-
-    font-weight:700;
-
-    color:#fff;
-
-    background:linear-gradient(
-        135deg,
-        #2563eb,
-        #4f46e5
-    );
-
-    transition:.3s;
-
-    box-shadow:
-        0 10px 25px rgba(37,99,235,.25);
-}
-
-.profile-btn:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 16px 32px rgba(37,99,235,.35);
-}
-
-.profile-btn:active{
-    transform:scale(.98);
-}
-
-/* ===========================
-   Secondary Button
-=========================== */
-
-.profile-btn-outline{
-
-    border-radius:50px;
-
-    padding:12px 26px;
-
-    border:2px solid #2563eb;
-
-    color:#2563eb;
-
-    background:#fff;
-
-    font-weight:700;
-
-    transition:.3s;
-}
-
-.profile-btn-outline:hover{
-
-    background:#2563eb;
-
-    color:#fff;
-}
-
-/* ===========================
-   Form Spacing
-=========================== */
-
-.profile-card .row{
-    row-gap:18px;
-}
-
-/* ===========================
-   Dark Mode
-=========================== */
-
-body.dark .profile-card{
-
-    background:#1e293b;
-
-    border-color:#334155;
-}
-
-body.dark .profile-card label{
-
-    color:#e2e8f0;
-}
-
-body.dark .profile-input{
-
-    background:#0f172a;
-
-    color:#fff;
-
-    border-color:#334155;
-}
-
-body.dark .profile-input:focus{
-
-    background:#0f172a;
-}
-
-body.dark .profile-btn-outline{
-
-    background:#1e293b;
-
-    color:#fff;
-
-    border-color:#475569;
-}
-
-body.dark .profile-photo-card{
-
-    background:linear-gradient(
-        135deg,
-        #1e3a8a,
-        #312e81,
-        #581c87
-    );
-}
-
-/* ===========================
-   Responsive
-=========================== */
-
-@media(max-width:768px){
-
-.profile-card,
-.profile-photo-card{
-
-    padding:22px;
-}
-
-.profile-name{
-
-    font-size:24px;
-}
-
-.profile-img,
-.profile-initial{
-
-    width:120px;
-    height:120px;
-}
-
-.profile-btn{
-
-    width:100%;
-}
-
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-card,
+  .profile-img,
+  .profile-initial,
+  .profile-input,
+  .profile-btn,
+  .profile-btn-outline {
+    animation: none !important;
+    transition: none !important;
+  }
 }

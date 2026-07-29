@@ -33,14 +33,7 @@ const SUGGESTIONS = [
     prompt:
       "Give me interview preparation tips for a fresher software developer.",
   },
-  {
-    label: "Improve Resume",
-    prompt: "How can I improve my resume for a software developer job?",
-  },
-  {
-    label: "Project Suggestions",
-    prompt: "Suggest job-ready full-stack projects for my portfolio.",
-  },
+  
 ];
 
 export default function AICareerCoach() {
@@ -72,6 +65,8 @@ export default function AICareerCoach() {
   const [copiedMessageId, setCopiedMessageId] = useState(null);
 
   const [feedbackState, setFeedbackState] = useState({});
+
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const chatEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -198,6 +193,7 @@ export default function AICareerCoach() {
     setMessages([welcomeMessage]);
     setInput("");
     setCopiedMessageId(null);
+    setHistoryOpen(false);
 
     window.setTimeout(() => {
       textareaRef.current?.focus();
@@ -219,6 +215,7 @@ export default function AICareerCoach() {
     setSelectedChatId(chat.id);
     setInput("");
     setCopiedMessageId(null);
+    setHistoryOpen(false);
 
     setMessages([
       {
@@ -413,8 +410,10 @@ export default function AICareerCoach() {
 
     if (response.data.success) {
       setHistory([]);
-      setMessages([]);
+      setMessages([welcomeMessage]);
       setSelectedChatId(null);
+      setFeedbackState({});
+      setHistoryOpen(false);
 
       toast.success(response.data.message);
     }
@@ -621,6 +620,40 @@ export default function AICareerCoach() {
     return `${title.slice(0, 42)}...`;
   };
 
+  /*
+  |--------------------------------------------------------------------------
+  | Mobile history drawer
+  |--------------------------------------------------------------------------
+  */
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setHistoryOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+
+  useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    if (historyOpen && isMobile) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [historyOpen]);
+
   return (
     <div className="dashboard-layout">
       <Sidebar />
@@ -631,9 +664,53 @@ export default function AICareerCoach() {
         <div className="dashboard-content">
           <div className="ai-box">
             <div className="ai-workspace">
+
+
+  {/* Mobile history open button */}
+  <button
+    type="button"
+    className="ai-history-menu-btn"
+    onClick={() => setHistoryOpen(true)}
+    aria-label="Open chat history"
+    aria-controls="ai-history-sidebar"
+    aria-expanded={historyOpen}
+  >
+    ☰
+  </button>
+
+  {/* Mobile overlay */}
+  {historyOpen && (
+    <div
+      className="ai-history-overlay"
+      onClick={() => setHistoryOpen(false)}
+      role="button"
+      tabIndex={0}
+      aria-label="Close chat history"
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          setHistoryOpen(false);
+        }
+      }}
+    />
+  )}
               {/* History sidebar */}
 
-              <aside className="ai-history-sidebar">
+              <aside
+                id="ai-history-sidebar"
+                className={`ai-history-sidebar ${historyOpen ? "open" : ""}`}
+                aria-label="Chat history"
+                aria-hidden={!historyOpen ? undefined : false}
+              >
+                <button
+                  type="button"
+                  className="ai-history-close-btn"
+                  onClick={() => setHistoryOpen(false)}
+                  aria-label="Close chat history"
+                >
+                  ×
+                </button>
+
                 <button
                   type="button"
                   className="new-chat-btn"
@@ -894,7 +971,9 @@ export default function AICareerCoach() {
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     disabled={isTyping}
-                    />
+                    maxLength={2000}
+                    placeholder="Ask anything about resume, jobs, interviews or career..."
+                  />
 
                   <button
                     className="send-btn"
