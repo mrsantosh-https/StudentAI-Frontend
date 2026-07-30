@@ -23,6 +23,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import MockInterview from "./pages/MockInterview";
 import ResumeReview from "./pages/ResumeReview";
+import ResumeTemplates from "./pages/ResumeTemplates";
 import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
 import { Toaster } from "react-hot-toast";
@@ -50,6 +51,7 @@ function App() {
   location.pathname.startsWith("/interview-history")||
   location.pathname.startsWith("/mock-interview");
   location.pathname.startsWith("/ResumeReview");
+  location.pathname.startsWith("/resume-templates");
   return (
     <BrowserRouter>
       <UserProvider>
@@ -64,6 +66,10 @@ function App() {
           <Route
             path="/resumes/:id/review"
             element={<ResumeReview />}
+          />
+          <Route
+            path="/resume-templates/:id"
+            element={<ResumeTemplates />}
           />
          <Route
               path="/mock-interview"

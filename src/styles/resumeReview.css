@@ -7,12 +7,14 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   margin-top: 8px;
+  align-items:start;
 }
 
 .modern-resume-card {
   position: relative;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
+  align-self:start;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(148, 163, 184, 0.24);
   border-radius: 24px;
@@ -335,6 +337,11 @@
 .resume-actions-wrapper {
   max-height: 0;
   overflow: hidden;
+  position:absolute;
+  top:100%;
+  left:0;
+  right:0;
+  z-index:100;
   opacity: 0;
   visibility: hidden;
   padding: 0;
@@ -348,7 +355,7 @@
 }
 
 .resume-actions-wrapper.show {
-  max-height: 520px;
+  max-height: 1000px;
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -824,8 +831,9 @@ body.dark-mode .action-icon,
 .review-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 30px;
+    align-items:start; 
 }
 
 .review-card {
@@ -1328,4 +1336,112 @@ body.dark-mode .review-secondary-btn,
 
 .resume-review-page {
   min-height: calc(100vh - 70px);
+}
+
+.modern-resume-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.modern-resume-card {
+  position: relative;
+  min-width: 0;
+  align-self: start;
+  overflow: visible;
+}
+
+/* Open card sabse upar rahe */
+.modern-resume-card.is-open {
+  z-index: 100;
+}
+
+/* Floating actions dropdown */
+.resume-actions-wrapper {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+
+  padding: 0;
+  margin: 0;
+
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 20px;
+  background: #ffffff;
+
+  box-shadow:
+    0 24px 50px rgba(15, 23, 42, 0.18),
+    0 8px 20px rgba(15, 23, 42, 0.08);
+
+  transform: translateY(-8px);
+
+  transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease,
+    transform 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.resume-actions-wrapper.show {
+  max-height: 600px;
+  overflow: visible;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Divider dropdown ke andar */
+.resume-actions-divider {
+  margin: 0 20px;
+  border-top: 1px dashed #dbe3ef;
+}
+
+/* Actions spacing */
+.modern-resume-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 18px 20px 14px;
+}
+
+/* Use Templates button center */
+.resume-actions-wrapper > .btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 0 20px 20px !important;
+}
+
+/* Dropdown ke niche cards click na hon */
+.modern-resume-card.is-open .resume-actions-wrapper {
+  pointer-events: auto;
+}
+
+body.dark-mode .resume-actions-wrapper,
+.dark .resume-actions-wrapper {
+  border-color: #334155;
+  background: #0f172a;
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 767px) {
+  .resume-actions-wrapper {
+    position: static;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .resume-actions-wrapper.show {
+    max-height: 650px;
+  }
 }

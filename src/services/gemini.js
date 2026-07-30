@@ -1,26 +1,68 @@
 import api from "../services/api";
 
+/*
+|--------------------------------------------------------------------------
+| Error helper
+|--------------------------------------------------------------------------
+*/
+
+function getErrorMessage(error, fallbackMessage) {
+  const validationErrors = error.response?.data?.errors;
+
+  if (validationErrors) {
+    return Object.values(validationErrors)
+      .flat()
+      .join(" ");
+  }
+
+  return (
+    error.response?.data?.message ||
+    error.message ||
+    fallbackMessage
+  );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Resume summary
+|--------------------------------------------------------------------------
+*/
+
 export async function generateSummary(userData) {
   try {
-    const prompt = `
-Generate a professional resume summary.
+    const response = await api.post("/ai/resume-summary", {
+      full_name: userData?.fullName?.trim() || "",
+      education: userData?.education?.trim() || "",
+      skills: userData?.skills?.trim() || "",
+      projects: userData?.projects?.trim() || "",
+      experience: userData?.experience?.trim() || "",
+    });
 
-Name: ${userData.fullName}
-Education: ${userData.education}
-Skills: ${userData.skills}
-Projects: ${userData.projects}
-Experience: ${userData.experience}
-
-Return only the professional summary.
-`;
-
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    return (
+      response.data?.summary ||
+      response.data?.result ||
+      ""
+    );
   } catch (error) {
-    console.error(error);
-    return "Failed to generate summary.";
+    console.error(
+      "Resume summary error:",
+      error.response?.data || error
+    );
+
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to generate resume summary."
+      )
+    );
   }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Cover letter
+|--------------------------------------------------------------------------
+*/
 
 export async function generateCoverLetter(data) {
   try {
@@ -30,152 +72,245 @@ export async function generateCoverLetter(data) {
       details: data?.details?.trim() || "",
     };
 
-    console.log("Cover letter payload:", payload);
+    const response = await api.post(
+      "/ai/cover-letter",
+      payload
+    );
 
-    const response = await api.post("/ai/cover-letter", payload);
-
-    return response.data?.cover_letter || "";
+    return (
+      response.data?.cover_letter ||
+      response.data?.result ||
+      ""
+    );
   } catch (error) {
     console.error(
       "Cover letter generation error:",
       error.response?.data || error
     );
 
-    const validationErrors = error.response?.data?.errors;
-
-    if (validationErrors) {
-      const message = Object.values(validationErrors)
-        .flat()
-        .join(" ");
-
-      throw new Error(message);
-    }
-
     throw new Error(
-      error.response?.data?.message ||
+      getErrorMessage(
+        error,
         "Failed to generate cover letter."
+      )
     );
   }
 }
 
+/*
+|--------------------------------------------------------------------------
+| Interview questions
+|--------------------------------------------------------------------------
+*/
+
 export async function generateInterviewQuestions(role) {
+  const cleanRole = String(role ?? "").trim();
+
+  if (!cleanRole) {
+    throw new Error("Please enter an interview role.");
+  }
+
   try {
-    const prompt = `
-Generate 5 technical interview questions for the role: ${role}.
+    const response = await api.post("/ai/interview-questions", {
+      role: cleanRole,
+    });
 
-Return only numbered questions.
-`;
+    const questions =
+      response.data?.questions ??
+      response.data?.result ??
+      response.data?.data ??
+      "";
 
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    if (typeof questions !== "string" || !questions.trim()) {
+      throw new Error(
+        response.data?.message ||
+          "No interview questions were received."
+      );
+    }
+
+    return questions.trim();
   } catch (error) {
-    console.error(error);
-    return "Failed to generate interview questions.";
+    console.error(
+      "Interview questions error:",
+      error.response?.data || error
+    );
+
+    const validationErrors = error.response?.data?.errors;
+
+    if (validationErrors) {
+      const validationMessage = Object.values(validationErrors)
+        .flat()
+        .join(" ");
+
+      throw new Error(validationMessage);
+    }
+
+    throw new Error(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to generate interview questions."
+    );
   }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Interview answer evaluation
+|--------------------------------------------------------------------------
+*/
 
 export async function evaluateInterviewAnswer(question, answer) {
+  const cleanQuestion = String(question ?? "").trim();
+  const cleanAnswer = String(answer ?? "").trim();
+
+  if (!cleanQuestion) {
+    throw new Error("Interview question is required.");
+  }
+
+  if (!cleanAnswer) {
+    throw new Error("Please enter your answer.");
+  }
+
   try {
-    const prompt = `
-Evaluate this interview answer.
+    const response = await api.post("/ai/interview-feedback", {
+      question: cleanQuestion,
+      answer: cleanAnswer,
+    });
 
-Question: ${question}
+    const feedback =
+      response.data?.feedback ??
+      response.data?.result ??
+      response.data?.data ??
+      "";
 
-User Answer: ${answer}
+    if (typeof feedback !== "string" || !feedback.trim()) {
+      throw new Error(
+        response.data?.message ||
+          "No interview feedback was received."
+      );
+    }
 
-Give feedback in this format:
-1. Score out of 10
-2. What is good
-3. What can be improved
-4. Better answer
-`;
-
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    return feedback.trim();
   } catch (error) {
-    console.error(error);
-    return "Failed to evaluate answer.";
+    console.error(
+      "Interview evaluation error:",
+      error.response?.data || error
+    );
+
+    const validationErrors = error.response?.data?.errors;
+
+    if (validationErrors) {
+      const validationMessage = Object.values(validationErrors)
+        .flat()
+        .join(" ");
+
+      throw new Error(validationMessage);
+    }
+
+    throw new Error(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to evaluate interview answer."
+    );
   }
 }
+/*
+|--------------------------------------------------------------------------
+| ATS score
+|--------------------------------------------------------------------------
+*/
 
 export async function checkATSScore(resumeData) {
   try {
-    const prompt = `
-Analyze this resume for ATS compatibility.
+    const response = await api.post("/ai/ats-score", {
+      full_name: resumeData?.full_name || "",
+      email: resumeData?.email || "",
+      phone: resumeData?.phone || "",
+      summary: resumeData?.summary || "",
+      education: resumeData?.education || "",
+      skills: resumeData?.skills || "",
+      projects: resumeData?.projects || "",
+      experience: resumeData?.experience || "",
+    });
 
-Resume:
-Name: ${resumeData.full_name}
-Email: ${resumeData.email}
-Phone: ${resumeData.phone}
-Summary: ${resumeData.summary}
-Education: ${resumeData.education}
-Skills: ${resumeData.skills}
-Projects: ${resumeData.projects}
-Experience: ${resumeData.experience}
-
-Give result in this format:
-
-ATS Score: __/100
-
-Strengths:
--
-
-Improvements:
--
-
-Suggested Keywords:
--
-
-Final Verdict:
-`;
-
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+    return (
+      response.data?.analysis ||
+      response.data?.result ||
+      ""
+    );
   } catch (error) {
-    console.error(error);
-    return "Failed to check ATS score.";
+    console.error(
+      "ATS score error:",
+      error.response?.data || error
+    );
+
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to check ATS score."
+      )
+    );
   }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Improve resume
+|--------------------------------------------------------------------------
+*/
+
 export async function improveResume(resumeData) {
-try {
-  const prompt = `
-You are an expert resume reviewer.
-
-Improve the following resume.
-
-Resume:
-
-Name: ${resumeData.full_name}
-Summary: ${resumeData.summary}
-Education: ${resumeData.education}
-Skills: ${resumeData.skills}
-Projects: ${resumeData.projects}
-Experience: ${resumeData.experience}
-
-Return:
-
-1. Improved Professional Summary
-
-2. Skills to Add
-
-3. Improvements
-
-4. Final Advice
-`;
-
-  const result = await model.generateContent(prompt);
-  return result.response.text();
-} catch (error) {
-  console.error(error);
-  return "Failed to improve resume.";
-}
-}
-
-export async function matchJobDescription(resumeId, jobDescription) {
   try {
+    const response = await api.post(
+      "/ai/improve-resume",
+      {
+        full_name: resumeData?.full_name || "",
+        summary: resumeData?.summary || "",
+        education: resumeData?.education || "",
+        skills: resumeData?.skills || "",
+        projects: resumeData?.projects || "",
+        experience: resumeData?.experience || "",
+      }
+    );
+
+    return (
+      response.data?.improved_resume ||
+      response.data?.result ||
+      ""
+    );
+  } catch (error) {
+    console.error(
+      "Resume improvement error:",
+      error.response?.data || error
+    );
+
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to improve resume."
+      )
+    );
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Job matcher
+|--------------------------------------------------------------------------
+*/
+
+export async function matchJobDescription(
+  resumeId,
+  jobDescription
+) {
+  try {
+    const cleanDescription = String(
+      jobDescription || ""
+    ).trim();
+
     const response = await api.post("/ai/job-match", {
       resume_id: Number(resumeId),
-      job_description: jobDescription.trim(),
+      job_description: cleanDescription,
     });
 
     return response.data;
@@ -184,21 +319,43 @@ export async function matchJobDescription(resumeId, jobDescription) {
       status: error.response?.status,
       data: error.response?.data,
       resumeId,
-      jobDescriptionLength: jobDescription?.trim()?.length,
+      jobDescriptionLength:
+        jobDescription?.trim()?.length,
     });
 
-    throw error;
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to match the job description."
+      )
+    );
   }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Career roadmap
+|--------------------------------------------------------------------------
+*/
+
 export async function generateCareerRoadmap(data) {
   try {
-    const response = await api.post("/ai/career-roadmap", {
-      goal: data.goal,
-      currentSkills: data.currentSkills,
-      experience: data.experience,
-    });
+    const response = await api.post(
+      "/ai/career-roadmap",
+      {
+        goal: data?.goal?.trim() || "",
+        currentSkills:
+          data?.currentSkills?.trim() || "",
+        experience:
+          data?.experience?.trim() || "",
+      }
+    );
 
-    return response.data.roadmap;
+    return (
+      response.data?.roadmap ||
+      response.data?.result ||
+      ""
+    );
   } catch (error) {
     console.error(
       "Career roadmap error:",
@@ -206,8 +363,10 @@ export async function generateCareerRoadmap(data) {
     );
 
     throw new Error(
-      error.response?.data?.message ||
-      "Failed to generate roadmap."
+      getErrorMessage(
+        error,
+        "Failed to generate roadmap."
+      )
     );
   }
 }

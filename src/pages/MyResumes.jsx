@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
@@ -8,53 +14,50 @@ import Topbar from "../components/Topbar";
 import api from "../services/api";
 
 export default function MyResumes() {
-  const [resumes, setResumes] = useState([]);
-  const [improvingId, setImprovingId] = useState(null);
-  const [analyzingId, setAnalyzingId] = useState(null);
-  const [deletingId, setDeletingId] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("latest");
-const [openResumeId, setOpenResumeId] = useState(null);
   const navigate = useNavigate();
 
+  const [resumes, setResumes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("latest");
+
+  const [openResumeId, setOpenResumeId] = useState(null);
+  const [analyzingId, setAnalyzingId] = useState(null);
+  const [improvingId, setImprovingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Helper functions
+  |--------------------------------------------------------------------------
+  */
+
+  const getResumeId = (resume) => {
+    const id = resume?.id ?? resume?.resume_id;
+
+    if (id === null || id === undefined) {
+      return null;
+    }
+
+    return String(id);
+  };
+
   const toggleResumeActions = (resumeId) => {
-  setOpenResumeId((currentId) =>
-    currentId === resumeId ? null : resumeId
-  );
-};
+    if (!resumeId) {
+      toast.error("Resume ID nahi mila.");
+      return;
+    }
 
-const formatUpdatedDate = (dateValue) => {
-  if (!dateValue) {
-    return "Recently updated";
-  }
+    setOpenResumeId((currentId) =>
+      currentId === resumeId ? null : resumeId
+    );
+  };
 
-  const date = new Date(dateValue);
+  const closeResumeActions = () => {
+    setOpenResumeId(null);
+  };
 
-  if (Number.isNaN(date.getTime())) {
-    return "Recently updated";
-  }
-
-  return `Updated ${date.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  })}`;
-};
-
-const getInitials = (name = "") => {
-  const cleanName = name.trim();
-
-  if (!cleanName) {
-    return "R";
-  }
-
-  return cleanName
-    .split(" ")
-    .slice(0, 2)
-    .map((word) => word.charAt(0).toUpperCase())
-    .join("");
-};
   const escapeHtml = (value = "") => {
     return String(value)
       .replaceAll("&", "&amp;")
@@ -64,6 +67,56 @@ const getInitials = (name = "") => {
       .replaceAll("'", "&#039;");
   };
 
+  const formatUpdatedDate = (dateValue) => {
+    if (!dateValue) {
+      return "Recently updated";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Recently updated";
+    }
+
+    return `Updated ${date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })}`;
+  };
+
+  const getInitials = (name = "") => {
+    const cleanName = String(name).trim();
+
+    if (!cleanName) {
+      return "R";
+    }
+
+    return cleanName
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((word) => word.charAt(0).toUpperCase())
+      .join("");
+  };
+
+  const getSkills = (skills = "") => {
+    if (!skills) {
+      return [];
+    }
+
+    return String(skills)
+      .split(/,|\n/)
+      .map((skill) => skill.trim())
+      .filter(Boolean)
+      .slice(0, 4);
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Fetch resumes
+  |--------------------------------------------------------------------------
+  */
+
   const fetchResumes = useCallback(async () => {
     try {
       setLoading(true);
@@ -72,17 +125,22 @@ const getInitials = (name = "") => {
 
       const resumeList = Array.isArray(response.data)
         ? response.data
-        : response.data?.resumes || [];
+        : Array.isArray(response.data?.resumes)
+        ? response.data.resumes
+        : Array.isArray(response.data?.data)
+        ? response.data.data
+        : [];
 
       setResumes(resumeList);
     } catch (error) {
       console.error("Fetch resumes error:", error);
 
-      toast.error(
-        error.response?.data?.message || "Resumes load nahi ho sake."
-      );
-
       setResumes([]);
+
+      toast.error(
+        error.response?.data?.message ||
+          "Resumes load nahi ho sake."
+      );
     } finally {
       setLoading(false);
     }
@@ -92,7 +150,44 @@ const getInitials = (name = "") => {
     fetchResumes();
   }, [fetchResumes]);
 
-  const handleDelete = async (id) => {
+  /*
+  |--------------------------------------------------------------------------
+  | Navigation handlers
+  |--------------------------------------------------------------------------
+  */
+
+  const handleView = (resumeId) => {
+    closeResumeActions();
+    navigate(`/view-resume/${resumeId}`);
+  };
+
+  const handleEdit = (resumeId) => {
+    closeResumeActions();
+    navigate(`/edit-resume/${resumeId}`);
+  };
+
+  const handleReview = (resumeId) => {
+    closeResumeActions();
+    navigate(`/resumes/${resumeId}/review`);
+  };
+
+  const handleTemplates = (resumeId) => {
+    closeResumeActions();
+    navigate(`/resume-templates/${resumeId}`);
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete resume
+  |--------------------------------------------------------------------------
+  */
+
+  const handleDelete = async (resumeId) => {
+    if (!resumeId) {
+      toast.error("Resume ID nahi mila.");
+      return;
+    }
+
     const result = await Swal.fire({
       icon: "warning",
       title: "Delete Resume?",
@@ -110,42 +205,65 @@ const getInitials = (name = "") => {
     }
 
     try {
-      setDeletingId(id);
+      setDeletingId(resumeId);
 
-      const response = await api.delete(`/resumes/${id}`);
-
-      setResumes((previousResumes) =>
-        previousResumes.filter((resume) => resume.id !== id)
+      const response = await api.delete(
+        `/resumes/${resumeId}`
       );
 
+      setResumes((previousResumes) =>
+        previousResumes.filter(
+          (resume) => getResumeId(resume) !== resumeId
+        )
+      );
+
+      closeResumeActions();
+
       toast.success(
-        response.data?.message || "Resume deleted successfully."
+        response.data?.message ||
+          "Resume deleted successfully."
       );
     } catch (error) {
       console.error("Delete resume error:", error);
 
       toast.error(
-        error.response?.data?.message || "Resume delete nahi ho saka."
+        error.response?.data?.message ||
+          "Resume delete nahi ho saka."
       );
     } finally {
       setDeletingId(null);
     }
   };
 
-  const analyzeResume = async (id) => {
+  /*
+  |--------------------------------------------------------------------------
+  | Analyze resume
+  |--------------------------------------------------------------------------
+  */
+
+  const analyzeResume = async (resumeId) => {
+    if (!resumeId) {
+      toast.error("Resume ID nahi mila.");
+      return;
+    }
+
     if (analyzingId !== null) {
       return;
     }
 
     try {
-      setAnalyzingId(id);
+      setAnalyzingId(resumeId);
 
-      const response = await api.post(`/resumes/${id}/analyze`);
+      const response = await api.post(
+        `/resumes/${resumeId}/analyze`
+      );
 
       const data = response.data;
 
       if (!data?.success) {
-        throw new Error(data?.message || "Resume analysis failed.");
+        throw new Error(
+          data?.message || "Resume analysis failed."
+        );
       }
 
       const analysis = data.analysis || {};
@@ -154,17 +272,24 @@ const getInitials = (name = "") => {
         ? analysis.strengths
         : [];
 
-      const weaknesses = Array.isArray(analysis.weaknesses)
+      const weaknesses = Array.isArray(
+        analysis.weaknesses
+      )
         ? analysis.weaknesses
         : [];
 
-      const suggestions = Array.isArray(analysis.suggestions)
+      const suggestions = Array.isArray(
+        analysis.suggestions
+      )
         ? analysis.suggestions
         : [];
 
       const atsScore = Math.min(
         100,
-        Math.max(0, Number(analysis.ats_score) || 0)
+        Math.max(
+          0,
+          Number(analysis.ats_score) || 0
+        )
       );
 
       const scoreColor =
@@ -183,7 +308,6 @@ const getInitials = (name = "") => {
 
         html: `
           <div style="text-align:left">
-
             <div style="
               text-align:center;
               background:#f1f5f9;
@@ -191,10 +315,7 @@ const getInitials = (name = "") => {
               border-radius:12px;
               margin-bottom:20px;
             ">
-              <h3 style="
-                margin:0;
-                color:#0f172a;
-              ">
+              <h3 style="margin:0;color:#0f172a">
                 ATS Score
               </h3>
 
@@ -227,7 +348,7 @@ const getInitials = (name = "") => {
             </h4>
 
             ${
-              strengths.length > 0
+              strengths.length
                 ? `
                   <ul style="padding-left:20px">
                     ${strengths
@@ -255,7 +376,7 @@ const getInitials = (name = "") => {
             </h4>
 
             ${
-              weaknesses.length > 0
+              weaknesses.length
                 ? `
                   <ul style="padding-left:20px">
                     ${weaknesses
@@ -283,7 +404,7 @@ const getInitials = (name = "") => {
             </h4>
 
             ${
-              suggestions.length > 0
+              suggestions.length
                 ? `
                   <ul style="padding-left:20px">
                     ${suggestions
@@ -303,7 +424,6 @@ const getInitials = (name = "") => {
                   </p>
                 `
             }
-
           </div>
         `,
       });
@@ -312,7 +432,7 @@ const getInitials = (name = "") => {
     } catch (error) {
       console.error("Resume analysis error:", error);
 
-      Swal.fire({
+      await Swal.fire({
         icon: "error",
         title: "Analysis Failed",
         text:
@@ -325,113 +445,167 @@ const getInitials = (name = "") => {
       setAnalyzingId(null);
     }
   };
-  const improveResume = async (id) => {
-  try {
-    setImprovingId(id);
 
-    const response = await api.post(`/resumes/${id}/improve`);
+  /*
+  |--------------------------------------------------------------------------
+  | Improve resume
+  |--------------------------------------------------------------------------
+  */
 
-    const data = response.data;
-
-    if (!data.success) {
-      throw new Error(data.message);
+  const improveResume = async (resumeId) => {
+    if (!resumeId) {
+      toast.error("Resume ID nahi mila.");
+      return;
     }
 
-    const resume = data.improved_resume;
+    if (improvingId !== null) {
+      return;
+    }
 
-    await Swal.fire({
-      title: "✨ AI Improved Resume",
-      width: 900,
-      confirmButtonText: "Close",
-      html: `
-        <div style="text-align:left">
+    try {
+      setImprovingId(resumeId);
 
-          <h3>Professional Summary</h3>
-          <div style="
-              background:#f8fafc;
-              padding:15px;
-              border-radius:10px;
-              margin-bottom:20px;
-          ">
-              ${escapeHtml(resume.summary)}
-          </div>
+      const response = await api.post(
+        `/resumes/${resumeId}/improve`
+      );
 
-          <h3>Skills</h3>
+      const data = response.data;
 
-          <div style="
+      if (!data?.success) {
+        throw new Error(
+          data?.message || "Resume improvement failed."
+        );
+      }
+
+      const improvedResume =
+        data.improved_resume || {};
+
+      await Swal.fire({
+        title: "✨ AI Improved Resume",
+        width: 900,
+        confirmButtonText: "Close",
+        confirmButtonColor: "#2563eb",
+        showCloseButton: true,
+
+        html: `
+          <div style="text-align:left">
+            <h3>Professional Summary</h3>
+
+            <div style="
               background:#f8fafc;
               padding:15px;
               border-radius:10px;
               margin-bottom:20px;
               white-space:pre-wrap;
-          ">
-              ${escapeHtml(resume.skills)}
-          </div>
+            ">
+              ${escapeHtml(
+                improvedResume.summary ||
+                  "Summary not available."
+              )}
+            </div>
 
-          <h3>Projects</h3>
+            <h3>Skills</h3>
 
-          <div style="
+            <div style="
               background:#f8fafc;
               padding:15px;
               border-radius:10px;
               margin-bottom:20px;
               white-space:pre-wrap;
-          ">
-              ${escapeHtml(resume.projects)}
-          </div>
+            ">
+              ${escapeHtml(
+                improvedResume.skills ||
+                  "Skills not available."
+              )}
+            </div>
 
-          <h3>Experience</h3>
+            <h3>Projects</h3>
 
-          <div style="
+            <div style="
+              background:#f8fafc;
+              padding:15px;
+              border-radius:10px;
+              margin-bottom:20px;
+              white-space:pre-wrap;
+            ">
+              ${escapeHtml(
+                improvedResume.projects ||
+                  "Projects not available."
+              )}
+            </div>
+
+            <h3>Experience</h3>
+
+            <div style="
               background:#f8fafc;
               padding:15px;
               border-radius:10px;
               white-space:pre-wrap;
-          ">
-              ${escapeHtml(resume.experience)}
+            ">
+              ${escapeHtml(
+                improvedResume.experience ||
+                  "Experience not available."
+              )}
+            </div>
           </div>
+        `,
+      });
+    } catch (error) {
+      console.error("Resume improvement error:", error);
 
-        </div>
-      `,
-    });
+      await Swal.fire({
+        icon: "error",
+        title: "Improvement Failed",
+        text:
+          error.response?.data?.message ||
+          error.message ||
+          "Resume improvement failed.",
+        confirmButtonColor: "#2563eb",
+      });
+    } finally {
+      setImprovingId(null);
+    }
+  };
 
-  } catch (err) {
+  /*
+  |--------------------------------------------------------------------------
+  | Search and sort
+  |--------------------------------------------------------------------------
+  */
 
-    console.error(err);
-
-    Swal.fire({
-      icon: "error",
-      title: "Failed",
-      text:
-        err.response?.data?.message ||
-        err.message ||
-        "Resume improvement failed.",
-    });
-
-  } finally {
-
-    setImprovingId(null);
-
-  }
-};
   const filteredResumes = useMemo(() => {
     const searchValue = search.trim().toLowerCase();
 
     return [...resumes]
       .filter((resume) => {
-        const title = resume.title || "";
-        const fullName = resume.full_name || "";
-        const skills = resume.skills || "";
+        const title = String(
+          resume?.title || ""
+        ).toLowerCase();
+
+        const fullName = String(
+          resume?.full_name || ""
+        ).toLowerCase();
+
+        const skills = String(
+          resume?.skills || ""
+        ).toLowerCase();
 
         return (
-          title.toLowerCase().includes(searchValue) ||
-          fullName.toLowerCase().includes(searchValue) ||
-          skills.toLowerCase().includes(searchValue)
+          title.includes(searchValue) ||
+          fullName.includes(searchValue) ||
+          skills.includes(searchValue)
         );
       })
-      .sort((a, b) => {
-        const firstDate = new Date(a.created_at).getTime();
-        const secondDate = new Date(b.created_at).getTime();
+      .sort((firstResume, secondResume) => {
+        const firstDate =
+          new Date(
+            firstResume?.created_at || 0
+          ).getTime() || 0;
+
+        const secondDate =
+          new Date(
+            secondResume?.created_at || 0
+          ).getTime() || 0;
 
         if (sort === "oldest") {
           return firstDate - secondDate;
@@ -440,6 +614,12 @@ const getInitials = (name = "") => {
         return secondDate - firstDate;
       });
   }, [resumes, search, sort]);
+
+  /*
+  |--------------------------------------------------------------------------
+  | JSX
+  |--------------------------------------------------------------------------
+  */
 
   return (
     <div className="dashboard-layout">
@@ -451,7 +631,9 @@ const getInitials = (name = "") => {
         <div className="dashboard-content">
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-              <h2 className="fw-bold mb-1">📋 My Resumes</h2>
+              <h2 className="fw-bold mb-1">
+                📋 My Resumes
+              </h2>
 
               <p className="text-muted mb-0">
                 View, edit and analyze your saved resumes.
@@ -461,7 +643,9 @@ const getInitials = (name = "") => {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={() => navigate("/resume-builder")}
+              onClick={() =>
+                navigate("/resume-builder")
+              }
             >
               + Create Resume
             </button>
@@ -474,7 +658,9 @@ const getInitials = (name = "") => {
                 className="form-control"
                 placeholder="Search by title, name or skills..."
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) =>
+                  setSearch(event.target.value)
+                }
               />
             </div>
 
@@ -482,10 +668,17 @@ const getInitials = (name = "") => {
               <select
                 className="form-select"
                 value={sort}
-                onChange={(event) => setSort(event.target.value)}
+                onChange={(event) =>
+                  setSort(event.target.value)
+                }
               >
-                <option value="latest">Latest First</option>
-                <option value="oldest">Oldest First</option>
+                <option value="latest">
+                  Latest First
+                </option>
+
+                <option value="oldest">
+                  Oldest First
+                </option>
               </select>
             </div>
           </div>
@@ -507,14 +700,17 @@ const getInitials = (name = "") => {
               <h4>No resumes found</h4>
 
               <p className="text-muted">
-                Create your first resume or change the search keyword.
+                Create your first resume or change the
+                search keyword.
               </p>
 
               <div>
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => navigate("/resume-builder")}
+                  onClick={() =>
+                    navigate("/resume-builder")
+                  }
                 >
                   Create Resume
                 </button>
@@ -522,283 +718,383 @@ const getInitials = (name = "") => {
             </div>
           ) : (
             <div className="modern-resume-grid">
-  {filteredResumes.map((resume) => {
-    const atsScore = Math.min(
-      100,
-      Math.max(0, Number(resume.ats_score) || 0)
-    );
+              {filteredResumes.map(
+                (resume, index) => {
+                  const resumeId =
+                    getResumeId(resume);
 
-    const hasAtsScore =
-      resume.ats_score !== null &&
-      resume.ats_score !== undefined;
+                  /*
+                   * cardKey UI ke liye unique rahega.
+                   * API actions ke liye resumeId use hoga.
+                   */
+                  const cardKey =
+                    resumeId ||
+                    `resume-card-${index}`;
 
-    const isAnalyzing = analyzingId === resume.id;
-    const isImproving = improvingId === resume.id;
-    const isDeleting = deletingId === resume.id;
-    const isOpen = openResumeId === resume.id;
+                  const atsScore = Math.min(
+                    100,
+                    Math.max(
+                      0,
+                      Number(resume?.ats_score) || 0
+                    )
+                  );
 
-    return (
-      <article
-        key={resume.id}
-        className={`modern-resume-card ${isOpen ? "is-open" : ""}`}
-      >
-        <button
-          type="button"
-          className="resume-card-trigger"
-          onClick={() => toggleResumeActions(resume.id)}
-          aria-expanded={isOpen}
-          aria-controls={`resume-actions-${resume.id}`}
-        >
-          <div className="resume-card-top">
-            <div className="resume-file-identity">
-              <div className="resume-file-icon">
-                <span>📄</span>
-              </div>
+                  const hasAtsScore =
+                    resume?.ats_score !== null &&
+                    resume?.ats_score !== undefined;
 
-              <div className="resume-title-content">
+                  const isOpen =
+                    resumeId !== null &&
+                    openResumeId === resumeId;
 
-                <span className="resume-card-label">
-                  Saved resume
-                </span>
-                <h3>
-                  {resume.title || "Untitled Resume"}
-                </h3>
+                  const isAnalyzing =
+                    analyzingId === resumeId;
 
-                <p>
-                  {resume.full_name ||
-                    resume.email ||
-                    "Candidate details not added"}
-                </p>
-              </div>
-            </div>
+                  const isImproving =
+                    improvingId === resumeId;
 
-            {hasAtsScore ? (
-              <div
-                className={`resume-ats-circle ${
-                  atsScore >= 80
-                    ? "ats-high"
-                    : atsScore >= 60
-                    ? "ats-medium"
-                    : "ats-low"
-                }`}
-                style={{
-                  "--ats-progress": `${atsScore * 3.6}deg`,
-                }}
-              >
-                <div className="resume-ats-inner">
-                  <strong>{atsScore}</strong>
-                  <span>ATS</span>
-                </div>
-              </div>
-            ) : (
-              <div className="resume-avatar">
-                {getInitials(
-                  resume.full_name || resume.title
-                )}
-              </div>
-            )}
-          </div>
+                  const isDeleting =
+                    deletingId === resumeId;
 
-          <div className="resume-skills-preview">
-            {resume.skills
-              ? resume.skills
-                  .split(",")
-                  .slice(0, 4)
-                  .map((skill, index) => (
-                    <span key={`${resume.id}-skill-${index}`}>
-                      {skill.trim()}
-                    </span>
-                  ))
-              : (
-                <span className="empty-skill">
-                  Skills not added
-                </span>
+                  const skills =
+                    getSkills(resume?.skills);
+
+                  return (
+                    <article
+                      key={cardKey}
+                      className={`modern-resume-card ${isOpen ? "is-open" : ""}`}
+                      style={{ zIndex: isOpen ? 100 : 1 }}
+                    >
+                      <button
+                        type="button"
+                        className="resume-card-trigger"
+                        onClick={() =>
+                          toggleResumeActions(
+                            resumeId
+                          )
+                        }
+                        aria-expanded={isOpen}
+                        aria-controls={`resume-actions-${cardKey}`}
+                      >
+                        <div className="resume-card-top">
+                          <div className="resume-file-identity">
+                            <div className="resume-file-icon">
+                              <span>📄</span>
+                            </div>
+
+                            <div className="resume-title-content">
+                              <span className="resume-card-label">
+                                Saved resume
+                              </span>
+
+                              <h3>
+                                {resume?.title ||
+                                  "Untitled Resume"}
+                              </h3>
+
+                              <p>
+                                {resume?.full_name ||
+                                  resume?.email ||
+                                  "Candidate details not added"}
+                              </p>
+                            </div>
+                          </div>
+
+                          {hasAtsScore ? (
+                            <div
+                              className={`resume-ats-circle ${
+                                atsScore >= 80
+                                  ? "ats-high"
+                                  : atsScore >= 60
+                                  ? "ats-medium"
+                                  : "ats-low"
+                              }`}
+                              style={{
+                                "--ats-progress": `${
+                                  atsScore * 3.6
+                                }deg`,
+                              }}
+                            >
+                              <div className="resume-ats-inner">
+                                <strong>
+                                  {atsScore}
+                                </strong>
+
+                                <span>ATS</span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="resume-avatar">
+                              {getInitials(
+                                resume?.full_name ||
+                                  resume?.title
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="resume-skills-preview">
+                          {skills.length > 0 ? (
+                            skills.map(
+                              (skill, skillIndex) => (
+                                <span
+                                  key={`${cardKey}-skill-${skillIndex}`}
+                                >
+                                  {skill}
+                                </span>
+                              )
+                            )
+                          ) : (
+                            <span className="empty-skill">
+                              Skills not added
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="resume-card-footer">
+                          <div className="resume-date">
+                            <span className="resume-status-dot" />
+
+                            {formatUpdatedDate(
+                              resume?.updated_at ||
+                                resume?.created_at
+                            )}
+                          </div>
+
+                          <div className="resume-manage-text">
+                            <span>
+                              {isOpen
+                                ? "Close actions"
+                                : "Manage resume"}
+                            </span>
+
+                            <span
+                              className={`resume-chevron ${
+                                isOpen ? "rotate" : ""
+                              }`}
+                            >
+                              ⌄
+                            </span>
+                          </div>
+                        </div>
+                      </button>
+
+                      {/*
+                       * Important:
+                       * Dropdown sirf current resume ke liye
+                       * render hoga.
+                       */}
+                      {isOpen && (
+                        <div
+                          id={`resume-actions-${cardKey}`}
+                          className="resume-actions-wrapper show"
+                        >
+                          <div className="resume-actions-divider" />
+
+                          <div className="modern-resume-actions">
+                            <button
+                              type="button"
+                              className="resume-action-item action-view"
+                              onClick={() =>
+                                handleView(resumeId)
+                              }
+                              disabled={
+                                !resumeId ||
+                                isDeleting
+                              }
+                            >
+                              <span className="action-icon">
+                                👁
+                              </span>
+
+                              <span className="action-copy">
+                                <strong>View</strong>
+                                <small>
+                                  Open resume
+                                </small>
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="resume-action-item action-edit"
+                              onClick={() =>
+                                handleEdit(resumeId)
+                              }
+                              disabled={
+                                !resumeId ||
+                                isAnalyzing ||
+                                isImproving ||
+                                isDeleting
+                              }
+                            >
+                              <span className="action-icon">
+                                ✏️
+                              </span>
+
+                              <span className="action-copy">
+                                <strong>Edit</strong>
+                                <small>
+                                  Update details
+                                </small>
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="resume-action-item action-review"
+                              onClick={() =>
+                                handleReview(resumeId)
+                              }
+                              disabled={
+                                !resumeId ||
+                                isAnalyzing ||
+                                isImproving ||
+                                isDeleting
+                              }
+                            >
+                              <span className="action-icon">
+                                ⭐
+                              </span>
+
+                              <span className="action-copy">
+                                <strong>
+                                  AI Review
+                                </strong>
+
+                                <small>
+                                  Detailed feedback
+                                </small>
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="resume-action-item action-analyze"
+                              onClick={() =>
+                                analyzeResume(resumeId)
+                              }
+                              disabled={
+                                !resumeId ||
+                                isAnalyzing ||
+                                isImproving ||
+                                isDeleting ||
+                                analyzingId !== null
+                              }
+                            >
+                              <span className="action-icon">
+                                {isAnalyzing ? (
+                                  <span className="action-spinner" />
+                                ) : (
+                                  "🤖"
+                                )}
+                              </span>
+
+                              <span className="action-copy">
+                                <strong>
+                                  {isAnalyzing
+                                    ? "Analyzing..."
+                                    : "Analyze"}
+                                </strong>
+
+                                <small>
+                                  Check ATS score
+                                </small>
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="resume-action-item action-improve"
+                              onClick={() =>
+                                improveResume(resumeId)
+                              }
+                              disabled={
+                                !resumeId ||
+                                isImproving ||
+                                isAnalyzing ||
+                                isDeleting ||
+                                improvingId !== null
+                              }
+                            >
+                              <span className="action-icon">
+                                {isImproving ? (
+                                  <span className="action-spinner" />
+                                ) : (
+                                  "✨"
+                                )}
+                              </span>
+
+                              <span className="action-copy">
+                                <strong>
+                                  {isImproving
+                                    ? "Improving..."
+                                    : "Improve"}
+                                </strong>
+
+                                <small>
+                                  Enhance with AI
+                                </small>
+                              </span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="resume-action-item action-delete"
+                              onClick={() =>
+                                handleDelete(resumeId)
+                              }
+                              disabled={
+                                !resumeId ||
+                                isDeleting ||
+                                isAnalyzing ||
+                                isImproving
+                              }
+                            >
+                              <span className="action-icon">
+                                {isDeleting ? (
+                                  <span className="action-spinner" />
+                                ) : (
+                                  "🗑️"
+                                )}
+                              </span>
+
+                              <span className="action-copy">
+                                <strong>
+                                  {isDeleting
+                                    ? "Deleting..."
+                                    : "Delete"}
+                                </strong>
+
+                                <small>
+                                  Remove permanently
+                                </small>
+                              </span>
+                            </button>
+                          </div>
+
+                          <button
+                            type="button"
+                            className="btn btn-primary mb-2"
+                            onClick={() =>
+                              handleTemplates(
+                                resumeId
+                              )
+                            }
+                            disabled={
+                              !resumeId ||
+                              isDeleting
+                            }
+                          >
+                            <b>Use Templates</b>
+                          </button>
+                        </div>
+                      )}
+                    </article>
+                  );
+                }
               )}
-          </div>
-
-          <div className="resume-card-footer">
-            <div className="resume-date">
-              <span className="resume-status-dot"></span>
-
-              {formatUpdatedDate(
-                resume.updated_at || resume.created_at
-              )}
             </div>
-
-            <div className="resume-manage-text">
-              <span>
-                {isOpen ? "Close actions" : "Manage resume"}
-              </span>
-
-              <span
-                className={`resume-chevron ${
-                  isOpen ? "rotate" : ""
-                }`}
-              >
-                ⌄
-              </span>
-            </div>
-          </div>
-        </button>
-
-        <div
-          id={`resume-actions-${resume.id}`}
-          className={`resume-actions-wrapper ${
-            isOpen ? "show" : ""
-          }`}
-        >
-          <div className="resume-actions-divider"></div>
-
-          <div className="modern-resume-actions">
-            <button
-              type="button"
-              className="resume-action-item action-view"
-              onClick={() =>
-                navigate(`/view-resume/${resume.id}`)
-              }
-              disabled={isDeleting}
-            >
-              <span className="action-icon">👁</span>
-
-              <span className="action-copy">
-                <strong>View</strong>
-                <small>Open resume</small>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="resume-action-item action-edit"
-              onClick={() =>
-                navigate(`/edit-resume/${resume.id}`)
-              }
-              disabled={
-                isAnalyzing ||
-                isImproving ||
-                isDeleting
-              }
-            >
-              <span className="action-icon">✏️</span>
-
-              <span className="action-copy">
-                <strong>Edit</strong>
-                <small>Update details</small>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="resume-action-item action-review"
-              onClick={() =>
-                navigate(`/resumes/${resume.id}/review`)
-              }
-              disabled={
-                isAnalyzing ||
-                isImproving ||
-                isDeleting
-              }
-            >
-              <span className="action-icon">⭐</span>
-
-              <span className="action-copy">
-                <strong>AI Review</strong>
-                <small>Detailed feedback</small>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="resume-action-item action-analyze"
-              onClick={() => analyzeResume(resume.id)}
-              disabled={
-                isAnalyzing ||
-                isImproving ||
-                isDeleting ||
-                analyzingId !== null
-              }
-            >
-              <span className="action-icon">
-                {isAnalyzing ? (
-                  <span className="action-spinner"></span>
-                ) : (
-                  "🤖"
-                )}
-              </span>
-
-              <span className="action-copy">
-                <strong>
-                  {isAnalyzing
-                    ? "Analyzing..."
-                    : "Analyze"}
-                </strong>
-
-                <small>Check ATS score</small>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="resume-action-item action-improve"
-              onClick={() => improveResume(resume.id)}
-              disabled={
-                isImproving ||
-                isAnalyzing ||
-                isDeleting
-              }
-            >
-              <span className="action-icon">
-                {isImproving ? (
-                  <span className="action-spinner"></span>
-                ) : (
-                  "✨"
-                )}
-              </span>
-
-              <span className="action-copy">
-                <strong>
-                  {isImproving
-                    ? "Improving..."
-                    : "Improve"}
-                </strong>
-
-                <small>Enhance with AI</small>
-              </span>
-            </button>
-
-            <button
-              type="button"
-              className="resume-action-item action-delete"
-              onClick={() => handleDelete(resume.id)}
-              disabled={
-                isDeleting ||
-                isAnalyzing ||
-                isImproving
-              }
-            >
-              <span className="action-icon">
-                {isDeleting ? (
-                  <span className="action-spinner"></span>
-                ) : (
-                  "🗑️"
-                )}
-              </span>
-
-              <span className="action-copy">
-                <strong>
-                  {isDeleting
-                    ? "Deleting..."
-                    : "Delete"}
-                </strong>
-
-                <small>Remove permanently</small>
-              </span>
-            </button>
-          </div>
-        </div>
-      </article>
-    );
-  })}
-</div>
           )}
         </div>
       </main>

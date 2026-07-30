@@ -1,4 +1,5 @@
 import "../styles/features.css";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -31,9 +32,11 @@ const features = [
     title: "ATS Resume Score",
     text: "Check how your resume performs."
   }
+  
 ];
 
 export default function Features() {
+  const navigate = useNavigate();
   return (
     <section className="features py-5">
       <div className="container">
@@ -45,7 +48,9 @@ export default function Features() {
         <div className="row">
 
           {features.map((item, index) => (
-            <div className="col-lg-4 col-md-6 mb-4" key={index}>
+            <div className="col-lg-4 col-md-6 mb-4" key={index} 
+             onClick={() => navigate("/login")}
+              style={{ cursor: "pointer" }}>
               <div className="feature-card">
 
                 <div className="feature-icon">

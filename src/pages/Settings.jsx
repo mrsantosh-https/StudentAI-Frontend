@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
 import api from "../services/api";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -105,7 +106,8 @@ export default function Settings() {
   return (
     <div className="dashboard-layout">
       <Sidebar />
-
+    <div className="dashboard-main">
+          <Topbar />
       <main className="dashboard-main">
         <div className="dashboard-content">
           <div className="settings-header">
@@ -254,6 +256,7 @@ export default function Settings() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -719,3 +719,267 @@ body.dark-mode .job-match-result {
     transition: none !important;
   }
 }
+
+.resume-form-card {
+  border-radius: 18px;
+}
+
+.resume-form-section {
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.resume-form-section:last-of-type {
+  border-bottom: 0;
+}
+
+.resume-form-section-title {
+  margin-bottom: 14px;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.resume-form-card .form-label {
+  margin-bottom: 7px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.resume-form-card .form-control {
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  padding: 11px 13px;
+}
+
+.resume-form-card .form-control:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.13);
+}
+
+.resume-form-card textarea {
+  resize: vertical;
+}
+
+.resume-form-card .btn {
+  min-height: 44px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* Resume Form */
+
+.resume-form-card {
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #f1f5f9;
+}
+
+/* Chrome */
+.resume-form-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.resume-form-card::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 20px;
+}
+
+.resume-form-card::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 20px;
+}
+
+.resume-form-card::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+
+/* Resume Preview */
+
+.resume-preview-wrapper {
+  position: sticky;
+  top: 85px;
+}
+
+.resume-preview-card {
+  width: 100%;
+  min-height: 1050px;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 42px;
+  background: #ffffff;
+  color: #1f2937;
+
+  border-radius: 18px;
+  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.12);
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #f1f5f9;
+}
+
+.resume-preview-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.resume-preview-card::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 20px;
+}
+
+.resume-preview-card::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 20px;
+}
+
+.resume-preview-card::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+.resume-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+
+  padding-bottom: 24px;
+  border-bottom: 3px solid #4f46e5;
+}
+
+.resume-preview-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.resume-preview-header h2 {
+  margin: 8px 0 0;
+  color: #4f46e5;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.resume-preview-contact {
+  min-width: 220px;
+  text-align: right;
+}
+
+.resume-preview-contact p {
+  margin: 0 0 7px;
+  color: #4b5563;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.resume-preview-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.resume-preview-links a {
+  color: #4f46e5;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.resume-preview-links a:hover {
+  text-decoration: underline;
+}
+
+.resume-preview-section {
+  margin-top: 28px;
+}
+
+.resume-preview-section h3 {
+  margin: 0 0 13px;
+  padding-bottom: 8px;
+
+  color: #111827;
+  border-bottom: 1px solid #d1d5db;
+
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.resume-preview-section p {
+  margin: 0;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.resume-preview-pre-line {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.resume-preview-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.resume-preview-skills span {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.resume-preview-empty {
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+@media (max-width: 991px) {
+  .resume-preview-wrapper {
+    position: static;
+  }
+
+  .resume-preview-card {
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 576px) {
+  .resume-preview-card {
+    padding: 26px 20px;
+    border-radius: 14px;
+  }
+
+  .resume-preview-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .resume-preview-header h1 {
+    font-size: 29px;
+  }
+
+  .resume-preview-contact {
+    min-width: 0;
+    text-align: left;
+  }
+}
