@@ -1,11 +1,73 @@
-export default function ResumePreview({ formData = {} }) {
-  const fullName = formData.fullName?.trim() || "Your Name";
+import ModernTemplate from "./resumeTemplates/ModernTemplate";
+import ProfessionalTemplate from "./resumeTemplates/ProfessionalTemplate";
+import MinimalTemplate from "./resumeTemplates/MinimalTemplate";
+import CorporateTemplate from "./resumeTemplates/CorporateTemplate";
+import CreativeTemplate from "./resumeTemplates/CreativeTemplate";
 
-  const designation =
-    formData.designation?.trim() || "Professional Designation";
+export default function ResumePreview({
+  formData = {},
+  selectedTemplate = "modern",
+}) {
+  /*
+  |--------------------------------------------------------------------------
+  | Helpers
+  |--------------------------------------------------------------------------
+  */
 
-  const email = formData.email?.trim() || "your-email@example.com";
-  const phone = formData.phone?.trim() || "+91 98765 43210";
+  const getString = (value) => {
+    return typeof value === "string" ? value.trim() : "";
+  };
+
+  const splitSkills = (value) => {
+    if (Array.isArray(value)) {
+      return value.filter(Boolean);
+    }
+
+    return String(value || "")
+      .split(/,|\n/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  };
+
+  /*
+   * Education, projects and experience are currently stored
+   * as text in Resume Builder.
+   *
+   * Templates may expect arrays, so we provide safe arrays.
+   */
+
+  const toTextItems = (value) => {
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    const text = getString(value);
+
+    if (!text) {
+      return [];
+    }
+
+    return text
+      .split(/\n\s*\n|\n/)
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .map((item) => ({
+        title: item,
+        name: item,
+        description: item,
+        course: item,
+        college: "",
+        company: "",
+        duration: "",
+        year: "",
+      }));
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Address
+  |--------------------------------------------------------------------------
+  */
 
   const addressParts = [
     formData.address,
@@ -14,153 +76,162 @@ export default function ResumePreview({ formData = {} }) {
     formData.country,
     formData.pincode,
   ]
-    .map((item) => item?.trim())
+    .map((item) => getString(item))
     .filter(Boolean);
 
-  const completeAddress =
+  const location =
     addressParts.length > 0
       ? addressParts.join(", ")
-      : "Your complete address";
+      : "Your Location";
 
-  const skills = formData.skills
-    ? formData.skills
-        .split(",")
-        .map((skill) => skill.trim())
-        .filter(Boolean)
-    : [];
+  /*
+  |--------------------------------------------------------------------------
+  | Normalized Resume Data
+  |--------------------------------------------------------------------------
+  */
+
+  const skillsArray = splitSkills(formData.skills);
+
+  const educationArray = toTextItems(formData.education);
+  const projectsArray = toTextItems(formData.projects);
+  const experienceArray = toTextItems(formData.experience);
+
+  const resumeData = {
+    /*
+     * Name
+     */
+    full_name:
+      getString(formData.fullName) || "Your Name",
+
+    fullName:
+      getString(formData.fullName) || "Your Name",
+
+    name:
+      getString(formData.fullName) || "Your Name",
+
+    /*
+     * Designation
+     */
+    designation:
+      getString(formData.designation) ||
+      "Professional Designation",
+
+    role:
+      getString(formData.designation) ||
+      "Professional Designation",
+
+    /*
+     * Contact
+     */
+    email:
+      getString(formData.email) ||
+      "your-email@example.com",
+
+    phone:
+      getString(formData.phone) ||
+      "+91 98765 43210",
+
+    /*
+     * Address
+     */
+    address: getString(formData.address),
+    city: getString(formData.city),
+    state: getString(formData.state),
+    country: getString(formData.country),
+    pincode: getString(formData.pincode),
+
+    location,
+
+    /*
+     * Social links
+     */
+    linkedin: getString(formData.linkedin),
+    github: getString(formData.github),
+    portfolio: getString(formData.portfolio),
+
+    /*
+     * Career Objective
+     */
+    career_objective:
+      getString(formData.careerObjective),
+
+    careerObjective:
+      getString(formData.careerObjective),
+
+    /*
+     * Summary
+     */
+    summary: getString(formData.summary),
+
+    /*
+     * Array versions used by templates
+     */
+    skills: skillsArray,
+    education: educationArray,
+    projects: projectsArray,
+    experience: experienceArray,
+
+    /*
+     * Original text versions
+     *
+     * Agar kisi template ko direct text chahiye,
+     * wo in properties ko use kar sakta hai.
+     */
+    skillsText: getString(formData.skills),
+    educationText: getString(formData.education),
+    projectsText: getString(formData.projects),
+    experienceText: getString(formData.experience),
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Render Selected Template
+  |--------------------------------------------------------------------------
+  */
+
+  const renderTemplate = () => {
+    switch (selectedTemplate) {
+      case "professional":
+        return (
+          <ProfessionalTemplate
+            resume={resumeData}
+          />
+        );
+
+      case "minimal":
+        return (
+          <MinimalTemplate
+            resume={resumeData}
+          />
+        );
+
+      case "corporate":
+        return (
+          <CorporateTemplate
+            resume={resumeData}
+          />
+        );
+
+      case "creative":
+        return (
+          <CreativeTemplate
+            resume={resumeData}
+          />
+        );
+
+      case "modern":
+      default:
+        return (
+          <ModernTemplate
+            resume={resumeData}
+          />
+        );
+    }
+  };
 
   return (
     <div className="resume-preview-wrapper">
-      <div className="resume-preview-card" id="resume-preview">
-        {/* Header */}
-        <header className="resume-preview-header">
-          <div>
-            <h1>{fullName}</h1>
-            <h2>{designation}</h2>
-          </div>
-
-          <div className="resume-preview-contact">
-            <p>{email}</p>
-            <p>{phone}</p>
-            <p>{completeAddress}</p>
-          </div>
-        </header>
-
-        {/* Social Links */}
-        {(formData.linkedin ||
-          formData.github ||
-          formData.portfolio) && (
-          <section className="resume-preview-links">
-            {formData.linkedin && (
-              <a
-                href={formData.linkedin}
-                target="_blank"
-                rel="noreferrer"
-              >
-                LinkedIn
-              </a>
-            )}
-
-            {formData.github && (
-              <a
-                href={formData.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </a>
-            )}
-
-            {formData.portfolio && (
-              <a
-                href={formData.portfolio}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Portfolio
-              </a>
-            )}
-          </section>
-        )}
-
-        {/* Career Objective */}
-        {formData.careerObjective && (
-          <section className="resume-preview-section">
-            <h3>Career Objective</h3>
-            <p>{formData.careerObjective}</p>
-          </section>
-        )}
-
-        {/* Professional Summary */}
-        {formData.summary && (
-          <section className="resume-preview-section">
-            <h3>Professional Summary</h3>
-            <p>{formData.summary}</p>
-          </section>
-        )}
-
-        {/* Skills */}
-        <section className="resume-preview-section">
-          <h3>Skills</h3>
-
-          {skills.length > 0 ? (
-            <div className="resume-preview-skills">
-              {skills.map((skill, index) => (
-                <span key={`${skill}-${index}`}>{skill}</span>
-              ))}
-            </div>
-          ) : (
-            <p className="resume-preview-empty">
-              Add your technical and professional skills.
-            </p>
-          )}
-        </section>
-
-        {/* Education */}
-        <section className="resume-preview-section">
-          <h3>Education</h3>
-
-          {formData.education ? (
-            <p className="resume-preview-pre-line">
-              {formData.education}
-            </p>
-          ) : (
-            <p className="resume-preview-empty">
-              Add your educational details.
-            </p>
-          )}
-        </section>
-
-        {/* Projects */}
-        <section className="resume-preview-section">
-          <h3>Projects</h3>
-
-          {formData.projects ? (
-            <p className="resume-preview-pre-line">
-              {formData.projects}
-            </p>
-          ) : (
-            <p className="resume-preview-empty">
-              Add your project details.
-            </p>
-          )}
-        </section>
-
-        {/* Experience */}
-        <section className="resume-preview-section">
-          <h3>Experience</h3>
-
-          {formData.experience ? (
-            <p className="resume-preview-pre-line">
-              {formData.experience}
-            </p>
-          ) : (
-            <p className="resume-preview-empty">
-              Add your professional experience.
-            </p>
-          )}
-        </section>
-      </div>
+      {renderTemplate()}
     </div>
   );
 }

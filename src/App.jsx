@@ -1,9 +1,8 @@
-import "./App.css";
+import "./App.css"; 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
-import AICareerCoach from "./pages/AICareerCoach";
 import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
@@ -11,12 +10,14 @@ import Interview from "./pages/Interview";
 import MyResumes from "./pages/MyResumes";
 import JobMatcher from "./pages/JobMatcher";
 import VerifyOtp from "./pages/VerifyOtp";
-import ResetPassword from "./pages/ResetPassword";
 import JobTracker from "./pages/JobTracker";
-import ViewResume from "./pages/ViewResume";
+import ResumeView from "./pages/ResumeView";
 import CoverLetter from "./pages/CoverLetter";
 import CareerRoadmap from "./pages/CareerRoadmap";
 import ResumeBuilder from "./pages/ResumeBuilder";
+import AICareerCoach from "./pages/AICareerCoach";
+import ResetPassword from "./pages/ResetPassword";
+import ResumeVersions from "./pages/ResumeVersions";
 import { UserProvider } from "./context/UserContext";
 import InterviewHistory from "./pages/InterviewHistory";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -27,7 +28,6 @@ import ResumeTemplates from "./pages/ResumeTemplates";
 import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
 import { Toaster } from "react-hot-toast";
-import { useLocation } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -50,7 +50,7 @@ function App() {
   location.pathname.startsWith("/ai-career-coach")||
   location.pathname.startsWith("/interview-history")||
   location.pathname.startsWith("/mock-interview");
-  location.pathname.startsWith("/ResumeReview");
+  location.pathname.startsWith("/resume-review");
   location.pathname.startsWith("/resume-templates");
   return (
     <BrowserRouter>
@@ -79,6 +79,23 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
+          <Route
+            path="/resumes/:id/versions"
+            element={
+              <ProtectedRoute>
+                <ResumeVersions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+          path="/view-resume/:id"
+          element={
+            <ProtectedRoute>
+              <ResumeView />
+            </ProtectedRoute>
+          }
+        />
           <Route
             path="/mock-interview-history"
             element={

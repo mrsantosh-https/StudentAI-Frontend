@@ -1,0 +1,612 @@
+/* =========================================================
+   RESUME VERSION HISTORY
+========================================================= */
+
+.resume-version-page {
+  width: 100%;
+}
+
+.resume-version-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.resume-version-header h2 {
+  margin: 0 0 6px;
+  color: #0f172a;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.resume-version-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   VERSION GRID
+========================================================= */
+
+.resume-version-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 26px;
+}
+
+
+/* =========================================================
+   VERSION CARD
+========================================================= */
+
+.resume-version-card {
+  position: relative;
+  overflow: hidden;
+
+  padding: 22px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.resume-version-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #c7d2fe;
+
+  box-shadow:
+    0 16px 35px rgba(15, 23, 42, 0.1);
+}
+
+
+/* =========================================================
+   TOP ACCENT
+========================================================= */
+
+.resume-version-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+
+  background: linear-gradient(
+    90deg,
+    #4f46e5,
+    #6366f1,
+    #8b5cf6
+  );
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.resume-version-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+.resume-version-card-title {
+  min-width: 0;
+}
+
+.resume-version-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 10px;
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background: #eef2ff;
+  color: #4338ca;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.resume-version-card-title h4 {
+  margin: 0 0 5px;
+
+  color: #111827;
+
+  font-size: 18px;
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
+}
+
+.resume-version-date {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TEMPLATE BADGE
+========================================================= */
+
+.resume-version-template {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+
+  background: #f8fafc;
+  color: #475569;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: capitalize;
+}
+
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+.resume-version-details {
+  display: grid;
+  gap: 10px;
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  background: #f8fafc;
+}
+
+.resume-version-detail-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  font-size: 13px;
+}
+
+.resume-version-detail-row span:first-child {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.resume-version-detail-row span:last-child {
+  color: #0f172a;
+  font-weight: 700;
+  text-align: right;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.resume-version-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.resume-version-actions .btn {
+  min-height: 42px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.resume-version-empty {
+  margin-top: 28px;
+  padding: 50px 24px;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+.resume-version-empty h4 {
+  margin-bottom: 8px;
+
+  color: #0f172a;
+
+  font-weight: 800;
+}
+
+.resume-version-empty p {
+  margin: 0;
+
+  color: #64748b;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark-mode .resume-version-header h2,
+.dark .resume-version-header h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .resume-version-header p,
+.dark .resume-version-header p {
+  color: #94a3b8;
+}
+
+body.dark-mode .resume-version-card,
+.dark .resume-version-card {
+  border-color: #334155;
+
+  background: #1e293b;
+
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+body.dark-mode .resume-version-card-title h4,
+.dark .resume-version-card-title h4 {
+  color: #f8fafc;
+}
+
+body.dark-mode .resume-version-date,
+.dark .resume-version-date {
+  color: #94a3b8;
+}
+
+body.dark-mode .resume-version-details,
+.dark .resume-version-details {
+  background: #0f172a;
+}
+
+body.dark-mode
+  .resume-version-detail-row
+  span:first-child,
+.dark
+  .resume-version-detail-row
+  span:first-child {
+  color: #94a3b8;
+}
+
+body.dark-mode
+  .resume-version-detail-row
+  span:last-child,
+.dark
+  .resume-version-detail-row
+  span:last-child {
+  color: #f8fafc;
+}
+
+body.dark-mode .resume-version-template,
+.dark .resume-version-template {
+  border-color: #475569;
+
+  background: #0f172a;
+
+  color: #cbd5e1;
+}
+
+body.dark-mode .resume-version-empty,
+.dark .resume-version-empty {
+  border-color: #475569;
+
+  background: #1e293b;
+}
+
+body.dark-mode .resume-version-empty h4,
+.dark .resume-version-empty h4 {
+  color: #f8fafc;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+  .resume-version-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+  .resume-version-header h2 {
+    font-size: 24px;
+  }
+
+  .resume-version-card {
+    padding: 18px;
+  }
+
+  .resume-version-card-header {
+    flex-direction: column;
+  }
+
+  .resume-version-template {
+    align-self: flex-start;
+  }
+
+  .resume-version-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-version-detail-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .resume-version-detail-row span:last-child {
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   VERSION PREVIEW MODAL
+========================================================= */
+
+.resume-version-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.resume-version-preview-modal {
+  display: flex;
+  flex-direction: column;
+
+  width: min(1100px, 100%);
+  max-height: 92vh;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.28);
+}
+
+.resume-version-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 18px 22px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.resume-version-preview-header h3 {
+  margin: 0 0 4px;
+
+  color: #2255c4;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.resume-version-preview-header p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.resume-version-preview-body {
+  flex: 1;
+
+  overflow: auto;
+
+  padding: 24px;
+
+  background: #f8fafc;
+}
+
+.resume-version-preview-body #resume-template {
+  margin: 0 auto;
+}
+
+.resume-version-preview-footer {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 16px 22px;
+
+  border-top: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+/* 3 buttons now */
+.resume-version-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .resume-version-preview-overlay {
+    padding: 12px;
+  }
+
+  .resume-version-preview-modal {
+    max-height: 95vh;
+    border-radius: 14px;
+  }
+
+  .resume-version-preview-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .resume-version-preview-body {
+    padding: 14px;
+  }
+
+  .resume-version-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .resume-version-preview-overlay {
+    padding: 0;
+  }
+
+  .resume-version-preview-modal {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+
+    border-radius: 0;
+  }
+
+  .resume-version-preview-footer {
+    flex-direction: column-reverse;
+  }
+
+  .resume-version-preview-footer .btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   FORCE PREVIEW BUTTON COLOR
+========================================================= */
+
+.resume-version-actions .resume-version-preview-btn,
+.resume-version-actions .resume-version-preview-btn.btn {
+  background: #eef2ff !important;
+  background-color: #eef2ff !important;
+
+  color: #4338ca !important;
+
+  border: 1px solid #c7d2fe !important;
+
+  box-shadow: none !important;
+
+  font-weight: 700 !important;
+}
+
+.resume-version-actions .resume-version-preview-btn:hover,
+.resume-version-actions .resume-version-preview-btn.btn:hover {
+  background: #dbeafe !important;
+  background-color: #dbeafe !important;
+
+  color: #1d4ed8 !important;
+
+  border-color: #93c5fd !important;
+}
+
+.resume-version-actions .resume-version-preview-btn:focus,
+.resume-version-actions .resume-version-preview-btn:active,
+.resume-version-actions .resume-version-preview-btn.btn:focus,
+.resume-version-actions .resume-version-preview-btn.btn:active {
+  background: #dbeafe !important;
+  background-color: #dbeafe !important;
+
+  color: #1d4ed8 !important;
+
+  border-color: #93c5fd !important;
+
+  box-shadow: none !important;
+}
+
+/* Dark mode me bhi black nahi hoga */
+
+body.dark-mode
+  .resume-version-actions
+  .resume-version-preview-btn,
+.dark
+  .resume-version-actions
+  .resume-version-preview-btn {
+  background: #eef2ff !important;
+  background-color: #eef2ff !important;
+
+  color: #4338ca !important;
+
+  border-color: #c7d2fe !important;
+}
+
+body.dark-mode
+  .resume-version-actions
+  .resume-version-preview-btn:hover,
+.dark
+  .resume-version-actions
+  .resume-version-preview-btn:hover {
+  background: #1568d4 !important;
+  background-color: #dbeafe !important;
+
+  color: #1d4ed8 !important;
+
+  border-color: #93c5fd !important;
+}

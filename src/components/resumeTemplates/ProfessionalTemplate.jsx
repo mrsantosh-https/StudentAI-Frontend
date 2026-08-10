@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function ProfessionalTemplate({ resume = {} }) {
   const getArray = (value) => {
     if (Array.isArray(value)) {

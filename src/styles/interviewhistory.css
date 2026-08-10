@@ -1,0 +1,340 @@
+/* =========================================================
+   INTERVIEW HISTORY PAGE
+========================================================= */
+
+.dashboard-content {
+  width: 100%;
+  padding: 28px;
+}
+
+.dashboard-content > h2 {
+  margin-bottom: 8px;
+  font-size: 30px;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.dashboard-content > .text-muted {
+  margin-bottom: 24px;
+  font-size: 15px;
+  color: #6b7280 !important;
+}
+
+
+/* =========================================================
+   INTERVIEW HISTORY CARD
+========================================================= */
+
+.dashboard-content .card {
+  position: relative;
+  width: 100%;
+  border-radius: 18px !important;
+  background: #ffffff;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.dashboard-content .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+
+/* =========================================================
+   ROLE TITLE
+========================================================= */
+
+.dashboard-content .card h5 {
+  margin: 0 110px 18px 0;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  color: #111827;
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.dashboard-content .card .btn-danger {
+  position: 0;
+
+  top: 22px;
+  right: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  min-width: 88px;
+
+  padding: 8px 14px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-content .card .btn-danger:hover {
+  background: #dc2626;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
+}
+
+.dashboard-content .card .btn-danger:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   CARD TEXT
+========================================================= */
+
+.dashboard-content .card p {
+  margin-bottom: 14px;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  color: #4b5563;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dashboard-content .card p strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.dashboard-content .card hr {
+  margin: 20px 0;
+
+  border: none;
+  border-top: 1px solid #e5e7eb;
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   AI FEEDBACK AREA
+========================================================= */
+
+.dashboard-content .card hr + div {
+  padding: 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #f8fafc;
+
+  font-size: 15px;
+  line-height: 1.75;
+
+  color: #374151;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+  .dashboard-content {
+    padding: 22px;
+  }
+
+  .dashboard-content > h2 {
+    font-size: 27px;
+  }
+
+  .dashboard-content .card {
+    padding: 22px !important;
+  }
+
+  .dashboard-content .card .btn-danger {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-content {
+    padding: 18px;
+  }
+
+  .dashboard-content > h2 {
+    font-size: 24px;
+  }
+
+  .dashboard-content > .text-muted {
+    margin-bottom: 18px;
+
+    font-size: 14px;
+  }
+
+  .dashboard-content .card {
+    padding: 20px !important;
+
+    border-radius: 16px !important;
+  }
+
+  .dashboard-content .card h5 {
+    margin-right: 0;
+    margin-bottom: 14px;
+
+    font-size: 18px;
+  }
+
+  .dashboard-content .card .btn-danger {
+    position: static;
+
+    width: auto;
+    min-width: 90px;
+
+    margin-bottom: 18px !important;
+  }
+
+  .dashboard-content .card p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .dashboard-content .card hr + div {
+    padding: 15px;
+
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .dashboard-content {
+    padding: 14px;
+  }
+
+  .dashboard-content > h2 {
+    font-size: 21px;
+  }
+
+  .dashboard-content .card {
+    padding: 16px !important;
+
+    margin-top: 16px !important;
+
+    border-radius: 14px !important;
+  }
+
+  .dashboard-content .card h5 {
+    font-size: 17px;
+  }
+
+  .dashboard-content .card .btn-danger {
+    width: 100%;
+    min-height: 42px;
+
+    border-radius: 9px;
+  }
+
+  .dashboard-content .card p {
+    margin-bottom: 12px;
+
+    font-size: 13.5px;
+  }
+
+  .dashboard-content .card hr {
+    margin: 16px 0;
+  }
+
+  .dashboard-content .card hr + div {
+    padding: 13px;
+
+    border-radius: 12px;
+
+    font-size: 13.5px;
+  }
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+.dark-mode .dashboard-content > h2 {
+  color: #f9fafb;
+}
+
+.dark-mode .dashboard-content > .text-muted {
+  color: #9ca3af !important;
+}
+
+.dark-mode .dashboard-content .card {
+  background: #111827;
+}
+
+.dark-mode .dashboard-content .card h5 {
+  color: #f9fafb;
+}
+
+.dark-mode .dashboard-content .card p {
+  color: #d1d5db;
+}
+
+.dark-mode .dashboard-content .card p strong {
+  color: #f3f4f6;
+}
+
+.dark-mode .dashboard-content .card hr {
+  border-top-color: #374151;
+}
+
+.dark-mode .dashboard-content .card hr + div {
+  border-color: #374151;
+
+  background: #1f2937;
+
+  color: #d1d5db;
+}

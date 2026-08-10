@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function MinimalTemplate({ resume = {} }) {
   const getArray = (value) => {
     if (Array.isArray(value)) return value;
