@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaBell, FaCheck, FaTrash } from "react-icons/fa";
+import { FaBell, FaCheck } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+
 import { useUser } from "../context/UserContext";
 import { API_URL } from "../services/api";
+
 import "../styles/dashboardLayout.css";
 
 export default function Topbar() {
@@ -13,14 +15,27 @@ export default function Topbar() {
 
   const { user } = useUser();
 
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [notificationLoading, setNotificationLoading] = useState(false);
+  const [showNotifications, setShowNotifications] =
+    useState(false);
+
+  const [notifications, setNotifications] =
+    useState([]);
+
+  const [unreadCount, setUnreadCount] =
+    useState(0);
+
+  const [notificationLoading, setNotificationLoading] =
+    useState(false);
 
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
+
+  /*
+  |--------------------------------------------------------------------------
+  | Page Titles
+  |--------------------------------------------------------------------------
+  */
 
   const pageTitles = {
     "/dashboard": "Dashboard",
@@ -36,86 +51,170 @@ export default function Topbar() {
     "/interview": "AI Interview",
     "/job-matcher": "Job Matcher",
     "/mock-interview": "AI Mock Interview",
-    "/mock-interview-history": "Mock Interview History",
+    "/mock-interview-history":
+      "Mock Interview History",
     "/ai-career-coach": "AI Career Coach",
+    "/admin/dashboard": "Admin Dashboard",
+    "/admin/user-analytics": "User Analytics",
+    "/admin/ai-analytics": "AI Usage Analytics",
   };
 
-  const currentTitle = pageTitles[location.pathname] || "StudentAI";
+  const currentTitle =
+    pageTitles[location.pathname] ||
+    "StudentAI";
 
-  const token = localStorage.getItem("token");
+  /*
+  |--------------------------------------------------------------------------
+  | Auth
+  |--------------------------------------------------------------------------
+  */
 
-  const backendUrl = API_URL.replace(/\/api\/?$/, "");
+  const token =
+    localStorage.getItem("token");
 
-  const profileImageUrl = user?.profile_photo
-    ? `${backendUrl}/storage/${user.profile_photo.replace(
-        /^storage\//,
-        ""
-      )}`
-    : null;
+  const backendUrl =
+    API_URL.replace(/\/api\/?$/, "");
+
+  /*
+  |--------------------------------------------------------------------------
+  | Profile Image
+  |--------------------------------------------------------------------------
+  */
+
+  const profileImageUrl =
+    user?.profile_photo
+      ? `${backendUrl}/storage/${user.profile_photo.replace(
+          /^storage\//,
+          ""
+        )}`
+      : null;
+
+  /*
+  |--------------------------------------------------------------------------
+  | Dark Mode
+  |--------------------------------------------------------------------------
+  */
 
   useEffect(() => {
-    document.body.classList.toggle("dark-mode", darkMode);
-    localStorage.setItem("darkMode", darkMode);
+    document.body.classList.toggle(
+      "dark-mode",
+      darkMode
+    );
+
+    localStorage.setItem(
+      "darkMode",
+      darkMode
+    );
   }, [darkMode]);
 
-  const fetchNotifications = async () => {
-    if (!token) return;
+  /*
+  |--------------------------------------------------------------------------
+  | Fetch Notifications
+  |--------------------------------------------------------------------------
+  */
 
+  useEffect(() => {
+  if (!token) return;
+
+  const loadNotifications = async () => {
     try {
       setNotificationLoading(true);
 
-      const response = await fetch(`${API_URL}/notifications`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+      const response = await fetch(
+        `${API_URL}/notifications`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to fetch notifications"
+          data.message ||
+            "Failed to fetch notifications"
         );
       }
 
-      setNotifications(data.notifications || []);
-      setUnreadCount(data.unread_count || 0);
+      const list = Array.isArray(data.notifications)
+        ? data.notifications
+        : [];
+
+      setNotifications(list);
+
+      const count =
+        data.unread_count !== undefined
+          ? Number(data.unread_count) || 0
+          : list.filter(
+              (notification) => !notification.read_at
+            ).length;
+
+      setUnreadCount(count);
     } catch (error) {
-      console.error("Notification fetch error:", error);
+      console.error(
+        "Notification fetch error:",
+        error
+      );
     } finally {
       setNotificationLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  loadNotifications();
+}, [token]);
+  /*
+  |--------------------------------------------------------------------------
+  | Outside Click
+  |--------------------------------------------------------------------------
+  */
 
   useEffect(() => {
-    const handleOutsideClick = (event) => {
+    const handleOutsideClick = (
+      event
+    ) => {
       if (
         notificationRef.current &&
-        !notificationRef.current.contains(event.target)
+        !notificationRef.current.contains(
+          event.target
+        )
       ) {
         setShowNotifications(false);
       }
     };
 
-    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener(
+      "mousedown",
+      handleOutsideClick
+    );
 
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
     };
   }, []);
 
-  const markAsRead = async (id) => {
-    const selectedNotification = notifications.find(
-      (item) => item.id === id
-    );
+  /*
+  |--------------------------------------------------------------------------
+  | Mark One As Read
+  |--------------------------------------------------------------------------
+  */
 
-    if (!selectedNotification || selectedNotification.is_read) {
+  const markAsRead = async (id) => {
+    const selectedNotification =
+      notifications.find(
+        (item) => item.id === id
+      );
+
+    if (
+      !selectedNotification ||
+      selectedNotification.read_at
+    ) {
       return;
     }
 
@@ -124,179 +223,337 @@ export default function Topbar() {
         `${API_URL}/notifications/read/${id}`,
         {
           method: "POST",
+
           headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
+            Authorization:
+              `Bearer ${token}`,
+
+            Accept:
+              "application/json",
           },
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to mark notification as read"
+          data.message ||
+            "Failed to mark notification as read"
         );
       }
 
-      setNotifications((previousNotifications) =>
-        previousNotifications.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                is_read: true,
-              }
-            : item
-        )
+      setNotifications(
+        (previousNotifications) =>
+          previousNotifications.map(
+            (item) =>
+              item.id === id
+                ? {
+                    ...item,
+                    read_at:
+                      item.read_at ||
+                      new Date().toISOString(),
+                  }
+                : item
+          )
       );
 
-      setUnreadCount((previousCount) =>
-        Math.max(previousCount - 1, 0)
+      setUnreadCount(
+        (previousCount) =>
+          Math.max(
+            previousCount - 1,
+            0
+          )
       );
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+
+      toast.error(
+        error.message
+      );
     }
   };
 
+  /*
+  |--------------------------------------------------------------------------
+  | Mark All As Read
+  |--------------------------------------------------------------------------
+  */
+
   const markAllAsRead = async () => {
-    if (unreadCount === 0) return;
+    if (unreadCount === 0) {
+      return;
+    }
 
     try {
       const response = await fetch(
         `${API_URL}/notifications/read-all`,
         {
           method: "POST",
+
           headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
+            Authorization:
+              `Bearer ${token}`,
+
+            Accept:
+              "application/json",
           },
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to mark all notifications as read"
+          data.message ||
+            "Failed to mark all notifications as read"
         );
       }
 
-      setNotifications((previousNotifications) =>
-        previousNotifications.map((item) => ({
-          ...item,
-          is_read: true,
-        }))
+      const now =
+        new Date().toISOString();
+
+      setNotifications(
+        (previousNotifications) =>
+          previousNotifications.map(
+            (item) => ({
+              ...item,
+
+              read_at:
+                item.read_at ||
+                now,
+            })
+          )
       );
 
       setUnreadCount(0);
-      toast.success("All notifications marked as read");
+
+      toast.success(
+        "All notifications marked as read"
+      );
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+
+      toast.error(
+        error.message
+      );
     }
   };
 
-  const deleteNotification = async (id) => {
-    const deletedNotification = notifications.find(
-      (item) => item.id === id
-    );
+  /*
+  |--------------------------------------------------------------------------
+  | Delete Notification
+  |--------------------------------------------------------------------------
+  */
+
+  const deleteNotification = async (
+    id
+  ) => {
+    const deletedNotification =
+      notifications.find(
+        (item) => item.id === id
+      );
 
     try {
       const response = await fetch(
         `${API_URL}/notifications/${id}`,
         {
           method: "DELETE",
+
           headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
+            Authorization:
+              `Bearer ${token}`,
+
+            Accept:
+              "application/json",
           },
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to delete notification"
+          data.message ||
+            "Failed to delete notification"
         );
       }
 
-      setNotifications((previousNotifications) =>
-        previousNotifications.filter((item) => item.id !== id)
+      setNotifications(
+        (previousNotifications) =>
+          previousNotifications.filter(
+            (item) =>
+              item.id !== id
+          )
       );
+
+      /*
+       * Agar deleted notification unread thi
+       * to unread count bhi decrease karo.
+       */
 
       if (
         deletedNotification &&
-        !deletedNotification.is_read
+        !deletedNotification.read_at
       ) {
-        setUnreadCount((previousCount) =>
-          Math.max(previousCount - 1, 0)
+        setUnreadCount(
+          (previousCount) =>
+            Math.max(
+              previousCount - 1,
+              0
+            )
         );
       }
 
-      toast.success("Notification deleted");
+      toast.success(
+        "Notification deleted"
+      );
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+
+      toast.error(
+        error.message
+      );
     }
   };
 
+  /*
+  |--------------------------------------------------------------------------
+  | Logout
+  |--------------------------------------------------------------------------
+  */
+
   const handleLogout = async () => {
-    const result = await Swal.fire({
-      title: "Logout?",
-      text: "Are you sure you want to logout?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Logout",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#2563eb",
-      cancelButtonColor: "#6c757d",
-    });
+    const result =
+      await Swal.fire({
+        title: "Logout?",
 
-    if (!result.isConfirmed) return;
+        text:
+          "Are you sure you want to logout?",
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+        icon: "warning",
 
-    toast.success("Logout successful");
+        showCancelButton: true,
+
+        confirmButtonText:
+          "Yes, Logout",
+
+        cancelButtonText:
+          "Cancel",
+
+        confirmButtonColor:
+          "#2563eb",
+
+        cancelButtonColor:
+          "#6c757d",
+      });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    localStorage.removeItem(
+      "token"
+    );
+
+    localStorage.removeItem(
+      "user"
+    );
+
+    toast.success(
+      "Logout successful"
+    );
 
     setTimeout(() => {
-      window.location.href = "/login";
+      window.location.href =
+        "/login";
     }, 800);
   };
 
-  const formatNotificationTime = (date) => {
-    if (!date) return "";
+  /*
+  |--------------------------------------------------------------------------
+  | Format Notification Time
+  |--------------------------------------------------------------------------
+  */
 
-    return new Date(date).toLocaleString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatNotificationTime = (
+    date
+  ) => {
+    if (!date) {
+      return "";
+    }
+
+    const parsedDate =
+      new Date(date);
+
+    if (
+      Number.isNaN(
+        parsedDate.getTime()
+      )
+    ) {
+      return "";
+    }
+
+    return parsedDate.toLocaleString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
   };
+
+  /*
+  |--------------------------------------------------------------------------
+  | JSX
+  |--------------------------------------------------------------------------
+  */
 
   return (
     <div className="topbar">
+      {/* =====================================================
+          TITLE
+      ===================================================== */}
+
       <div className="topbar-title">
-        <h4>{currentTitle}</h4>
+        <h4>
+          {currentTitle}
+        </h4>
 
         <p>
           Welcome back,{" "}
-          <strong>{user?.name || "User"}</strong> 👋
+          <strong>
+            {user?.name || "User"}
+          </strong>{" "}
+          👋
         </p>
       </div>
 
+      {/* =====================================================
+          ACTIONS
+      ===================================================== */}
+
       <div className="topbar-actions">
+        {/* Dark Mode */}
+
         <button
           type="button"
           className={`theme-toggle ${
-            darkMode ? "active" : ""
+            darkMode
+              ? "active"
+              : ""
           }`}
           onClick={() =>
-            setDarkMode((previousMode) => !previousMode)
+            setDarkMode(
+              (previousMode) =>
+                !previousMode
+            )
           }
           title={
             darkMode
@@ -304,8 +561,16 @@ export default function Topbar() {
               : "Enable dark mode"
           }
         >
-          <span>{darkMode ? "🌙" : "☀️"}</span>
+          <span>
+            {darkMode
+              ? "🌙"
+              : "☀️"}
+          </span>
         </button>
+
+        {/* =================================================
+            NOTIFICATIONS
+        ================================================= */}
 
         <div
           className="notification-wrapper"
@@ -316,7 +581,8 @@ export default function Topbar() {
             className="notification-btn"
             onClick={() =>
               setShowNotifications(
-                (previousValue) => !previousValue
+                (previousValue) =>
+                  !previousValue
               )
             }
             title="Notifications"
@@ -325,17 +591,26 @@ export default function Topbar() {
 
             {unreadCount > 0 && (
               <span className="notification-badge">
-                {unreadCount > 9 ? "9+" : unreadCount}
+                {unreadCount > 9
+                  ? "9+"
+                  : unreadCount}
               </span>
             )}
           </button>
 
           {showNotifications && (
             <div className="notification-dropdown">
+              {/* Header */}
+
               <div className="notification-header">
                 <div>
-                  <h5>Notifications</h5>
-                  <small>{unreadCount} unread</small>
+                  <h5>
+                    Notifications
+                  </h5>
+
+                  <small>
+                    {unreadCount} unread
+                  </small>
                 </div>
 
                 {unreadCount > 0 && (
@@ -345,38 +620,92 @@ export default function Topbar() {
                     onClick={markAllAsRead}
                   >
                     <FaCheck />
-                    <span>Mark all</span>
+
+                    <span>
+                      Mark all
+                    </span>
                   </button>
                 )}
               </div>
 
-             <div className="notification-list">
-              {notifications.length === 0 ? (
-                <div className="no-notification">
-                  <p>No notifications yet</p>
-                </div>
-              ) : (
-                notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`notification-item ${
-                      !notification.read_at ? "unread" : ""
-                    }`}
-                  >
-                    <strong>{notification.title}</strong>
-                    <p>{notification.message}</p>
-                    <small>{notification.created_at}</small>
+              {/* Notifications */}
 
-                    <button className="notification-delete">
-                      ✕
-                    </button>
+              <div className="notification-list">
+                {notificationLoading ? (
+                  <div className="no-notification">
+                    <p>
+                      Loading notifications...
+                    </p>
                   </div>
-                ))
-              )}
-            </div>
+                ) : notifications.length ===
+                  0 ? (
+                  <div className="no-notification">
+                    <p>
+                      No notifications yet
+                    </p>
+                  </div>
+                ) : (
+                  notifications.map(
+                    (notification) => (
+                      <div
+                        key={
+                          notification.id
+                        }
+                        className={`notification-item ${
+                          !notification.read_at
+                            ? "unread"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          markAsRead(
+                            notification.id
+                          )
+                        }
+                      >
+                        <strong>
+                          {notification.title ||
+                            "Notification"}
+                        </strong>
+
+                        <p>
+                          {notification.message ||
+                            ""}
+                        </p>
+
+                        <small>
+                          {formatNotificationTime(
+                            notification.created_at
+                          )}
+                        </small>
+
+                        <button
+                          type="button"
+                          className="notification-delete"
+                          title="Delete notification"
+                          onClick={(
+                            event
+                          ) => {
+                            event.stopPropagation();
+
+                            deleteNotification(
+                              notification.id
+                            );
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )
+                  )
+                )}
+              </div>
             </div>
           )}
         </div>
+
+        {/* =================================================
+            PROFILE
+        ================================================= */}
 
         <Link
           to="/profile"
@@ -386,21 +715,39 @@ export default function Topbar() {
           {profileImageUrl ? (
             <img
               src={profileImageUrl}
-              alt={`${user?.name || "User"} profile`}
+              alt={`${
+                user?.name ||
+                "User"
+              } profile`}
               onError={(event) => {
-                event.currentTarget.style.display = "none";
+                event.currentTarget.style.display =
+                  "none";
               }}
             />
           ) : (
             <span>
-              {user?.name?.charAt(0)?.toUpperCase() || "U"}
+              {user?.name
+                ?.charAt(0)
+                ?.toUpperCase() ||
+                "U"}
             </span>
           )}
         </Link>
 
-        <button type="button" className="upgrade-btn">
+        {/* =================================================
+            UPGRADE
+        ================================================= */}
+
+        <button
+          type="button"
+          className="upgrade-btn"
+        >
           Upgrade Pro
         </button>
+
+        {/* =================================================
+            LOGOUT
+        ================================================= */}
 
         <button
           type="button"

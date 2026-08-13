@@ -1,4 +1,5 @@
-import "./App.css"; 
+import "./App.css";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -18,102 +19,181 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import AICareerCoach from "./pages/AICareerCoach";
 import ResetPassword from "./pages/ResetPassword";
 import ResumeVersions from "./pages/ResumeVersions";
-import { UserProvider } from "./context/UserContext";
+import AdminAIAnalytics from "./pages/AdminAIAnalytics";
 import InterviewHistory from "./pages/InterviewHistory";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import MockInterview from "./pages/MockInterview";
 import ResumeReview from "./pages/ResumeReview";
+import AdminDashboard from "./pages/AdminDashboard";
 import ResumeTemplates from "./pages/ResumeTemplates";
+import AdminUserAnalytics from "./pages/AdminUserAnalytics";
 import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
-import { Toaster } from "react-hot-toast";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
- const hideNavbar =
-  location.pathname.startsWith("/dashboard") ||
-  location.pathname.startsWith("/settings ") ||
-  location.pathname.startsWith("/profile") ||
-  location.pathname.startsWith("/resume-builder") ||
-  location.pathname.startsWith("/my-resumes") ||
-  location.pathname.startsWith("/view-resume") ||
-  location.pathname.startsWith("/edit-resume") ||
-  location.pathname.startsWith("/cover-letter") ||
-  location.pathname.startsWith("/interview") ||
-  location.pathname.startsWith("/career-roadmap") ||
-  location.pathname.startsWith("/job-tracker") ||
-  location.pathname.startsWith("/job-matcher") ||
-  location.pathname.startsWith("/dashboard") ||
-  location.pathname.startsWith("/profile") ||
-  location.pathname.startsWith("/settings") ||
-  location.pathname.startsWith("/ai-career-coach")||
-  location.pathname.startsWith("/interview-history")||
-  location.pathname.startsWith("/mock-interview");
-  location.pathname.startsWith("/resume-review");
-  location.pathname.startsWith("/resume-templates");
+import { Toaster } from "react-hot-toast";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
+import { UserProvider } from "./context/UserContext";
+
+/*
+|--------------------------------------------------------------------------
+| App Routes Content
+|--------------------------------------------------------------------------
+*/
+
+function AppContent() {
+  const location = useLocation();
+
+  /*
+  |--------------------------------------------------------------------------
+  | Navbar
+  |--------------------------------------------------------------------------
+  |
+  | Navbar ONLY Login and Signup pages par show hoga.
+  | Baaki sab pages par hide rahega.
+  |
+  */
+
+  const showNavbar =
+    location.pathname === "/login" ||
+    location.pathname === "/signup";
+
   return (
-    <BrowserRouter>
-      <UserProvider>
-       <div className="app">
-        {!hideNavbar && <Navbar />}
-        <Toaster position="top-right" />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/resumes/:id/review"
-            element={<ResumeReview />}
-          />
-          <Route
-            path="/resume-templates/:id"
-            element={<ResumeTemplates />}
-          />
-         <Route
-              path="/mock-interview"
-              element={
-              <ProtectedRoute>
-                <MockInterview />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/resumes/:id/versions"
-            element={
-              <ProtectedRoute>
-                <ResumeVersions />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-          path="/view-resume/:id"
+    <div className="app">
+      {showNavbar && <Navbar />}
+
+      <Toaster position="top-right" />
+
+      <Routes>
+        {/* =====================================================
+            PUBLIC ROUTES
+        ===================================================== */}
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/verify-otp"
+          element={<VerifyOtp />}
+        />
+
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+        />
+
+        {/* =====================================================
+            RESUME REVIEW
+        ===================================================== */}
+
+        <Route
+          path="/resumes/:id/review"
           element={
             <ProtectedRoute>
-              <ResumeView />
+              <ResumeReview />
             </ProtectedRoute>
           }
         />
-          <Route
-            path="/mock-interview-history"
-            element={
-              <ProtectedRoute>
-                <MockInterviewHistory />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mock-interview-result/:id"
-            element={
-              <ProtectedRoute>
-                  <MockInterviewResult />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
+
+        {/* =====================================================
+            RESUME TEMPLATES
+        ===================================================== */}
+
+        <Route
+          path="/resume-templates/:id"
+          element={
+            <ProtectedRoute>
+              <ResumeTemplates />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            ADMIN
+        ===================================================== */}
+
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/user-analytics"
+          element={
+            <ProtectedRoute>
+              <AdminUserAnalytics />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/ai-analytics"
+          element={
+            <ProtectedRoute>
+              <AdminAIAnalytics />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            DASHBOARD
+        ===================================================== */}
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            PROFILE
+        ===================================================== */}
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            AI CAREER COACH
+        ===================================================== */}
+
+        <Route
           path="/ai-career-coach"
           element={
             <ProtectedRoute>
@@ -121,133 +201,201 @@ function App() {
             </ProtectedRoute>
           }
         />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+        {/* =====================================================
+            RESUME BUILDER
+        ===================================================== */}
 
-          <Route
-            path="/resume-builder"
-            element={
-              <ProtectedRoute>
-                <ResumeBuilder />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/resume-builder"
+          element={
+            <ProtectedRoute>
+              <ResumeBuilder />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/my-resumes"
-            element={
-              <ProtectedRoute>
-                <MyResumes />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/edit-resume/:id"
+          element={
+            <ProtectedRoute>
+              <ResumeBuilder />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/cover-letter"
-            element={
-              <ProtectedRoute>
-                <CoverLetter />
-              </ProtectedRoute>
-            }
-          />
-       
-           <Route
-            path="/interview/"
-            element={
-              <ProtectedRoute>
-                <Interview />
-              </ProtectedRoute>
-            }
-          />
+        {/* =====================================================
+            MY RESUMES
+        ===================================================== */}
 
-          <Route
-            path="/career-roadmap/"
-            element={
-              <ProtectedRoute>
-                <CareerRoadmap />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/my-resumes"
+          element={
+            <ProtectedRoute>
+              <MyResumes />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/job-tracker/"
-            element={
-              <ProtectedRoute>
-                <JobTracker />
-              </ProtectedRoute>
-            }
-          />
+        {/* =====================================================
+            VIEW RESUME
+        ===================================================== */}
 
-          <Route
-            path="/job-matcher/"
-            element={
-              <ProtectedRoute>
-                <JobMatcher />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/view-resume/:id"
+          element={
+            <ProtectedRoute>
+              <ResumeView />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/interview-history/"
-            element={
-              <ProtectedRoute>
-                <InterviewHistory />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/view-resume/:id"
-            element={
-              <ProtectedRoute>
-                <InterviewHistory />
-              </ProtectedRoute>
-            }
-          />
+        {/* =====================================================
+            RESUME VERSION HISTORY
+        ===================================================== */}
 
-          <Route
-            path="/edit-resume/:id"
-            element={
-              <ProtectedRoute>
-                <ResumeBuilder />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/resumes/:id/versions"
+          element={
+            <ProtectedRoute>
+              <ResumeVersions />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/verify-otp"
-            element={<VerifyOtp />}
-          />
-          <Route
-            path="/reset-password"
-            element={<ResetPassword />}
-          />
-          
-        </Routes>
-      </div>
+        {/* =====================================================
+            COVER LETTER
+        ===================================================== */}
+
+        <Route
+          path="/cover-letter"
+          element={
+            <ProtectedRoute>
+              <CoverLetter />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            INTERVIEW
+        ===================================================== */}
+
+        <Route
+          path="/interview"
+          element={
+            <ProtectedRoute>
+              <Interview />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interview-history"
+          element={
+            <ProtectedRoute>
+              <InterviewHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            MOCK INTERVIEW
+        ===================================================== */}
+
+        <Route
+          path="/mock-interview"
+          element={
+            <ProtectedRoute>
+              <MockInterview />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mock-interview-history"
+          element={
+            <ProtectedRoute>
+              <MockInterviewHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mock-interview-result/:id"
+          element={
+            <ProtectedRoute>
+              <MockInterviewResult />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            CAREER ROADMAP
+        ===================================================== */}
+
+        <Route
+          path="/career-roadmap"
+          element={
+            <ProtectedRoute>
+              <CareerRoadmap />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            JOB TRACKER
+        ===================================================== */}
+
+        <Route
+          path="/job-tracker"
+          element={
+            <ProtectedRoute>
+              <JobTracker />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            JOB MATCHER
+        ===================================================== */}
+
+        <Route
+          path="/job-matcher"
+          element={
+            <ProtectedRoute>
+              <JobMatcher />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* =====================================================
+            SETTINGS
+        ===================================================== */}
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </div>
+  );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Main App
+|--------------------------------------------------------------------------
+*/
+
+function App() {
+  return (
+    <BrowserRouter>
+      <UserProvider>
+        <AppContent />
       </UserProvider>
     </BrowserRouter>
   );

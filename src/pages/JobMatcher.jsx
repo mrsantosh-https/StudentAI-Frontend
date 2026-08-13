@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import api from "../services/api";
@@ -16,72 +16,226 @@ export default function JobMatcher() {
 
   /*
   |--------------------------------------------------------------------------
-  | Fetch resumes
+  | Fetch Resumes
   |--------------------------------------------------------------------------
   */
 
-  const fetchResumes = useCallback(async () => {
-    try {
-      setResumesLoading(true);
-
-      const response = await api.get("/resumes");
-
-      const resumeList = Array.isArray(response.data)
-        ? response.data
-        : Array.isArray(response.data?.resumes)
-        ? response.data.resumes
-        : Array.isArray(response.data?.data)
-        ? response.data.data
-        : [];
-
-      setResumes(resumeList);
-    } catch (error) {
-      console.error(
-        "Fetch resumes failed:",
-        error.response?.data || error
-      );
-
-      setResumes([]);
-
-      toast.error(
-        error.response?.data?.message ||
-          "Resumes load nahi ho sake."
-      );
-    } finally {
-      setResumesLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchResumes = async () => {
+      try {
+        const response = await api.get("/resumes");
+
+        console.log(
+          "Resumes API Response:",
+          response.data
+        );
+
+        let resumeList = [];
+
+        if (Array.isArray(response.data)) {
+          resumeList = response.data;
+        } else if (
+          Array.isArray(response.data?.resumes)
+        ) {
+          resumeList = response.data.resumes;
+        } else if (
+          Array.isArray(response.data?.data)
+        ) {
+          resumeList = response.data.data;
+        } else if (
+          Array.isArray(
+            response.data?.data?.resumes
+          )
+        ) {
+          resumeList =
+            response.data.data.resumes;
+        }
+
+        const validResumes =
+          resumeList.filter((resume) => {
+            const resumeId =
+              resume?.id ??
+              resume?.resume_id;
+
+            const numericId =
+              Number(resumeId);
+
+            return (
+              Number.isInteger(
+                numericId
+              ) &&
+              numericId > 0
+            );
+          });
+
+        if (!isMounted) {
+          return;
+        }
+
+        setResumes(validResumes);
+      } catch (error) {
+        console.error(
+          "Fetch resumes failed:",
+          error.response?.data ||
+            error
+        );
+
+        if (!isMounted) {
+          return;
+        }
+
+        setResumes([]);
+        setSelectedResume("");
+
+        toast.error(
+          error.response?.data
+            ?.message ||
+            "Resumes load nahi ho sake."
+        );
+      } finally {
+        if (isMounted) {
+          setResumesLoading(false);
+        }
+      }
+    };
+
     fetchResumes();
-  }, [fetchResumes]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   /*
   |--------------------------------------------------------------------------
-  | Match job description
+  | Resume Change
+  |--------------------------------------------------------------------------
+  */
+
+  const handleResumeChange = (
+    event
+  ) => {
+    const value =
+      event.target.value;
+
+    if (!value) {
+      setSelectedResume("");
+      return;
+    }
+
+    const resumeId =
+      Number(value);
+
+    if (
+      !Number.isInteger(
+        resumeId
+      ) ||
+      resumeId <= 0
+    ) {
+      setSelectedResume("");
+      return;
+    }
+
+    setSelectedResume(
+      String(resumeId)
+    );
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Match Job Description
   |--------------------------------------------------------------------------
   */
 
   const handleMatch = async () => {
-    const cleanDescription = jobDescription.trim();
+    const resumeId =
+      Number(selectedResume);
 
-    if (!selectedResume) {
+    const cleanDescription =
+      String(
+        jobDescription ?? ""
+      ).trim();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resume Validation
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+      !selectedResume ||
+      !Number.isInteger(
+        resumeId
+      ) ||
+      resumeId <= 0
+    ) {
       await Swal.fire({
         icon: "warning",
         title: "Select Resume",
-        text: "Please select a resume first.",
-        confirmButtonColor: "#2563eb",
+        text:
+          "Please select a valid resume first.",
+        confirmButtonColor:
+          "#2563eb",
       });
 
       return;
     }
 
-    if (cleanDescription.length < 20) {
+    /*
+    |--------------------------------------------------------------------------
+    | Check Selected Resume Exists
+    |--------------------------------------------------------------------------
+    */
+
+    const resumeExists =
+      resumes.some(
+        (resume) => {
+          const currentId =
+            resume?.id ??
+            resume?.resume_id;
+
+          return (
+            Number(currentId) ===
+            resumeId
+          );
+        }
+      );
+
+    if (!resumeExists) {
+      await Swal.fire({
+        icon: "error",
+        title: "Invalid Resume",
+        text:
+          "Selected resume is no longer available. Please select another resume.",
+        confirmButtonColor:
+          "#2563eb",
+      });
+
+      setSelectedResume("");
+
+      return;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Job Description Validation
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+      cleanDescription.length <
+      20
+    ) {
       await Swal.fire({
         icon: "warning",
-        title: "Job Description Too Short",
-        text: "Please enter at least 20 characters.",
-        confirmButtonColor: "#2563eb",
+        title:
+          "Job Description Too Short",
+        text:
+          "Please enter at least 20 characters.",
+        confirmButtonColor:
+          "#2563eb",
       });
 
       return;
@@ -91,49 +245,120 @@ export default function JobMatcher() {
       setLoading(true);
       setResult("");
 
-      const data = await matchJobDescription(
-        Number(selectedResume),
-        cleanDescription
+      console.log(
+        "Selected Resume ID:",
+        resumeId
       );
 
-      if (!data?.success || !data?.result) {
+      console.log(
+        "Job Matcher Request:",
+        {
+          resume_id:
+            resumeId,
+
+          job_description:
+            cleanDescription,
+        }
+      );
+
+      /*
+      |--------------------------------------------------------------------------
+      | API Request
+      |--------------------------------------------------------------------------
+      */
+
+      const data =
+        await matchJobDescription(
+          resumeId,
+          cleanDescription
+        );
+
+      console.log(
+        "Job Matcher Response:",
+        data
+      );
+
+      /*
+      |--------------------------------------------------------------------------
+      | Validate Response
+      |--------------------------------------------------------------------------
+      */
+
+      if (!data?.success) {
         throw new Error(
-          data?.message || "No match result received."
+          data?.message ||
+            "Job matching failed."
         );
       }
 
-      setResult(data.result);
-      toast.success("Job matched successfully!");
+      if (
+        typeof data?.result !==
+          "string" ||
+        !data.result.trim()
+      ) {
+        throw new Error(
+          data?.message ||
+            "No match result received."
+        );
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Success
+      |--------------------------------------------------------------------------
+      */
+
+      setResult(
+        data.result.trim()
+      );
+
+      toast.success(
+        "Job matched successfully!"
+      );
     } catch (error) {
       console.error(
         "Job match failed:",
-        error.response?.data || error
+        error.response?.data ||
+          error
       );
 
       const validationErrors =
-        error.response?.data?.errors;
+        error.response?.data
+          ?.errors;
 
       let errorMessage =
-        error.response?.data?.message ||
+        error.response?.data
+          ?.message ||
         error.message ||
         "Failed to match the job description.";
 
       if (validationErrors) {
-        errorMessage = Object.values(validationErrors)
-          .flat()
-          .join("\n");
+        errorMessage =
+          Object.values(
+            validationErrors
+          )
+            .flat()
+            .join("\n");
       }
 
       await Swal.fire({
         icon: "error",
-        title: "Matching Failed",
+        title:
+          "Matching Failed",
         text: errorMessage,
-        confirmButtonColor: "#2563eb",
+        confirmButtonColor:
+          "#2563eb",
       });
     } finally {
       setLoading(false);
     }
   };
+
+  /*
+  |--------------------------------------------------------------------------
+  | JSX
+  |--------------------------------------------------------------------------
+  */
 
   return (
     <div className="dashboard-layout">
@@ -143,99 +368,147 @@ export default function JobMatcher() {
         <Topbar />
 
         <div className="dashboard-content">
-          <h2 className="fw-bold">🎯 AI Job Matcher</h2>
+          <h2 className="fw-bold">
+            🎯 AI Job Matcher
+          </h2>
 
           <p className="text-muted">
-            Compare your resume with a job description.
+            Compare your resume with a
+            job description.
           </p>
 
+          {/* Resume Selection */}
+
           <div className="card border-0 shadow p-4 mt-4 matcher-card">
-            <h4>Select Resume</h4>
+            <h4>
+              Select Resume
+            </h4>
 
             <select
               className="form-select mt-3"
-              value={selectedResume}
-              onChange={(event) =>
-                setSelectedResume(event.target.value)
+              value={
+                selectedResume
               }
-              disabled={resumesLoading || resumes.length === 0}
+              onChange={
+                handleResumeChange
+              }
+              disabled={
+                loading ||
+                resumesLoading ||
+                resumes.length ===
+                  0
+              }
             >
               <option value="">
                 {resumesLoading
                   ? "Loading resumes..."
-                  : resumes.length === 0
+                  : resumes.length ===
+                    0
                   ? "No resumes available"
                   : "Choose Resume"}
               </option>
 
-              {resumes.map((resume, index) => {
-                const resumeId =
-                  resume?.id ?? resume?.resume_id;
+              {resumes.map(
+                (
+                  resume,
+                  index
+                ) => {
+                  const resumeId =
+                    resume?.id ??
+                    resume?.resume_id;
 
-                if (
-                  resumeId === null ||
-                  resumeId === undefined
-                ) {
-                  return null;
+                  return (
+                    <option
+                      key={`resume-${resumeId}`}
+                      value={String(
+                        resumeId
+                      )}
+                    >
+                      {resume?.title ||
+                        resume?.full_name ||
+                        `Resume ${
+                          index +
+                          1
+                        }`}
+                    </option>
+                  );
                 }
-
-                return (
-                  <option
-                    key={`resume-${resumeId}-${index}`}
-                    value={resumeId}
-                  >
-                    {resume?.title ||
-                      resume?.full_name ||
-                      `Resume ${index + 1}`}
-                  </option>
-                );
-              })}
+              )}
             </select>
 
-            {!resumesLoading && resumes.length === 0 && (
-              <p className="text-danger mt-2 mb-0">
-                Pehle ek resume create karo.
-              </p>
-            )}
+            {!resumesLoading &&
+              resumes.length ===
+                0 && (
+                <p className="text-danger mt-2 mb-0">
+                  Pehle ek resume
+                  create karo.
+                </p>
+              )}
           </div>
 
+          {/* Job Description */}
+
           <div className="card border-0 shadow p-4 mt-4">
-            <h4>Paste Job Description</h4>
+            <h4>
+              Paste Job Description
+            </h4>
 
             <textarea
               className="form-control mt-3"
               rows="8"
               placeholder="Paste job description here..."
-              value={jobDescription}
-              onChange={(event) =>
-                setJobDescription(event.target.value)
+              value={
+                jobDescription
               }
-              disabled={loading}
+              onChange={(
+                event
+              ) =>
+                setJobDescription(
+                  event.target
+                    .value
+                )
+              }
+              disabled={
+                loading
+              }
             />
 
             <button
               type="button"
               className="btn btn-primary mt-3"
-              onClick={handleMatch}
+              onClick={
+                handleMatch
+              }
               disabled={
                 loading ||
                 resumesLoading ||
-                resumes.length === 0
+                resumes.length ===
+                  0 ||
+                !selectedResume
               }
             >
-              {loading ? "Matching..." : "🎯 Check Match"}
+              {loading
+                ? "Matching..."
+                : "🎯 Check Match"}
             </button>
           </div>
 
+          {/* Result */}
+
           {result && (
             <div className="card border-0 shadow p-4 mt-4">
-              <h4>📊 Match Result</h4>
+              <h4>
+                📊 Match Result
+              </h4>
 
               <hr />
 
               <div
                 className="matcher-result"
-                style={{ whiteSpace: "pre-wrap" }}
+                style={{
+                  whiteSpace:
+                    "pre-wrap",
+                }}
               >
                 {result}
               </div>
