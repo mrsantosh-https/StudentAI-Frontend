@@ -51,7 +51,7 @@ export default function AdminAIAnalytics() {
         setLoading(true);
 
         const response = await api.get(
-          "/admin/ai-analytics"
+          "/admin/ai-usage"
         );
 
         if (!isMounted) return;

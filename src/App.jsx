@@ -14,6 +14,7 @@ import VerifyOtp from "./pages/VerifyOtp";
 import JobTracker from "./pages/JobTracker";
 import ResumeView from "./pages/ResumeView";
 import CoverLetter from "./pages/CoverLetter";
+import AdminAIUsage from "./pages/AdminAIUsage";
 import CareerRoadmap from "./pages/CareerRoadmap";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import AICareerCoach from "./pages/AICareerCoach";
@@ -28,8 +29,11 @@ import ResumeReview from "./pages/ResumeReview";
 import AdminDashboard from "./pages/AdminDashboard";
 import ResumeTemplates from "./pages/ResumeTemplates";
 import AdminUserAnalytics from "./pages/AdminUserAnalytics";
+import AdminNotifications from "./pages/AdminNotifications";
 import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
+import AdminUserSubscriptions from "./pages/AdminUserSubscriptions";
+import AdminSubscriptionPlans from "./pages/AdminSubscriptionPlans";
 
 import { Toaster } from "react-hot-toast";
 
@@ -63,6 +67,7 @@ function AppContent() {
 
   const showNavbar =
     location.pathname === "/login" ||
+    location.pathname === "/" ||
     location.pathname === "/signup";
 
   return (
@@ -135,7 +140,10 @@ function AppContent() {
         {/* =====================================================
             ADMIN
         ===================================================== */}
-
+        <Route
+          path="/admin/ai-usage"
+          element={<AdminAIUsage />}
+        />
         <Route
           path="/admin/dashboard"
           element={
@@ -153,7 +161,10 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/admin/notifications"
+          element={<AdminNotifications />}
+        />
         <Route
           path="/admin/ai-analytics"
           element={
@@ -161,6 +172,15 @@ function AppContent() {
               <AdminAIAnalytics />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/admin/subscriptions"
+          element={<AdminSubscriptionPlans />}
+        />
+
+        <Route
+          path="/admin/user-subscriptions"
+          element={<AdminUserSubscriptions />}
         />
 
         {/* =====================================================

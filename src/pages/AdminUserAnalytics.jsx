@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -31,13 +32,18 @@ export default function AdminUserAnalytics() {
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] =
+    useState("all");
 
   const [loading, setLoading] = useState(true);
-  const [usersLoading, setUsersLoading] = useState(true);
+  const [usersLoading, setUsersLoading] =
+    useState(true);
 
-  const [actionUserId, setActionUserId] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [actionUserId, setActionUserId] =
+    useState(null);
+
+  const [selectedUser, setSelectedUser] =
+    useState(null);
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -62,7 +68,9 @@ export default function AdminUserAnalytics() {
           "/admin/user-analytics"
         );
 
-        if (!isMounted) return;
+        if (!isMounted) {
+          return;
+        }
 
         const data = response.data || {};
 
@@ -97,7 +105,9 @@ export default function AdminUserAnalytics() {
           error.response?.data || error
         );
 
-        if (!isMounted) return;
+        if (!isMounted) {
+          return;
+        }
 
         if (error.response?.status === 401) {
           toast.error("Please login again.");
@@ -133,70 +143,97 @@ export default function AdminUserAnalytics() {
   |--------------------------------------------------------------------------
   | Fetch Users
   |--------------------------------------------------------------------------
+  |
+  | IMPORTANT:
+  | useCallback prevents fetchUsers from getting a new
+  | function reference on every render.
+  |
   */
 
-  const fetchUsers = async (page = 1) => {
-    try {
-      setUsersLoading(true);
+  const fetchUsers = useCallback(
+    async (page = 1) => {
+      try {
+        setUsersLoading(true);
 
-      const params = {
-        page,
-      };
+        const params = {
+          page,
+        };
 
-      if (search.trim()) {
-        params.search = search.trim();
-      }
+        const cleanSearch = search.trim();
 
-      if (roleFilter !== "all") {
-        params.role = roleFilter;
-      }
-
-      if (statusFilter !== "all") {
-        params.status = statusFilter;
-      }
-
-      const response = await api.get(
-        "/admin/users",
-        {
-          params,
+        if (cleanSearch) {
+          params.search = cleanSearch;
         }
-      );
 
-      const usersData =
-        response.data?.users || {};
+        if (roleFilter !== "all") {
+          params.role = roleFilter;
+        }
 
-      setUsers(
-        Array.isArray(usersData.data)
-          ? usersData.data
-          : []
-      );
+        if (statusFilter !== "all") {
+          params.status = statusFilter;
+        }
 
-      setPagination({
-        currentPage:
-          Number(usersData.current_page) || 1,
+        const response = await api.get(
+          "/admin/users",
+          {
+            params,
+          }
+        );
 
-        lastPage:
-          Number(usersData.last_page) || 1,
+        const usersData =
+          response.data?.users || {};
 
-        total:
-          Number(usersData.total) || 0,
-      });
-    } catch (error) {
-      console.error(
-        "Users fetch error:",
-        error.response?.data || error
-      );
+        setUsers(
+          Array.isArray(usersData.data)
+            ? usersData.data
+            : []
+        );
 
-      setUsers([]);
+        setPagination({
+          currentPage:
+            Number(usersData.current_page) || 1,
 
-      toast.error(
-        error.response?.data?.message ||
-          "Users load nahi ho sake."
-      );
-    } finally {
-      setUsersLoading(false);
-    }
-  };
+          lastPage:
+            Number(usersData.last_page) || 1,
+
+          total:
+            Number(usersData.total) || 0,
+        });
+      } catch (error) {
+        console.error(
+          "Users fetch error:",
+          error.response?.data || error
+        );
+
+        setUsers([]);
+
+        if (error.response?.status === 401) {
+          toast.error("Please login again.");
+          navigate("/login");
+          return;
+        }
+
+        if (error.response?.status === 403) {
+          toast.error("Admin access required.");
+          navigate("/dashboard");
+          return;
+        }
+
+        toast.error(
+          error.response?.data?.message ||
+            "Users load nahi ho sake."
+        );
+      } finally {
+        setUsersLoading(false);
+      }
+    },
+    [
+      search,
+      roleFilter,
+      statusFilter,
+      navigate,
+    ]
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -212,7 +249,7 @@ export default function AdminUserAnalytics() {
     return () => {
       clearTimeout(timer);
     };
-  }, [search, roleFilter, statusFilter]);
+  }, [fetchUsers]);
 
   /*
   |--------------------------------------------------------------------------
@@ -220,11 +257,14 @@ export default function AdminUserAnalytics() {
   |--------------------------------------------------------------------------
   */
 
-  const refreshUsers = async () => {
+  const refreshUsers = useCallback(async () => {
     await fetchUsers(
       pagination.currentPage
     );
-  };
+  }, [
+    fetchUsers,
+    pagination.currentPage,
+  ]);
 
   /*
   |--------------------------------------------------------------------------
@@ -364,13 +404,21 @@ export default function AdminUserAnalytics() {
 
     const result = await Swal.fire({
       icon: "question",
+
       title: "Change Role?",
+
       text: `${user.name} ka role "${nextRole}" karna hai?`,
+
       showCancelButton: true,
+
       confirmButtonText: "Change Role",
+
       cancelButtonText: "Cancel",
+
       confirmButtonColor: "#2563eb",
+
       cancelButtonColor: "#64748b",
+
       reverseButtons: true,
     });
 
@@ -404,8 +452,6 @@ export default function AdminUserAnalytics() {
         error.response?.data?.message ||
           "Role update failed."
       );
-
-      await refreshUsers();
     } finally {
       setActionUserId(null);
     }
@@ -420,7 +466,9 @@ export default function AdminUserAnalytics() {
   const handleDelete = async (user) => {
     const result = await Swal.fire({
       icon: "warning",
+
       title: "Delete User?",
+
       html: `
         <div style="text-align:center">
           <p>
@@ -437,11 +485,17 @@ export default function AdminUserAnalytics() {
           </p>
         </div>
       `,
+
       showCancelButton: true,
+
       confirmButtonText: "Delete User",
+
       cancelButtonText: "Cancel",
+
       confirmButtonColor: "#dc2626",
+
       cancelButtonColor: "#64748b",
+
       reverseButtons: true,
     });
 
@@ -461,10 +515,6 @@ export default function AdminUserAnalytics() {
           "User deleted successfully."
       );
 
-      /*
-       * Agar current page ka last user delete ho gaya
-       * to previous page par le jao.
-       */
       if (
         users.length === 1 &&
         pagination.currentPage > 1
@@ -515,11 +565,7 @@ export default function AdminUserAnalytics() {
 
     const date = new Date(value);
 
-    if (
-      Number.isNaN(
-        date.getTime()
-      )
-    ) {
+    if (Number.isNaN(date.getTime())) {
       return "N/A";
     }
 
@@ -567,9 +613,8 @@ export default function AdminUserAnalytics() {
         <Topbar />
 
         <div className="dashboard-content">
-          {/* =====================================================
-              HEADER
-          ===================================================== */}
+
+          {/* HEADER */}
 
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
             <div>
@@ -594,9 +639,7 @@ export default function AdminUserAnalytics() {
             </button>
           </div>
 
-          {/* =====================================================
-              ANALYTICS LOADING
-          ===================================================== */}
+          {/* ANALYTICS LOADING */}
 
           {loading ? (
             <div className="text-center py-5">
@@ -612,9 +655,7 @@ export default function AdminUserAnalytics() {
             </div>
           ) : (
             <>
-              {/* =================================================
-                  ANALYTICS CARDS
-              ================================================= */}
+              {/* ANALYTICS CARDS */}
 
               <div className="row g-4">
                 {[
@@ -678,9 +719,7 @@ export default function AdminUserAnalytics() {
                 ))}
               </div>
 
-              {/* =================================================
-                  REGISTRATION CHART
-              ================================================= */}
+              {/* REGISTRATION CHART */}
 
               <div className="card border-0 shadow-sm p-4 mt-4">
                 <div className="mb-4">
@@ -769,9 +808,7 @@ export default function AdminUserAnalytics() {
                 )}
               </div>
 
-              {/* =================================================
-                  USER MANAGEMENT
-              ================================================= */}
+              {/* USER MANAGEMENT */}
 
               <div className="card border-0 shadow-sm p-4 mt-4">
                 <div className="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
@@ -791,9 +828,7 @@ export default function AdminUserAnalytics() {
                   </span>
                 </div>
 
-                {/* =============================================
-                    SEARCH / FILTER
-                ============================================= */}
+                {/* SEARCH / FILTER */}
 
                 <div className="row g-3 mb-4">
                   <div className="col-lg-5">
@@ -874,9 +909,7 @@ export default function AdminUserAnalytics() {
                   </div>
                 </div>
 
-                {/* =============================================
-                    USERS
-                ============================================= */}
+                {/* USERS */}
 
                 {usersLoading ? (
                   <div className="text-center py-5">
@@ -938,10 +971,14 @@ export default function AdminUserAnalytics() {
                               user.id;
 
                             return (
-                              <tr key={user.id}>
+                              <tr
+                                key={user.id}
+                              >
                                 <td>
-                                  {(pagination.currentPage -
-                                    1) *
+                                  {(
+                                    pagination.currentPage -
+                                    1
+                                  ) *
                                     10 +
                                     index +
                                     1}
@@ -981,7 +1018,8 @@ export default function AdminUserAnalytics() {
                                             "11px",
                                         }}
                                       >
-                                        ID #{user.id}
+                                        ID #
+                                        {user.id}
                                       </div>
                                     </div>
                                   </div>
@@ -1046,8 +1084,6 @@ export default function AdminUserAnalytics() {
 
                                 <td>
                                   <div className="d-flex gap-2 flex-wrap">
-                                    {/* View */}
-
                                     <button
                                       type="button"
                                       className="btn btn-sm btn-outline-primary"
@@ -1062,8 +1098,6 @@ export default function AdminUserAnalytics() {
                                         ? "..."
                                         : "👁 View"}
                                     </button>
-
-                                    {/* Block / Unblock */}
 
                                     <button
                                       type="button"
@@ -1085,8 +1119,6 @@ export default function AdminUserAnalytics() {
                                         ? "🔓 Unblock"
                                         : "🚫 Block"}
                                     </button>
-
-                                    {/* Delete */}
 
                                     <button
                                       type="button"
@@ -1113,16 +1145,15 @@ export default function AdminUserAnalytics() {
                   </div>
                 )}
 
-                {/* =============================================
-                    PAGINATION
-                ============================================= */}
+                {/* PAGINATION */}
 
                 {!usersLoading &&
                   users.length > 0 && (
                     <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-4">
                       <span className="text-muted">
                         Page{" "}
-                        {pagination.currentPage} of{" "}
+                        {pagination.currentPage}{" "}
+                        of{" "}
                         {pagination.lastPage}
                       </span>
 
@@ -1171,9 +1202,7 @@ export default function AdminUserAnalytics() {
         </div>
       </main>
 
-      {/* =====================================================
-          USER DETAILS MODAL
-      ===================================================== */}
+      {/* USER DETAILS MODAL */}
 
       {selectedUser && (
         <div
@@ -1225,8 +1254,7 @@ export default function AdminUserAnalytics() {
               <strong>Name</strong>
 
               <p className="text-muted mb-0">
-                {selectedUser.name ||
-                  "N/A"}
+                {selectedUser.name || "N/A"}
               </p>
             </div>
 
@@ -1234,8 +1262,7 @@ export default function AdminUserAnalytics() {
               <strong>Email</strong>
 
               <p className="text-muted mb-0">
-                {selectedUser.email ||
-                  "N/A"}
+                {selectedUser.email || "N/A"}
               </p>
             </div>
 
@@ -1243,8 +1270,7 @@ export default function AdminUserAnalytics() {
               <strong>Phone</strong>
 
               <p className="text-muted mb-0">
-                {selectedUser.phone ||
-                  "N/A"}
+                {selectedUser.phone || "N/A"}
               </p>
             </div>
 
@@ -1260,8 +1286,7 @@ export default function AdminUserAnalytics() {
                       : "bg-primary"
                   }`}
                 >
-                  {selectedUser.role ||
-                    "user"}
+                  {selectedUser.role || "user"}
                 </span>
               </p>
             </div>
@@ -1299,9 +1324,7 @@ export default function AdminUserAnalytics() {
             )}
 
             <div className="mb-3">
-              <strong>
-                Joined
-              </strong>
+              <strong>Joined</strong>
 
               <p className="text-muted mb-0">
                 {formatDate(

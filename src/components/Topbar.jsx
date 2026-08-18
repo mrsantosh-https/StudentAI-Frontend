@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaBell, FaCheck } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -12,7 +13,7 @@ import "../styles/dashboardLayout.css";
 export default function Topbar() {
   const location = useLocation();
   const notificationRef = useRef(null);
-
+  const navigate = useNavigate();
   const { user } = useUser();
 
   const [showNotifications, setShowNotifications] =
@@ -737,12 +738,12 @@ export default function Topbar() {
         {/* =================================================
             UPGRADE
         ================================================= */}
-
         <button
           type="button"
           className="upgrade-btn"
+          onClick={() => navigate("/admin/user-subscriptions")}
         >
-          Upgrade Pro
+          🚀 Upgrade Pro
         </button>
 
         {/* =================================================

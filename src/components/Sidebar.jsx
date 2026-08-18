@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaMicrophoneAlt } from "react-icons/fa";
+import {
+  FaMicrophoneAlt,
+  FaShieldAlt,
+} from "react-icons/fa";
 
 import "../styles/dashboardLayout.css";
 
@@ -23,11 +26,7 @@ export default function Sidebar() {
 
       return JSON.parse(savedUser);
     } catch (error) {
-      console.error(
-        "Sidebar user parse error:",
-        error
-      );
-
+      console.error("Sidebar user parse error:", error);
       return null;
     }
   };
@@ -60,7 +59,7 @@ export default function Sidebar() {
         <div
           className="sidebar-overlay"
           onClick={closeSidebar}
-        ></div>
+        />
       )}
 
       <aside
@@ -80,10 +79,7 @@ export default function Sidebar() {
           type="button"
           className="menu-btn"
           onClick={() =>
-            setSidebarOpen(
-              (previousState) =>
-                !previousState
-            )
+            setSidebarOpen((previousState) => !previousState)
           }
           aria-label="Toggle sidebar"
         >
@@ -91,6 +87,7 @@ export default function Sidebar() {
         </button>
 
         <nav className="sidebar-menu">
+
           {/* Dashboard */}
 
           <NavLink
@@ -100,16 +97,49 @@ export default function Sidebar() {
             🏠 Dashboard
           </NavLink>
 
-          {/* Admin Dashboard - Admin Only */}
+          {/* Admin Dashboard */}
 
           {isAdmin && (
             <NavLink
               to="/admin/dashboard"
               onClick={closeSidebar}
             >
-              🛡️ Admin Dashboard
+              <FaShieldAlt className="me-2" />
+              Admin Dashboard
             </NavLink>
           )}
+
+          {/* Notifications */}
+
+          {/* <NavLink
+            to="/notifications"
+            className={({ isActive }) =>
+              `sidebar-link ${
+                isActive ? "active" : ""
+              }`
+            }
+            onClick={closeSidebar}
+          >
+            <FaBell className="me-2" />
+            <span>Notifications</span>
+          </NavLink> */}
+
+          {/* Admin Notifications
+
+          {isAdmin && (
+            <NavLink
+              to="/admin/notifications"
+              className={({ isActive }) =>
+                `sidebar-link ${
+                  isActive ? "active" : ""
+                }`
+              }
+              onClick={closeSidebar}
+            >
+              <FaBell className="me-2" />
+              <span>Admin Notifications</span>
+            </NavLink>
+          )} */}
 
           {/* Profile */}
 
@@ -199,18 +229,13 @@ export default function Sidebar() {
             to="/mock-interview"
             className={({ isActive }) =>
               `sidebar-link ${
-                isActive
-                  ? "active"
-                  : ""
+                isActive ? "active" : ""
               }`
             }
             onClick={closeSidebar}
           >
             <FaMicrophoneAlt className="me-2" />
-
-            <span>
-              AI Mock Interview
-            </span>
+            <span>AI Mock Interview</span>
           </NavLink>
 
           {/* Mock Interview History */}
@@ -219,15 +244,12 @@ export default function Sidebar() {
             to="/mock-interview-history"
             className={({ isActive }) =>
               `sidebar-link ${
-                isActive
-                  ? "active"
-                  : ""
+                isActive ? "active" : ""
               }`
             }
             onClick={closeSidebar}
           >
             <FaMicrophoneAlt className="me-2" />
-
             <span>
               AI Mock Interview History
             </span>
