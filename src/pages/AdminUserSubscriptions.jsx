@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import api from "../services/api";
-
+import "../styles/AdminUserSubscriptions.css";
 export default function AdminUserSubscriptions() {
   const navigate = useNavigate();
 
@@ -33,7 +33,6 @@ export default function AdminUserSubscriptions() {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const [selectedUser, setSelectedUser] = useState(null);
-
   const [selectedPlan, setSelectedPlan] = useState("");
   const [subscriptionAction, setSubscriptionAction] =
     useState("assign");
@@ -42,7 +41,45 @@ export default function AdminUserSubscriptions() {
     currentPage: 1,
     lastPage: 1,
     total: 0,
+    perPage: 10,
   });
+
+  // =========================================================
+  // Get API Error Message
+  // =========================================================
+
+  const getErrorMessage = (error, fallback) => {
+    return (
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      fallback
+    );
+  };
+
+  // =========================================================
+  // Handle Auth / Admin Errors
+  // =========================================================
+
+  const handleAuthError = useCallback(
+    (error) => {
+      const status = error?.response?.status;
+
+      if (status === 401) {
+        toast.error("Please login again.");
+        navigate("/login");
+        return true;
+      }
+
+      if (status === 403) {
+        toast.error("Admin access required.");
+        navigate("/dashboard");
+        return true;
+      }
+
+      return false;
+    },
+    [navigate]
+  );
 
   // =========================================================
   // Fetch Plans
@@ -52,48 +89,41 @@ export default function AdminUserSubscriptions() {
     try {
       setPlansLoading(true);
 
-      const response = await api.get(
-        "/admin/subscriptions"
-      );
+      const response = await api.get("/admin/subscriptions");
 
-      const data = response.data || {};
+      const data = response?.data || {};
 
-      const plansData =
-        data.plans ||
-        data.data ||
-        [];
+      let plansData = [];
 
-      setPlans(
-        Array.isArray(plansData)
-          ? plansData
-          : []
-      );
+      if (Array.isArray(data.plans)) {
+        plansData = data.plans;
+      } else if (Array.isArray(data.data)) {
+        plansData = data.data;
+      } else if (Array.isArray(data)) {
+        plansData = data;
+      }
+
+      setPlans(plansData);
     } catch (error) {
       console.error(
         "Plans fetch error:",
-        error.response?.data || error
+        error?.response?.data || error
       );
 
-      if (error.response?.status === 401) {
-        toast.error("Please login again.");
-        navigate("/login");
-        return;
-      }
-
-      if (error.response?.status === 403) {
-        toast.error("Admin access required.");
-        navigate("/dashboard");
+      if (handleAuthError(error)) {
         return;
       }
 
       toast.error(
-        error.response?.data?.message ||
+        getErrorMessage(
+          error,
           "Subscription plans load nahi ho sake."
+        )
       );
     } finally {
       setPlansLoading(false);
     }
-  }, [navigate]);
+  }, [handleAuthError]);
 
   // =========================================================
   // Fetch Users
@@ -116,8 +146,7 @@ export default function AdminUserSubscriptions() {
         }
 
         if (statusFilter !== "all") {
-          params.subscription_status =
-            statusFilter;
+          params.subscription_status = statusFilter;
         }
 
         const response = await api.get(
@@ -127,72 +156,89 @@ export default function AdminUserSubscriptions() {
           }
         );
 
-        const data = response.data || {};
+        const data = response?.data || {};
 
-        const usersData =
-          data.users ||
-          data.data ||
-          {};
+        /*
+         * Laravel pagination can come in different forms:
+         *
+         * {
+         *   users: {
+         *      data: [],
+         *      current_page: 1,
+         *      last_page: 2,
+         *      total: 20,
+         *      per_page: 10
+         *   }
+         * }
+         *
+         * OR
+         *
+         * {
+         *   data: {
+         *      data: [],
+         *      current_page: 1
+         *   }
+         * }
+         */
 
-        const usersList =
-          Array.isArray(usersData)
-            ? usersData
-            : Array.isArray(usersData.data)
-            ? usersData.data
-            : [];
+        let usersData = data.users ?? data.data ?? [];
+
+        let usersList = [];
+
+        if (Array.isArray(usersData)) {
+          usersList = usersData;
+        } else if (
+          usersData &&
+          Array.isArray(usersData.data)
+        ) {
+          usersList = usersData.data;
+        }
 
         setUsers(usersList);
 
-        if (
-          usersData &&
-          !Array.isArray(usersData)
-        ) {
-          setPagination({
-            currentPage:
-              Number(
-                usersData.current_page
-              ) || page,
+        const paginationData =
+          !Array.isArray(usersData) &&
+          usersData
+            ? usersData
+            : data;
 
-            lastPage:
-              Number(
-                usersData.last_page
-              ) || 1,
+        setPagination({
+          currentPage:
+            Number(
+              paginationData?.current_page
+            ) || page,
 
-            total:
-              Number(
-                usersData.total
-              ) || usersList.length,
-          });
-        } else {
-          setPagination({
-            currentPage: page,
-            lastPage: 1,
-            total: usersList.length,
-          });
-        }
+          lastPage:
+            Number(
+              paginationData?.last_page
+            ) || 1,
+
+          total:
+            Number(
+              paginationData?.total
+            ) || usersList.length,
+
+          perPage:
+            Number(
+              paginationData?.per_page
+            ) || 10,
+        });
       } catch (error) {
         console.error(
           "User subscriptions fetch error:",
-          error.response?.data || error
+          error?.response?.data || error
         );
 
         setUsers([]);
 
-        if (error.response?.status === 401) {
-          toast.error("Please login again.");
-          navigate("/login");
+        if (handleAuthError(error)) {
           return;
         }
 
-        if (error.response?.status === 403) {
-          toast.error("Admin access required.");
-          navigate("/dashboard");
-          return;
-        }
-
-        const message =
-          error.response?.data?.message ||
-          "User subscriptions load nahi ho sake.";
+        const message = getErrorMessage(
+          error,
+          "User subscriptions load nahi ho sake."
+        );
 
         setError(message);
         toast.error(message);
@@ -203,27 +249,95 @@ export default function AdminUserSubscriptions() {
     [
       search,
       statusFilter,
-      navigate,
+      handleAuthError,
     ]
   );
 
   // =========================================================
-  // Initial Load
-  // =========================================================
-  // Delayed callback avoids React hooks
-  // set-state-in-effect warning.
+  // Initial / Filter Load
   // =========================================================
 
   useEffect(() => {
     const timer = setTimeout(() => {
       void fetchPlans();
       void fetchUsers(1);
-    }, 0);
+    }, 300);
 
     return () => {
       clearTimeout(timer);
     };
   }, [fetchPlans, fetchUsers]);
+
+  // =========================================================
+  // Get User Subscription
+  // =========================================================
+
+  const getSubscription = useCallback((user) => {
+    return (
+      user?.subscription ||
+      user?.active_subscription ||
+      user?.current_subscription ||
+      null
+    );
+  }, []);
+
+  // =========================================================
+  // Get User Plan
+  // =========================================================
+
+  const getUserPlan = useCallback(
+    (user) => {
+      const subscription =
+        getSubscription(user);
+
+      if (!subscription) {
+        return null;
+      }
+
+      return (
+        subscription.plan ||
+        subscription.subscription_plan ||
+        null
+      );
+    },
+    [getSubscription]
+  );
+
+  // =========================================================
+  // Get Subscription Status
+  // =========================================================
+
+  const getSubscriptionStatus = useCallback(
+    (user) => {
+      const subscription =
+        getSubscription(user);
+
+      if (!subscription) {
+        return "none";
+      }
+
+      if (
+        subscription.status === "cancelled"
+      ) {
+        return "cancelled";
+      }
+
+      if (
+        subscription.status === "inactive"
+      ) {
+        return "inactive";
+      }
+
+      if (
+        subscription.is_active === false
+      ) {
+        return "inactive";
+      }
+
+      return "active";
+    },
+    [getSubscription]
+  );
 
   // =========================================================
   // Filter Users
@@ -239,15 +353,15 @@ export default function AdminUserSubscriptions() {
       }
 
       const name = String(
-        user.name || ""
+        user?.name || ""
       ).toLowerCase();
 
       const email = String(
-        user.email || ""
+        user?.email || ""
       ).toLowerCase();
 
       const id = String(
-        user.id || ""
+        user?.id || ""
       ).toLowerCase();
 
       return (
@@ -267,54 +381,31 @@ export default function AdminUserSubscriptions() {
 
     const active = users.filter(
       (user) =>
-        user.subscription &&
-        (
-          user.subscription.is_active === true ||
-          user.subscription.status === "active"
-        )
+        getSubscriptionStatus(user) ===
+        "active"
     ).length;
 
-    const inactive =
-      total - active;
+    const cancelled = users.filter(
+      (user) =>
+        getSubscriptionStatus(user) ===
+        "cancelled"
+    ).length;
+
+    const inactive = users.filter(
+      (user) =>
+        getSubscriptionStatus(user) ===
+          "inactive" ||
+        getSubscriptionStatus(user) ===
+          "none"
+    ).length;
 
     return {
       total,
       active,
+      cancelled,
       inactive,
     };
-  }, [users]);
-
-  // =========================================================
-  // Get User Subscription
-  // =========================================================
-
-  const getSubscription = (user) => {
-    return (
-      user?.subscription ||
-      user?.active_subscription ||
-      user?.current_subscription ||
-      null
-    );
-  };
-
-  // =========================================================
-  // Get Plan
-  // =========================================================
-
-  const getUserPlan = (user) => {
-    const subscription =
-      getSubscription(user);
-
-    if (!subscription) {
-      return null;
-    }
-
-    return (
-      subscription.plan ||
-      subscription.subscription_plan ||
-      null
-    );
-  };
+  }, [users, getSubscriptionStatus]);
 
   // =========================================================
   // Open Manage Modal
@@ -357,97 +448,122 @@ export default function AdminUserSubscriptions() {
   };
 
   // =========================================================
-  // Refresh
+  // Force Close Modal
+  // =========================================================
+  // Used after successful API action.
   // =========================================================
 
-  const refreshData = useCallback(
-    async () => {
-      await Promise.all([
-        fetchPlans(),
-        fetchUsers(
-          pagination.currentPage
-        ),
-      ]);
-    },
-    [
-      fetchPlans,
-      fetchUsers,
-      pagination.currentPage,
-    ]
-  );
+  const forceCloseModal = () => {
+    setSelectedUser(null);
+    setSelectedPlan("");
+    setSubscriptionAction("assign");
+  };
 
   // =========================================================
-  // Assign / Change Subscription
+  // Refresh Data
   // =========================================================
 
-  const handleSaveSubscription =
-    async (event) => {
-      event.preventDefault();
+  const refreshData = useCallback(async () => {
+    await Promise.all([
+      fetchPlans(),
+      fetchUsers(
+        pagination.currentPage
+      ),
+    ]);
+  }, [
+    fetchPlans,
+    fetchUsers,
+    pagination.currentPage,
+  ]);
 
-      if (!selectedUser) {
-        toast.error("User select karo.");
+  // =========================================================
+  // Save Subscription
+  // =========================================================
+
+  const handleSaveSubscription = async (
+    event
+  ) => {
+    event.preventDefault();
+
+    if (!selectedUser) {
+      toast.error("User select karo.");
+      return;
+    }
+
+    if (!selectedPlan) {
+      toast.error(
+        "Subscription plan select karo."
+      );
+      return;
+    }
+
+    const selectedPlanObject =
+      plans.find(
+        (plan) =>
+          String(plan.id) ===
+          String(selectedPlan)
+      );
+
+    if (!selectedPlanObject) {
+      toast.error(
+        "Selected subscription plan valid nahi hai."
+      );
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+
+      const response = await api.post(
+        `/admin/users/${selectedUser.id}/subscription`,
+        {
+          plan_id: Number(selectedPlan),
+        }
+      );
+
+      toast.success(
+        response?.data?.message ||
+          (subscriptionAction === "change"
+            ? "Subscription changed successfully."
+            : "Subscription assigned successfully.")
+      );
+
+      /*
+       * Important:
+       * Original code me closeModal() yahan call ho raha tha
+       * jab actionLoading true tha.
+       *
+       * closeModal() actionLoading ki wajah se return kar deta tha.
+       *
+       * Isliye successful request ke baad forceCloseModal()
+       * use kar rahe hain.
+       */
+
+      forceCloseModal();
+
+      await fetchUsers(
+        pagination.currentPage
+      );
+    } catch (error) {
+      console.error(
+        "Subscription save error:",
+        error?.response?.data || error
+      );
+
+      if (handleAuthError(error)) {
         return;
       }
 
-      if (!selectedPlan) {
-        toast.error("Subscription plan select karo.");
-        return;
-      }
-
-      try {
-        setActionLoading(true);
-
-        const response = await api.post(
-          `/admin/users/${selectedUser.id}/subscription`,
-          {
-            plan_id: Number(selectedPlan),
-          }
-        );
-
-        toast.success(
-          response.data?.message ||
-            (
-              subscriptionAction === "change"
-                ? "Subscription changed successfully."
-                : "Subscription assigned successfully."
-            )
-        );
-
-        closeModal();
-
-        await fetchUsers(
-          pagination.currentPage
-        );
-      } catch (error) {
-        console.error(
-          "Subscription save error:",
-          error.response?.data || error
-        );
-
-        if (error.response?.status === 401) {
-          toast.error(
-            "Please login again."
-          );
-          navigate("/login");
-          return;
-        }
-
-        if (error.response?.status === 403) {
-          toast.error(
-            "Admin access required."
-          );
-          navigate("/dashboard");
-          return;
-        }
-
-        toast.error(
-          error.response?.data?.message ||
-            "Subscription save nahi ho saki."
-        );
-      } finally {
-        setActionLoading(false);
-      }
-    };
+      toast.error(
+        getErrorMessage(
+          error,
+          "Subscription save nahi ho saki."
+        )
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   // =========================================================
   // Cancel Subscription
@@ -460,7 +576,24 @@ export default function AdminUserSubscriptions() {
 
       if (!subscription) {
         toast.error(
-          "Is user ki active subscription nahi hai."
+          "Is user ki subscription nahi hai."
+        );
+        return;
+      }
+
+      if (
+        subscription.status ===
+        "cancelled"
+      ) {
+        toast.error(
+          "Subscription already cancelled hai."
+        );
+        return;
+      }
+
+      if (!subscription.id) {
+        toast.error(
+          "Subscription ID nahi mili."
         );
         return;
       }
@@ -472,8 +605,9 @@ export default function AdminUserSubscriptions() {
           title:
             "Cancel Subscription?",
 
-          text:
-            `${user.name || "User"} ki subscription cancel karni hai?`,
+          text: `${
+            user?.name || "User"
+          } ki subscription cancel karni hai?`,
 
           showCancelButton: true,
 
@@ -499,16 +633,13 @@ export default function AdminUserSubscriptions() {
       try {
         setActionLoading(true);
 
-        const subscriptionId =
-          subscription.id;
-
         const response =
           await api.patch(
-            `/admin/user-subscriptions/${subscriptionId}/cancel`
+            `/admin/user-subscriptions/${subscription.id}/cancel`
           );
 
         toast.success(
-          response.data?.message ||
+          response?.data?.message ||
             "Subscription cancelled successfully."
         );
 
@@ -518,32 +649,18 @@ export default function AdminUserSubscriptions() {
       } catch (error) {
         console.error(
           "Cancel subscription error:",
-          error.response?.data || error
+          error?.response?.data || error
         );
 
-        if (
-          error.response?.status === 401
-        ) {
-          toast.error(
-            "Please login again."
-          );
-          navigate("/login");
-          return;
-        }
-
-        if (
-          error.response?.status === 403
-        ) {
-          toast.error(
-            "Admin access required."
-          );
-          navigate("/dashboard");
+        if (handleAuthError(error)) {
           return;
         }
 
         toast.error(
-          error.response?.data?.message ||
+          getErrorMessage(
+            error,
             "Subscription cancel nahi ho saki."
+          )
         );
       } finally {
         setActionLoading(false);
@@ -566,6 +683,13 @@ export default function AdminUserSubscriptions() {
         return;
       }
 
+      if (!subscription.id) {
+        toast.error(
+          "Subscription ID nahi mili."
+        );
+        return;
+      }
+
       const result =
         await Swal.fire({
           icon: "warning",
@@ -577,7 +701,7 @@ export default function AdminUserSubscriptions() {
             <div style="text-align:center">
               <p>
                 <strong>
-                  ${user.name || "User"}
+                  ${user?.name || "User"}
                 </strong>
                 ki subscription permanently delete ho jayegi.
               </p>
@@ -616,16 +740,13 @@ export default function AdminUserSubscriptions() {
       try {
         setActionLoading(true);
 
-        const subscriptionId =
-          subscription.id;
-
         const response =
           await api.delete(
-            `/admin/user-subscriptions/${subscriptionId}`
+            `/admin/user-subscriptions/${subscription.id}`
           );
 
         toast.success(
-          response.data?.message ||
+          response?.data?.message ||
             "Subscription deleted successfully."
         );
 
@@ -635,12 +756,18 @@ export default function AdminUserSubscriptions() {
       } catch (error) {
         console.error(
           "Delete subscription error:",
-          error.response?.data || error
+          error?.response?.data || error
         );
 
+        if (handleAuthError(error)) {
+          return;
+        }
+
         toast.error(
-          error.response?.data?.message ||
+          getErrorMessage(
+            error,
             "Subscription delete nahi ho saki."
+          )
         );
       } finally {
         setActionLoading(false);
@@ -656,8 +783,7 @@ export default function AdminUserSubscriptions() {
       return "N/A";
     }
 
-    const date =
-      new Date(value);
+    const date = new Date(value);
 
     if (
       Number.isNaN(
@@ -684,8 +810,7 @@ export default function AdminUserSubscriptions() {
   // =========================================================
 
   const formatPrice = (value) => {
-    const price =
-      Number(value);
+    const price = Number(value);
 
     if (
       !Number.isFinite(price) ||
@@ -700,80 +825,43 @@ export default function AdminUserSubscriptions() {
   };
 
   // =========================================================
-  // Subscription Status
-  // =========================================================
-
-  const getSubscriptionStatus =
-    (user) => {
-      const subscription =
-        getSubscription(user);
-
-      if (!subscription) {
-        return "none";
-      }
-
-      if (
-        subscription.status ===
-        "cancelled"
-      ) {
-        return "cancelled";
-      }
-
-      if (
-        subscription.is_active ===
-        false
-      ) {
-        return "inactive";
-      }
-
-      return "active";
-    };
-
-  // =========================================================
   // Status Badge
   // =========================================================
 
-  const renderStatusBadge =
-    (user) => {
-      const status =
-        getSubscriptionStatus(
-          user
-        );
+  const renderStatusBadge = (user) => {
+    const status =
+      getSubscriptionStatus(user);
 
-      if (status === "active") {
-        return (
-          <span className="badge bg-success">
-            Active
-          </span>
-        );
-      }
-
-      if (
-        status === "cancelled"
-      ) {
-        return (
-          <span className="badge bg-danger">
-            Cancelled
-          </span>
-        );
-      }
-
-      if (
-        status === "inactive"
-      ) {
-        return (
-          <span className="badge bg-secondary">
-            Inactive
-          </span>
-        );
-      }
-
+    if (status === "active") {
       return (
-        <span className="badge bg-warning text-dark">
-          No Subscription
+        <span className="badge bg-success">
+          Active
         </span>
       );
-    };
+    }
+
+    if (status === "cancelled") {
+      return (
+        <span className="badge bg-danger">
+          Cancelled
+        </span>
+      );
+    }
+
+    if (status === "inactive") {
+      return (
+        <span className="badge bg-secondary">
+          Inactive
+        </span>
+      );
+    }
+
+    return (
+      <span className="badge bg-warning text-dark">
+        No Subscription
+      </span>
+    );
+  };
 
   // =========================================================
   // Reset Filters
@@ -797,9 +885,9 @@ export default function AdminUserSubscriptions() {
 
         <div className="dashboard-content">
 
-          {/* ===================================================
+          {/* =================================================
               HEADER
-          =================================================== */}
+          ================================================= */}
 
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
 
@@ -844,18 +932,20 @@ export default function AdminUserSubscriptions() {
               </button>
 
             </div>
-
           </div>
 
-          {/* ===================================================
+          {/* =================================================
               STATS
-          =================================================== */}
+          ================================================= */}
 
           <div className="row g-4 mb-4">
+
+            {/* Total */}
 
             <div className="col-md-4">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
+
                   <div className="d-flex justify-content-between align-items-center">
 
                     <div>
@@ -864,8 +954,7 @@ export default function AdminUserSubscriptions() {
                       </p>
 
                       <h2 className="fw-bold mb-0">
-                        {pagination.total ||
-                          stats.total}
+                        {pagination.total}
                       </h2>
                     </div>
 
@@ -878,13 +967,17 @@ export default function AdminUserSubscriptions() {
                     </div>
 
                   </div>
+
                 </div>
               </div>
             </div>
 
+            {/* Active */}
+
             <div className="col-md-4">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
+
                   <div className="d-flex justify-content-between align-items-center">
 
                     <div>
@@ -906,13 +999,17 @@ export default function AdminUserSubscriptions() {
                     </div>
 
                   </div>
+
                 </div>
               </div>
             </div>
 
+            {/* Inactive */}
+
             <div className="col-md-4">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body">
+
                   <div className="d-flex justify-content-between align-items-center">
 
                     <div>
@@ -934,21 +1031,24 @@ export default function AdminUserSubscriptions() {
                     </div>
 
                   </div>
+
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* ===================================================
+          {/* =================================================
               FILTERS
-          =================================================== */}
+          ================================================= */}
 
           <div className="card border-0 shadow-sm mb-4">
 
             <div className="card-body">
 
               <div className="row g-3">
+
+                {/* Search */}
 
                 <div className="col-lg-7">
 
@@ -970,6 +1070,8 @@ export default function AdminUserSubscriptions() {
 
                 </div>
 
+                {/* Status */}
+
                 <div className="col-lg-3">
 
                   <label className="form-label fw-semibold">
@@ -978,16 +1080,13 @@ export default function AdminUserSubscriptions() {
 
                   <select
                     className="form-select"
-                    value={
-                      statusFilter
-                    }
+                    value={statusFilter}
                     onChange={(event) =>
                       setStatusFilter(
                         event.target.value
                       )
                     }
                   >
-
                     <option value="all">
                       All Users
                     </option>
@@ -1007,10 +1106,11 @@ export default function AdminUserSubscriptions() {
                     <option value="none">
                       No Subscription
                     </option>
-
                   </select>
 
                 </div>
+
+                {/* Reset */}
 
                 <div className="col-lg-2 d-flex align-items-end">
 
@@ -1032,9 +1132,9 @@ export default function AdminUserSubscriptions() {
 
           </div>
 
-          {/* ===================================================
+          {/* =================================================
               ERROR
-          =================================================== */}
+          ================================================= */}
 
           {error && (
             <div className="alert alert-danger d-flex justify-content-between align-items-center mb-4">
@@ -1058,9 +1158,9 @@ export default function AdminUserSubscriptions() {
             </div>
           )}
 
-          {/* ===================================================
+          {/* =================================================
               USER TABLE
-          =================================================== */}
+          ================================================= */}
 
           <div className="card border-0 shadow-sm">
 
@@ -1069,6 +1169,7 @@ export default function AdminUserSubscriptions() {
               <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
 
                 <div>
+
                   <h4 className="fw-bold mb-1">
                     👥 User Subscription Management
                   </h4>
@@ -1077,14 +1178,13 @@ export default function AdminUserSubscriptions() {
                     {filteredUsers.length} user(s)
                     displayed.
                   </p>
+
                 </div>
 
-                <div className="d-flex gap-2">
-
-                  <span className="badge bg-primary d-flex align-items-center">
+                <div>
+                  <span className="badge bg-primary">
                     {pagination.total} Users
                   </span>
-
                 </div>
 
               </div>
@@ -1142,37 +1242,16 @@ export default function AdminUserSubscriptions() {
 
                     <thead>
                       <tr>
-
                         <th>#</th>
-
-                        <th>
-                          User
-                        </th>
-
-                        <th>
-                          Current Plan
-                        </th>
-
-                        <th>
-                          Price
-                        </th>
-
-                        <th>
-                          Status
-                        </th>
-
-                        <th>
-                          Start Date
-                        </th>
-
-                        <th>
-                          End Date
-                        </th>
-
+                        <th>User</th>
+                        <th>Current Plan</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                         <th className="text-end">
                           Actions
                         </th>
-
                       </tr>
                     </thead>
 
@@ -1205,7 +1284,7 @@ export default function AdminUserSubscriptions() {
                                     pagination.currentPage -
                                     1
                                   ) *
-                                    10
+                                    pagination.perPage
                                 ) +
                                   index +
                                   1}
@@ -1231,7 +1310,7 @@ export default function AdminUserSubscriptions() {
                                     }}
                                   >
                                     {String(
-                                      user.name ||
+                                      user?.name ||
                                         "U"
                                     )
                                       .charAt(
@@ -1243,18 +1322,18 @@ export default function AdminUserSubscriptions() {
                                   <div>
 
                                     <strong>
-                                      {user.name ||
+                                      {user?.name ||
                                         "N/A"}
                                     </strong>
 
                                     <small className="d-block text-muted">
-                                      {user.email ||
+                                      {user?.email ||
                                         "N/A"}
                                     </small>
 
                                     <small className="d-block text-muted">
                                       ID #
-                                      {user.id}
+                                      {user?.id}
                                     </small>
 
                                   </div>
@@ -1271,14 +1350,15 @@ export default function AdminUserSubscriptions() {
                                   <div>
 
                                     <strong>
-                                      {plan.name ||
+                                      {plan?.name ||
                                         "Unnamed Plan"}
                                     </strong>
 
-                                    <small className="d-block text-muted">
-                                      {plan.slug ||
-                                        ""}
-                                    </small>
+                                    {plan?.slug && (
+                                      <small className="d-block text-muted">
+                                        {plan.slug}
+                                      </small>
+                                    )}
 
                                   </div>
                                 ) : (
@@ -1298,17 +1378,16 @@ export default function AdminUserSubscriptions() {
 
                                     <strong className="text-primary">
                                       {formatPrice(
-                                        plan.price
+                                        plan?.price
                                       )}
                                     </strong>
 
                                     {Number(
-                                      plan.price
-                                    ) >
-                                      0 && (
+                                      plan?.price
+                                    ) > 0 && (
                                       <small className="d-block text-muted">
                                         per{" "}
-                                        {plan.billing_period ||
+                                        {plan?.billing_period ||
                                           "month"}
                                       </small>
                                     )}
@@ -1371,22 +1450,24 @@ export default function AdminUserSubscriptions() {
                                       : "➕ Assign"}
                                   </button>
 
-                                  {subscription && (
-                                    <button
-                                      type="button"
-                                      className="btn btn-sm btn-outline-warning"
-                                      onClick={() =>
-                                        void handleCancelSubscription(
-                                          user
-                                        )
-                                      }
-                                      disabled={
-                                        actionLoading
-                                      }
-                                    >
-                                      ⏸ Cancel
-                                    </button>
-                                  )}
+                                  {subscription &&
+                                    subscription.status !==
+                                      "cancelled" && (
+                                      <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-warning"
+                                        onClick={() =>
+                                          void handleCancelSubscription(
+                                            user
+                                          )
+                                        }
+                                        disabled={
+                                          actionLoading
+                                        }
+                                      >
+                                        ⏸ Cancel
+                                      </button>
+                                    )}
 
                                   {subscription && (
                                     <button
@@ -1426,8 +1507,7 @@ export default function AdminUserSubscriptions() {
               ================================================= */}
 
               {!loading &&
-                filteredUsers.length >
-                  0 && (
+                filteredUsers.length > 0 && (
                   <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-4">
 
                     <span className="text-muted">
@@ -1449,7 +1529,8 @@ export default function AdminUserSubscriptions() {
                         disabled={
                           pagination.currentPage <=
                             1 ||
-                          loading
+                          loading ||
+                          actionLoading
                         }
                         onClick={() =>
                           void fetchUsers(
@@ -1467,7 +1548,8 @@ export default function AdminUserSubscriptions() {
                         disabled={
                           pagination.currentPage >=
                             pagination.lastPage ||
-                          loading
+                          loading ||
+                          actionLoading
                         }
                         onClick={() =>
                           void fetchUsers(
@@ -1537,7 +1619,7 @@ export default function AdminUserSubscriptions() {
                   </h4>
 
                   <p className="text-muted mb-0">
-                    {selectedUser.name ||
+                    {selectedUser?.name ||
                       "User"}
                   </p>
 
@@ -1558,7 +1640,7 @@ export default function AdminUserSubscriptions() {
 
             </div>
 
-            {/* Modal Body */}
+            {/* Modal Form */}
 
             <form
               onSubmit={
@@ -1572,29 +1654,29 @@ export default function AdminUserSubscriptions() {
 
                 <div className="alert alert-light border">
 
-                  <div className="d-flex justify-content-between">
+                  <div className="row g-3">
 
-                    <div>
+                    <div className="col-md-6">
 
                       <strong>
                         User
                       </strong>
 
                       <div>
-                        {selectedUser.name ||
+                        {selectedUser?.name ||
                           "N/A"}
                       </div>
 
                     </div>
 
-                    <div>
+                    <div className="col-md-6">
 
                       <strong>
                         Email
                       </strong>
 
                       <div>
-                        {selectedUser.email ||
+                        {selectedUser?.email ||
                           "N/A"}
                       </div>
 
@@ -1681,7 +1763,7 @@ export default function AdminUserSubscriptions() {
                       {plans
                         .filter(
                           (plan) =>
-                            plan.is_active !==
+                            plan?.is_active !==
                             false
                         )
                         .map(
@@ -1694,12 +1776,14 @@ export default function AdminUserSubscriptions() {
                                 plan.id
                               }
                             >
-                              {plan.name} -{" "}
+                              {plan?.name ||
+                                "Unnamed Plan"}{" "}
+                              -{" "}
                               {formatPrice(
-                                plan.price
+                                plan?.price
                               )}{" "}
                               /{" "}
-                              {plan.billing_period ||
+                              {plan?.billing_period ||
                                 "monthly"}
                             </option>
                           )
@@ -1719,7 +1803,7 @@ export default function AdminUserSubscriptions() {
                       .filter(
                         (plan) =>
                           String(
-                            plan.id
+                            plan?.id
                           ) ===
                           String(
                             selectedPlan
@@ -1734,11 +1818,12 @@ export default function AdminUserSubscriptions() {
                           >
 
                             <h6 className="fw-bold">
-                              {plan.name}
+                              {plan?.name ||
+                                "Unnamed Plan"}
                             </h6>
 
                             <div className="mb-2">
-                              {plan.description ||
+                              {plan?.description ||
                                 "No description"}
                             </div>
 
@@ -1746,25 +1831,25 @@ export default function AdminUserSubscriptions() {
 
                               <span>
                                 📄 Resume:{" "}
-                                {plan.resume_limit ??
+                                {plan?.resume_limit ??
                                   "∞"}
                               </span>
 
                               <span>
                                 🤖 AI:{" "}
-                                {plan.ai_usage_limit ??
+                                {plan?.ai_usage_limit ??
                                   "∞"}
                               </span>
 
                               <span>
                                 🎤 Interview:{" "}
-                                {plan.interview_limit ??
+                                {plan?.interview_limit ??
                                   "∞"}
                               </span>
 
                               <span>
                                 💼 Jobs:{" "}
-                                {plan.job_tracker_limit ??
+                                {plan?.job_tracker_limit ??
                                   "∞"}
                               </span>
 
@@ -1805,7 +1890,8 @@ export default function AdminUserSubscriptions() {
                       actionLoading ||
                       plansLoading ||
                       plans.length ===
-                        0
+                        0 ||
+                      !selectedPlan
                     }
                   >
                     {actionLoading

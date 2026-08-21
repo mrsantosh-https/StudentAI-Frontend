@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import Payment from "./pages/Payment";
 import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
@@ -32,6 +33,8 @@ import AdminUserAnalytics from "./pages/AdminUserAnalytics";
 import AdminNotifications from "./pages/AdminNotifications";
 import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
+import Upgrade from "./pages/Upgrade";
+import MySubscription from "./pages/MySubscription";
 import AdminUserSubscriptions from "./pages/AdminUserSubscriptions";
 import AdminSubscriptionPlans from "./pages/AdminSubscriptionPlans";
 
@@ -179,8 +182,25 @@ function AppContent() {
         />
 
         <Route
+          path="/upgrade"
+          element={<Upgrade />}
+        />
+        <Route
+          path="/payment"
+          element={<Payment />}
+        />
+        <Route
           path="/admin/user-subscriptions"
           element={<AdminUserSubscriptions />}
+        />
+
+        <Route
+          path="/my-subscription"
+          element={
+            <ProtectedRoute>
+              <MySubscription />
+            </ProtectedRoute>
+          }
         />
 
         {/* =====================================================

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import {
   FaMicrophoneAlt,
   FaShieldAlt,
@@ -79,7 +79,9 @@ export default function Sidebar() {
           type="button"
           className="menu-btn"
           onClick={() =>
-            setSidebarOpen((previousState) => !previousState)
+            setSidebarOpen(
+              (previousState) => !previousState
+            )
           }
           aria-label="Toggle sidebar"
         >
@@ -264,6 +266,23 @@ export default function Sidebar() {
             🗺 Career Roadmap
           </NavLink>
 
+          {/* My Subscription */}
+
+          <NavLink
+            to="/my-subscription"
+            type="button"
+            className="sidebar-nav-item"
+            onClick={closeSidebar}
+          >
+            <span className="sidebar-nav-icon">
+              💳
+            </span>
+
+            <span>
+              My Subscription
+            </span>
+          </NavLink>
+
           {/* Settings */}
 
           <NavLink
@@ -272,6 +291,7 @@ export default function Sidebar() {
           >
             ⚙️ Settings
           </NavLink>
+
         </nav>
       </aside>
     </>

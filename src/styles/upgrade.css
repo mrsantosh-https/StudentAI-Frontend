@@ -1,0 +1,1506 @@
+/* =========================================================
+   STUDENTAI UPGRADE PAGE
+   FIXED SIDEBAR + TOPBAR + RESPONSIVE
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   GLOBAL
+--------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+.upgrade-page {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100vh - 70px);
+  overflow-x: hidden;
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(99, 102, 241, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 15% 30%,
+      rgba(59, 130, 246, 0.06),
+      transparent 30%
+    ),
+    #f7f9fc;
+  color: #111827;
+}
+
+
+/* =========================================================
+   DASHBOARD LAYOUT FIX
+   ========================================================= */
+
+/*
+   Sidebar normally fixed/absolute hota hai.
+   Isliye main content ko sidebar ke according space dena
+   zaroori hai.
+*/
+
+.student-dashboard-layout {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  position: relative;
+  overflow-x: hidden;
+}
+
+
+/*
+   IMPORTANT:
+   Sidebar width screenshot me ~258px hai.
+*/
+
+.student-dashboard-main {
+  position: relative;
+  flex: 1 1 auto;
+  width: calc(100% - 258px);
+  max-width: calc(100% - 258px);
+  min-width: 0;
+  margin-left: 258px;
+  min-height: 100vh;
+}
+
+
+/*
+   Agar tumhara Sidebar fixed hai to ye required hai.
+*/
+
+.student-dashboard-main > .upgrade-page {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+/* =========================================================
+   TOPBAR SAFETY
+   ========================================================= */
+
+.student-dashboard-main > .topbar,
+.student-dashboard-main > header {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.upgrade-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
+
+.upgrade-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: 0;
+}
+
+.upgrade-glow-one {
+  width: 360px;
+  height: 360px;
+  top: 50px;
+  right: -120px;
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.upgrade-glow-two {
+  width: 300px;
+  height: 300px;
+  top: 500px;
+  left: -150px;
+  background: rgba(59, 130, 246, 0.06);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.upgrade-hero {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 35px 0 45px;
+  background: transparent;
+}
+
+.upgrade-hero .upgrade-container {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ---------------------------------------------------------
+   BACK BUTTON
+--------------------------------------------------------- */
+
+.upgrade-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 0;
+  background: transparent;
+
+  color: #4f46e5;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 30px;
+
+  transition: 0.2s ease;
+}
+
+.upgrade-back:hover {
+  color: #3730a3;
+  transform: translateX(-3px);
+}
+
+
+/* ---------------------------------------------------------
+   HERO CONTENT
+--------------------------------------------------------- */
+
+.upgrade-hero-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.upgrade-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 15px;
+
+  border-radius: 999px;
+
+  background: rgba(99, 102, 241, 0.10);
+  border: 1px solid rgba(99, 102, 241, 0.16);
+
+  color: #4f46e5;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.upgrade-hero-inner h1 {
+  margin: 20px 0 15px;
+
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+
+  color: #111827;
+}
+
+.upgrade-hero-inner h1 span {
+  display: inline;
+  color: #6366f1;
+}
+
+.upgrade-hero-inner p {
+  max-width: 680px;
+  margin: 0 auto;
+
+  color: #64748b;
+
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   BILLING TOGGLE
+   ========================================================= */
+
+.upgrade-billing {
+  width: fit-content;
+  margin: 30px auto 0;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.07);
+}
+
+.upgrade-billing button {
+  min-width: 110px;
+
+  border: 0;
+  background: transparent;
+
+  padding: 11px 18px;
+
+  border-radius: 10px;
+
+  color: #64748b;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.upgrade-billing button:hover {
+  color: #4f46e5;
+}
+
+.upgrade-billing button.active {
+  background: #6366f1;
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 14px rgba(99, 102, 241, 0.25);
+}
+
+.upgrade-billing button span {
+  margin-left: 6px;
+
+  padding: 3px 7px;
+
+  border-radius: 999px;
+
+  background: rgba(16, 185, 129, 0.12);
+
+  color: #059669;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   CURRENT PLAN
+   ========================================================= */
+
+.upgrade-current-section {
+  position: relative;
+  z-index: 2;
+  padding: 0 0 25px;
+}
+
+.upgrade-current-card {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 18px 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #dbe4f0;
+  border-radius: 16px;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.05);
+}
+
+.current-check {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #dcfce7;
+  color: #16a34a;
+
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.current-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.current-info small {
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.current-info strong {
+  color: #111827;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.current-active {
+  margin-left: auto;
+
+  padding: 7px 13px;
+
+  border-radius: 999px;
+
+  background: #dcfce7;
+  color: #15803d;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   PLANS SECTION
+   ========================================================= */
+
+.upgrade-plans-section {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  padding: 20px 0 60px;
+}
+
+
+/* =========================================================
+   PLAN GRID
+   ========================================================= */
+
+.upgrade-plans-grid {
+  width: 100%;
+
+  display: grid;
+
+  /*
+     IMPORTANT:
+     Fixed card size.
+     Cards ab chhote nahi honge.
+  */
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(320px, 1fr)
+    );
+
+  gap: 26px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   PLAN CARD
+   ========================================================= */
+
+.upgrade-plan-card {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  min-height: 590px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 34px 30px 30px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbfcff 100%
+    );
+
+  border: 1px solid #dbe4f0;
+  border-radius: 24px;
+
+  box-shadow:
+    0 12px 35px rgba(15, 23, 42, 0.07);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.upgrade-plan-card:hover {
+  transform: translateY(-7px);
+
+  border-color: #c7d2fe;
+
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.12);
+}
+
+
+/* ---------------------------------------------------------
+   POPULAR CARD
+--------------------------------------------------------- */
+
+.upgrade-plan-card.is-popular {
+  border: 2px solid #6366f1;
+
+  box-shadow:
+    0 18px 50px rgba(99, 102, 241, 0.16);
+}
+
+.upgrade-plan-card.is-current {
+  border-color: #22c55e;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.popular-badge {
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: max-content;
+
+  padding: 8px 18px;
+
+  border-radius: 0 0 12px 12px;
+
+  background: #6366f1;
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 0.06em;
+}
+
+.current-badge {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: #dcfce7;
+  color: #15803d;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   PLAN ICON
+   ========================================================= */
+
+.plan-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #e0e7ff
+    );
+
+  font-size: 28px;
+}
+
+
+/* =========================================================
+   PLAN NAME
+   ========================================================= */
+
+.upgrade-plan-card h2 {
+  margin: 0 0 10px;
+
+  color: #111827;
+
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.plan-description {
+  min-height: 50px;
+
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   PRICE
+   ========================================================= */
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+
+  margin: 25px 0;
+
+  padding-bottom: 23px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.plan-price strong {
+  color: #111827;
+
+  font-size: 38px;
+  line-height: 1;
+
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.plan-price span {
+  color: #64748b;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   FEATURES
+   ========================================================= */
+
+.plan-features {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-bottom: 25px;
+}
+
+.plan-feature {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.feature-check {
+  width: 25px;
+  height: 25px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ecfdf5;
+  color: #16a34a;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.plan-feature > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  min-width: 0;
+}
+
+.plan-feature strong {
+  color: #1e293b;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.plan-feature span {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.upgrade-primary-btn,
+.upgrade-outline-btn,
+.upgrade-current-btn {
+  width: 100%;
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.upgrade-primary-btn {
+  border: 1px solid #6366f1;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #4f46e5
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 18px rgba(99, 102, 241, 0.22);
+}
+
+.upgrade-primary-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 25px rgba(99, 102, 241, 0.30);
+}
+
+.upgrade-outline-btn {
+  border: 1px solid #cbd5e1;
+
+  background: #ffffff;
+
+  color: #334155;
+}
+
+.upgrade-outline-btn:hover:not(:disabled) {
+  border-color: #6366f1;
+
+  color: #4f46e5;
+
+  background: #f8f7ff;
+}
+
+.upgrade-current-btn {
+  border: 1px solid #bbf7d0;
+
+  background: #f0fdf4;
+
+  color: #15803d;
+
+  cursor: default;
+}
+
+.upgrade-primary-btn:disabled,
+.upgrade-outline-btn:disabled,
+.upgrade-current-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.upgrade-empty {
+  width: 100%;
+
+  padding: 70px 30px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.upgrade-empty-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.upgrade-empty h3 {
+  margin: 0 0 8px;
+
+  color: #111827;
+
+  font-size: 24px;
+}
+
+.upgrade-empty p {
+  margin: 0 auto 25px;
+
+  max-width: 500px;
+
+  color: #64748b;
+
+  line-height: 1.6;
+}
+
+.upgrade-empty .upgrade-outline-btn {
+  width: auto;
+  display: inline-flex;
+
+  padding: 0 25px;
+}
+
+
+/* =========================================================
+   TRUST SECTION
+   ========================================================= */
+
+.upgrade-trust {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 20px;
+
+  margin-top: 35px;
+}
+
+.trust-item {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 20px;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border: 1px solid #dbe4f0;
+  border-radius: 18px;
+}
+
+.trust-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #eef2ff;
+
+  font-size: 21px;
+}
+
+.trust-item > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.trust-item strong {
+  color: #1e293b;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.trust-item span {
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.upgrade-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.60);
+
+  backdrop-filter: blur(8px);
+}
+
+.upgrade-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 500px;
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  padding: 35px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 25px;
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.25);
+
+  text-align: center;
+}
+
+.upgrade-modal-close {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: #f1f5f9;
+  color: #475569;
+
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+.upgrade-modal-close:hover {
+  background: #e2e8f0;
+}
+
+.modal-icon {
+  width: 65px;
+  height: 65px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 15px;
+
+  border-radius: 18px;
+
+  background: #eef2ff;
+
+  font-size: 30px;
+}
+
+.modal-label {
+  color: #6366f1;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 0.1em;
+}
+
+.upgrade-modal h2 {
+  margin: 10px 0;
+
+  color: #111827;
+
+  font-size: 28px;
+}
+
+.upgrade-modal > p {
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-price {
+  margin: 20px 0;
+
+  color: #4f46e5;
+
+  font-size: 35px;
+  font-weight: 900;
+}
+
+.modal-price span {
+  color: #64748b;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.modal-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin: 20px 0;
+}
+
+.modal-summary > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  background: #f8fafc;
+
+  text-align: left;
+}
+
+.modal-summary span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.modal-summary strong {
+  color: #1e293b;
+  font-size: 12px;
+}
+
+.modal-actions {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1.5fr;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.modal-note {
+  display: block;
+
+  margin-top: 15px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   LOADING / ERROR
+   ========================================================= */
+
+.upgrade-state-page {
+  min-height: calc(100vh - 70px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+}
+
+.upgrade-state-card {
+  width: 100%;
+  max-width: 500px;
+
+  padding: 45px 30px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+
+  box-shadow:
+    0 15px 40px rgba(15, 23, 42, 0.08);
+}
+
+.upgrade-spinner {
+  width: 45px;
+  height: 45px;
+
+  margin: 0 auto 20px;
+
+  border: 4px solid #e0e7ff;
+  border-top-color: #6366f1;
+
+  border-radius: 50%;
+
+  animation: upgradeSpin 0.8s linear infinite;
+}
+
+@keyframes upgradeSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.upgrade-state-card h3 {
+  margin: 0 0 10px;
+
+  color: #111827;
+
+  font-size: 22px;
+}
+
+.upgrade-state-card p {
+  margin: 0 0 25px;
+
+  color: #64748b;
+
+  line-height: 1.6;
+}
+
+.upgrade-error-card {
+  border-color: #fecaca;
+}
+
+.upgrade-state-icon {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+.dark-mode .upgrade-page,
+body.dark .upgrade-page,
+body.dark-mode .upgrade-page {
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(99, 102, 241, 0.14),
+      transparent 30%
+    ),
+    #0b1120;
+
+  color: #f8fafc;
+}
+
+.dark-mode .upgrade-hero-inner h1,
+body.dark .upgrade-hero-inner h1,
+body.dark-mode .upgrade-hero-inner h1 {
+  color: #f8fafc;
+}
+
+.dark-mode .upgrade-hero-inner p,
+body.dark .upgrade-hero-inner p,
+body.dark-mode .upgrade-hero-inner p {
+  color: #94a3b8;
+}
+
+.dark-mode .upgrade-billing,
+body.dark .upgrade-billing,
+body.dark-mode .upgrade-billing {
+  background: #111827;
+  border-color: #1e293b;
+}
+
+.dark-mode .upgrade-current-card,
+.dark-mode .upgrade-plan-card,
+.dark-mode .trust-item,
+.dark-mode .upgrade-empty,
+.dark-mode .upgrade-state-card,
+body.dark .upgrade-current-card,
+body.dark .upgrade-plan-card,
+body.dark .trust-item,
+body.dark .upgrade-empty,
+body.dark .upgrade-state-card,
+body.dark-mode .upgrade-current-card,
+body.dark-mode .upgrade-plan-card,
+body.dark-mode .trust-item,
+body.dark-mode .upgrade-empty,
+body.dark-mode .upgrade-state-card {
+  background:
+    linear-gradient(
+      180deg,
+      #111827,
+      #0f172a
+    );
+
+  border-color: #1e293b;
+}
+
+.dark-mode .upgrade-plan-card h2,
+.dark-mode .plan-price strong,
+.dark-mode .current-info strong,
+.dark-mode .upgrade-empty h3,
+.dark-mode .upgrade-state-card h3,
+.dark-mode .trust-item strong,
+body.dark .upgrade-plan-card h2,
+body.dark .plan-price strong,
+body.dark .current-info strong,
+body.dark .upgrade-empty h3,
+body.dark .upgrade-state-card h3,
+body.dark .trust-item strong,
+body.dark-mode .upgrade-plan-card h2,
+body.dark-mode .plan-price strong,
+body.dark-mode .current-info strong,
+body.dark-mode .upgrade-empty h3,
+body.dark-mode .upgrade-state-card h3,
+body.dark-mode .trust-item strong {
+  color: #f8fafc;
+}
+
+.dark-mode .plan-description,
+.dark-mode .plan-price span,
+.dark-mode .plan-feature span,
+.dark-mode .trust-item span,
+.dark-mode .upgrade-empty p,
+.dark-mode .upgrade-state-card p,
+body.dark .plan-description,
+body.dark .plan-price span,
+body.dark .plan-feature span,
+body.dark .trust-item span,
+body.dark .upgrade-empty p,
+body.dark .upgrade-state-card p,
+body.dark-mode .plan-description,
+body.dark-mode .plan-price span,
+body.dark-mode .plan-feature span,
+body.dark-mode .trust-item span,
+body.dark-mode .upgrade-empty p,
+body.dark-mode .upgrade-state-card p {
+  color: #94a3b8;
+}
+
+.dark-mode .plan-feature strong,
+body.dark .plan-feature strong,
+body.dark-mode .plan-feature strong {
+  color: #e2e8f0;
+}
+
+.dark-mode .plan-price,
+body.dark .plan-price,
+body.dark-mode .plan-price {
+  border-color: #1e293b;
+}
+
+.dark-mode .upgrade-outline-btn,
+body.dark .upgrade-outline-btn,
+body.dark-mode .upgrade-outline-btn {
+  background: #111827;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.dark-mode .upgrade-outline-btn:hover,
+body.dark .upgrade-outline-btn:hover,
+body.dark-mode .upgrade-outline-btn:hover {
+  background: #1e293b;
+  border-color: #6366f1;
+}
+
+.dark-mode .upgrade-modal,
+body.dark .upgrade-modal,
+body.dark-mode .upgrade-modal {
+  background: #111827;
+  border-color: #1e293b;
+}
+
+.dark-mode .upgrade-modal h2,
+body.dark .upgrade-modal h2,
+body.dark-mode .upgrade-modal h2 {
+  color: #f8fafc;
+}
+
+.dark-mode .upgrade-modal > p,
+body.dark .upgrade-modal > p,
+body.dark-mode .upgrade-modal > p {
+  color: #94a3b8;
+}
+
+.dark-mode .modal-summary > div,
+body.dark .modal-summary > div,
+body.dark-mode .modal-summary > div {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.dark-mode .modal-summary strong,
+body.dark .modal-summary strong,
+body.dark-mode .modal-summary strong {
+  color: #e2e8f0;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .student-dashboard-main {
+    width: calc(100% - 230px);
+    max-width: calc(100% - 230px);
+    margin-left: 230px;
+  }
+
+  .upgrade-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .upgrade-plans-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(300px, 1fr)
+      );
+  }
+
+  .upgrade-trust {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /*
+     Mobile sidebar usually becomes drawer.
+     Main content should NOT have desktop margin.
+  */
+
+  .student-dashboard-main {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .upgrade-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .upgrade-hero {
+    padding-top: 25px;
+    padding-bottom: 35px;
+  }
+
+  .upgrade-back {
+    margin-bottom: 22px;
+  }
+
+  .upgrade-hero-inner {
+    text-align: left;
+  }
+
+  .upgrade-hero-inner h1 {
+    font-size: 38px;
+  }
+
+  .upgrade-hero-inner p {
+    font-size: 14px;
+  }
+
+  .upgrade-billing {
+    width: 100%;
+  }
+
+  .upgrade-billing button {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 8px;
+  }
+
+  .upgrade-billing button span {
+    display: none;
+  }
+
+  .upgrade-current-card {
+    padding: 15px;
+  }
+
+  .current-active {
+    font-size: 10px;
+  }
+
+  .upgrade-plans-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .upgrade-plan-card {
+    min-height: auto;
+    padding: 30px 24px 25px;
+  }
+
+  .upgrade-plan-card.is-popular {
+    transform: none;
+  }
+
+  .plan-price strong {
+    font-size: 34px;
+  }
+
+  .upgrade-trust {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .trust-item {
+    padding: 16px;
+  }
+
+  .upgrade-modal {
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+
+  .modal-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .upgrade-container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .upgrade-hero-inner h1 {
+    font-size: 32px;
+  }
+
+  .upgrade-plan-card {
+    padding: 25px 20px 22px;
+    border-radius: 20px;
+  }
+
+  .plan-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .upgrade-plan-card h2 {
+    font-size: 23px;
+  }
+
+  .plan-price strong {
+    font-size: 31px;
+  }
+
+  .current-info strong {
+    font-size: 14px;
+  }
+
+  .upgrade-state-page {
+    padding: 20px 14px;
+  }
+}

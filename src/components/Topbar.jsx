@@ -741,7 +741,7 @@ export default function Topbar() {
         <button
           type="button"
           className="upgrade-btn"
-          onClick={() => navigate("/admin/user-subscriptions")}
+          onClick={() => navigate("/upgrade")}
         >
           🚀 Upgrade Pro
         </button>

@@ -1,0 +1,548 @@
+/* =========================================================
+   ADMIN USER SUBSCRIPTIONS
+========================================================= */
+
+.admin-user-subscriptions {
+  width: 100%;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.admin-subscription-header {
+  margin-bottom: 24px;
+}
+
+.admin-subscription-header h2 {
+  color: #0f172a;
+  font-size: 28px;
+}
+
+.admin-subscription-header p {
+  color: #64748b;
+}
+
+/* =========================================================
+   STATS CARDS
+========================================================= */
+
+.subscription-stat-card {
+  border: 0 !important;
+  border-radius: 16px !important;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.subscription-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1) !important;
+}
+
+.subscription-stat-card .card-body {
+  padding: 22px;
+}
+
+.subscription-stat-title {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.subscription-stat-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.subscription-stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  background: #f1f5f9;
+}
+
+/* =========================================================
+   FILTER CARD
+========================================================= */
+
+.subscription-filter-card {
+  border: 0 !important;
+  border-radius: 16px !important;
+}
+
+.subscription-filter-card .card-body {
+  padding: 22px;
+}
+
+.subscription-filter-card .form-label {
+  color: #334155;
+  font-size: 14px;
+}
+
+.subscription-filter-card .form-control,
+.subscription-filter-card .form-select {
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid #dbe2ea;
+  transition: all 0.2s ease;
+}
+
+.subscription-filter-card .form-control:focus,
+.subscription-filter-card .form-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.12);
+}
+
+/* =========================================================
+   MAIN TABLE CARD
+========================================================= */
+
+.subscription-table-card {
+  border: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+.subscription-table-card .card-body {
+  padding: 24px;
+}
+
+.subscription-table-title {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.subscription-table-subtitle {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.subscription-table {
+  margin-bottom: 0;
+  min-width: 1150px;
+}
+
+.subscription-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.subscription-table tbody td {
+  padding: 16px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #eef2f7;
+  color: #334155;
+}
+
+.subscription-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.subscription-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* =========================================================
+   USER AVATAR
+========================================================= */
+
+.subscription-user-avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    #6366f1,
+    #8b5cf6
+  );
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.subscription-user-name {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.subscription-user-email,
+.subscription-user-id {
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* =========================================================
+   PLAN
+========================================================= */
+
+.subscription-plan-name {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.subscription-plan-slug {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.subscription-price {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.subscription-price-period {
+  display: block;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.subscription-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.subscription-status-active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.subscription-status-cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.subscription-status-inactive {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.subscription-status-none {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* =========================================================
+   DATES
+========================================================= */
+
+.subscription-date {
+  white-space: nowrap;
+  color: #475569;
+  font-size: 13px;
+}
+
+.subscription-date-start {
+  color: #15803d;
+}
+
+.subscription-date-end {
+  color: #dc2626;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.subscription-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.subscription-actions .btn {
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.subscription-pagination {
+  border-top: 1px solid #eef2f7;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.subscription-pagination-info {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.subscription-empty-state {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.subscription-empty-icon {
+  font-size: 52px;
+  margin-bottom: 12px;
+}
+
+.subscription-empty-state h5 {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.subscription-empty-state p {
+  color: #64748b;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.subscription-error {
+  border-radius: 12px;
+}
+
+/* =========================================================
+   MODAL OVERLAY
+========================================================= */
+
+.subscription-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(4px);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.subscription-modal {
+  width: min(650px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 0 !important;
+  border-radius: 18px !important;
+  animation: subscriptionModalIn 0.2s ease-out;
+}
+
+@keyframes subscriptionModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.subscription-modal .card-header {
+  padding: 22px 24px;
+}
+
+.subscription-modal .card-body {
+  padding: 24px;
+}
+
+.subscription-modal .card-footer {
+  padding: 20px 24px;
+}
+
+.subscription-modal-title {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.subscription-modal-user {
+  color: #64748b;
+}
+
+/* =========================================================
+   USER INFO
+========================================================= */
+
+.subscription-user-info {
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+/* =========================================================
+   PLAN PREVIEW
+========================================================= */
+
+.subscription-plan-preview {
+  border-radius: 12px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+}
+
+.subscription-plan-preview h6 {
+  color: #1e40af;
+  font-weight: 700;
+}
+
+.subscription-plan-feature {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: white;
+  border: 1px solid #dbeafe;
+  color: #334155;
+  font-size: 13px;
+}
+
+/* =========================================================
+   MODAL FORM
+========================================================= */
+
+.subscription-modal .form-label {
+  color: #334155;
+  font-size: 14px;
+}
+
+.subscription-modal .form-control,
+.subscription-modal .form-select {
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid #dbe2ea;
+}
+
+.subscription-modal .form-control:focus,
+.subscription-modal .form-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.12);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 992px) {
+  .subscription-table-card .card-body {
+    padding: 18px;
+  }
+
+  .subscription-table {
+    min-width: 1050px;
+  }
+
+  .subscription-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-subscription-header h2 {
+    font-size: 23px;
+  }
+
+  .subscription-stat-card .card-body {
+    padding: 18px;
+  }
+
+  .subscription-stat-value {
+    font-size: 26px;
+  }
+
+  .subscription-filter-card .card-body {
+    padding: 18px;
+  }
+
+  .subscription-table-card .card-body {
+    padding: 14px;
+  }
+
+  .subscription-modal-overlay {
+    padding: 10px;
+  }
+
+  .subscription-modal {
+    max-height: 94vh;
+    border-radius: 14px !important;
+  }
+
+  .subscription-modal .card-header,
+  .subscription-modal .card-body,
+  .subscription-modal .card-footer {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-subscription-header {
+    align-items: flex-start !important;
+  }
+
+  .admin-subscription-header .btn {
+    width: 100%;
+  }
+
+  .subscription-stat-value {
+    font-size: 24px;
+  }
+
+  .subscription-stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+
+  .subscription-pagination {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .subscription-pagination .btn {
+    flex: 1;
+  }
+
+  .subscription-modal .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
