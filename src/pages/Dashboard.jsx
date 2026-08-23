@@ -4,7 +4,7 @@ import Topbar from "../components/Topbar";
 import { useUser } from "../context/UserContext";
 import DashboardCard from "../components/DashboardCard";
 import api from "../services/api";
-const user = JSON.parse(localStorage.getItem("user"));
+
 import {
   LineChart,
   Line,
@@ -68,6 +68,7 @@ const usageData = [
 
 export default function Dashboard() {
   const { user } = useUser();
+
   const [analytics, setAnalytics] = useState({
     total_resumes: 0,
     profile_completion: 0,
@@ -82,6 +83,7 @@ export default function Dashboard() {
     const fetchAnalytics = async () => {
       try {
         const response = await api.get("/dashboard/analytics");
+
         setAnalytics(response.data);
       } catch (error) {
         console.error(error);
@@ -99,7 +101,10 @@ export default function Dashboard() {
         <Topbar />
 
         <div className="dashboard-content">
-          <h2 className="fw-bold">Welcome, {user?.name || "User"} 👋</h2>
+          <h2 className="fw-bold">
+            Welcome, {user?.name || "User"} 👋
+          </h2>
+
           <p className="text-muted">
             Build resumes, prepare interviews, and grow your career with AI.
           </p>
@@ -107,7 +112,10 @@ export default function Dashboard() {
           <div className="card border-0 shadow-sm p-4 my-4 dashboard-hero">
             <div className="row align-items-center">
               <div className="col-lg-8">
-                <h3 className="fw-bold">Your AI Career Growth Hub 🚀</h3>
+                <h3 className="fw-bold">
+                  Your AI Career Growth Hub 🚀
+                </h3>
+
                 <p className="mb-0">
                   Generate resumes, cover letters, interview feedback, and
                   career roadmaps using AI.
@@ -115,7 +123,10 @@ export default function Dashboard() {
               </div>
 
               <div className="col-lg-4 text-lg-end mt-3 mt-lg-0">
-                <a href="/resume-builder" className="btn btn-light">
+                <a
+                  href="/resume-builder"
+                  className="btn btn-light"
+                >
                   Build Resume →
                 </a>
               </div>
@@ -123,29 +134,43 @@ export default function Dashboard() {
           </div>
 
           <div className="card border-0 shadow-sm p-4 mb-4">
-            <h4 className="fw-bold mb-4">🚀 Quick Actions</h4>
+            <h4 className="fw-bold mb-4">
+              🚀 Quick Actions
+            </h4>
 
             <div className="row g-3">
               <div className="col-md-3">
-                <a href="/resume-builder" className="btn btn-primary w-100 py-3">
+                <a
+                  href="/resume-builder"
+                  className="btn btn-primary w-100 py-3"
+                >
                   📄 Resume Builder
                 </a>
               </div>
 
               <div className="col-md-3">
-                <a href="/cover-letter" className="btn btn-success w-100 py-3">
+                <a
+                  href="/cover-letter"
+                  className="btn btn-success w-100 py-3"
+                >
                   ✉️ Cover Letter
                 </a>
               </div>
 
               <div className="col-md-3">
-                <a href="/interview" className="btn btn-warning w-100 py-3">
+                <a
+                  href="/interview"
+                  className="btn btn-warning w-100 py-3"
+                >
                   🎤 AI Interview
                 </a>
               </div>
 
               <div className="col-md-3">
-                <a href="/job-tracker" className="btn btn-dark w-100 py-3">
+                <a
+                  href="/job-tracker"
+                  className="btn btn-dark w-100 py-3"
+                >
                   💼 Job Tracker
                 </a>
               </div>
@@ -155,27 +180,50 @@ export default function Dashboard() {
           <div className="row g-4 mb-4">
             <div className="col-lg-4 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#dbeafe" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#dbeafe" }}
+                >
                   📄
                 </div>
-                <p className="text-muted mb-1">Total Resumes</p>
-                <h2>{analytics.total_resumes}</h2>
-                <span className="stats-trend">Saved in database</span>
+
+                <p className="text-muted mb-1">
+                  Total Resumes
+                </p>
+
+                <h2>
+                  {analytics.total_resumes}
+                </h2>
+
+                <span className="stats-trend">
+                  Saved in database
+                </span>
               </div>
             </div>
 
             <div className="col-lg-4 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#dcfce7" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#dcfce7" }}
+                >
                   👤
                 </div>
-                <p className="text-muted mb-1">Profile Completion</p>
-                <h2>{analytics.profile_completion}%</h2>
+
+                <p className="text-muted mb-1">
+                  Profile Completion
+                </p>
+
+                <h2>
+                  {analytics.profile_completion}%
+                </h2>
 
                 <div className="progress mt-3">
                   <div
                     className="progress-bar"
-                    style={{ width: `${analytics.profile_completion}%` }}
+                    style={{
+                      width: `${analytics.profile_completion}%`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -183,10 +231,17 @@ export default function Dashboard() {
 
             <div className="col-lg-4 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#f3e8ff" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#f3e8ff" }}
+                >
                   📝
                 </div>
-                <p className="text-muted mb-1">Latest Resume</p>
+
+                <p className="text-muted mb-1">
+                  Latest Resume
+                </p>
+
                 <h5 className="fw-bold">
                   {analytics.latest_resume
                     ? analytics.latest_resume.title
@@ -199,41 +254,77 @@ export default function Dashboard() {
           <div className="row g-4 mb-4">
             <div className="col-lg-3 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#e0f2fe" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#e0f2fe" }}
+                >
                   💼
                 </div>
-                <p className="text-muted mb-1">Total Jobs</p>
-                <h2>{analytics.total_jobs}</h2>
+
+                <p className="text-muted mb-1">
+                  Total Jobs
+                </p>
+
+                <h2>
+                  {analytics.total_jobs}
+                </h2>
               </div>
             </div>
 
             <div className="col-lg-3 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#fef3c7" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#fef3c7" }}
+                >
                   🎤
                 </div>
-                <p className="text-muted mb-1">Interviews</p>
-                <h2>{analytics.interview_jobs}</h2>
+
+                <p className="text-muted mb-1">
+                  Interviews
+                </p>
+
+                <h2>
+                  {analytics.interview_jobs}
+                </h2>
               </div>
             </div>
 
             <div className="col-lg-3 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#fee2e2" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#fee2e2" }}
+                >
                   📊
                 </div>
-                <p className="text-muted mb-1">Average ATS Score</p>
-                <h2>{analytics.average_ats_score}%</h2>
+
+                <p className="text-muted mb-1">
+                  Average ATS Score
+                </p>
+
+                <h2>
+                  {analytics.average_ats_score}%
+                </h2>
               </div>
             </div>
 
             <div className="col-lg-3 col-md-6">
               <div className="stats-card">
-                <div className="stats-icon" style={{ background: "#dcfce7" }}>
+                <div
+                  className="stats-icon"
+                  style={{ background: "#dcfce7" }}
+                >
                   🏆
                 </div>
-                <p className="text-muted mb-1">Offers</p>
-                <h2>{analytics.offer_jobs}</h2>
+
+                <p className="text-muted mb-1">
+                  Offers
+                </p>
+
+                <h2>
+                  {analytics.offer_jobs}
+                </h2>
               </div>
             </div>
           </div>
@@ -241,14 +332,24 @@ export default function Dashboard() {
           <div className="row mt-4">
             <div className="col-lg-8 mb-4">
               <div className="card border-0 shadow-sm p-4 analytics-card">
-                <h4 className="fw-bold mb-3">📈 AI Usage Analytics</h4>
+                <h4 className="fw-bold mb-3">
+                  📈 AI Usage Analytics
+                </h4>
 
-                <div style={{ width: "100%", height: 250 }}>
+                <div
+                  style={{
+                    width: "100%",
+                    height: 250,
+                  }}
+                >
                   <ResponsiveContainer>
                     <LineChart data={usageData}>
                       <XAxis dataKey="day" />
+
                       <YAxis />
+
                       <Tooltip />
+
                       <Line
                         type="monotone"
                         dataKey="ai"
@@ -263,56 +364,97 @@ export default function Dashboard() {
 
             <div className="col-lg-4 mb-4">
               <div className="card border-0 shadow-sm p-4 analytics-card">
-                <h4 className="fw-bold mb-3">🔥 Daily Goal</h4>
-                <h2>70%</h2>
+                <h4 className="fw-bold mb-3">
+                  🔥 Daily Goal
+                </h4>
+
+                <h2>
+                  70%
+                </h2>
 
                 <div className="progress mt-3">
-                  <div className="progress-bar" style={{ width: "70%" }}></div>
+                  <div
+                    className="progress-bar"
+                    style={{ width: "70%" }}
+                  ></div>
                 </div>
 
-                <p className="mt-3 text-muted">Complete one interview today.</p>
+                <p className="mt-3 text-muted">
+                  Complete one interview today.
+                </p>
               </div>
             </div>
           </div>
 
           <div className="row mt-4">
             {tools.map((tool, index) => (
-              <DashboardCard key={index} {...tool} />
+              <DashboardCard
+                key={index}
+                {...tool}
+              />
             ))}
           </div>
 
           <div className="card border-0 shadow-sm p-4 mt-4 activity-card">
-            <h4 className="fw-bold mb-4">Recent Activity</h4>
+            <h4 className="fw-bold mb-4">
+              Recent Activity
+            </h4>
 
             <div className="activity-item">
               <span>📄</span>
+
               <div>
-                <h6>Resume Saved</h6>
-                <p>Your latest resume is connected with backend.</p>
+                <h6>
+                  Resume Saved
+                </h6>
+
+                <p>
+                  Your latest resume is connected with backend.
+                </p>
               </div>
             </div>
 
             <div className="activity-item">
               <span>💼</span>
+
               <div>
-                <h6>Job Tracker Updated</h6>
-                <p>You have {analytics.total_jobs} job applications.</p>
+                <h6>
+                  Job Tracker Updated
+                </h6>
+
+                <p>
+                  You have {analytics.total_jobs} job applications.
+                </p>
               </div>
             </div>
 
             <div className="activity-item">
               <span>📊</span>
+
               <div>
-                <h6>ATS Score Updated</h6>
-                <p>Average ATS score is {analytics.average_ats_score}%.</p>
+                <h6>
+                  ATS Score Updated
+                </h6>
+
+                <p>
+                  Average ATS score is{" "}
+                  {analytics.average_ats_score}%.
+                </p>
               </div>
             </div>
 
             <div className="activity-item">
               <span>👤</span>
+
               <div>
-                <h6>Profile Updated</h6>
-                <p>Profile completion is {analytics.profile_completion}%.</p>
+                <h6>
+                  Profile Updated
+                </h6>
+
+                <p>
+                  Profile completion is{" "}
+                  {analytics.profile_completion}%.
+                </p>
               </div>
             </div>
           </div>

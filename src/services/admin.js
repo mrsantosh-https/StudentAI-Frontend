@@ -2,12 +2,19 @@ import api from "./api";
 
 /*
 |--------------------------------------------------------------------------
-| Error helper
+| Error Helper
 |--------------------------------------------------------------------------
 */
 
-function getAdminErrorMessage(error, fallbackMessage) {
-  const validationErrors = error.response?.data?.errors;
+function getAdminErrorMessage(
+  error,
+  fallbackMessage
+) {
+  const responseData =
+    error?.response?.data;
+
+  const validationErrors =
+    responseData?.errors;
 
   if (validationErrors) {
     return Object.values(validationErrors)
@@ -16,12 +23,11 @@ function getAdminErrorMessage(error, fallbackMessage) {
   }
 
   return (
-    error.response?.data?.message ||
-    error.message ||
+    responseData?.message ||
+    error?.message ||
     fallbackMessage
   );
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -37,20 +43,34 @@ export async function getLoginActivities({
 } = {}) {
   try {
     const params = {
-      page,
+      page: Number(page) || 1,
     };
 
-    if (search.trim()) {
+    if (
+      typeof search === "string" &&
+      search.trim() !== ""
+    ) {
       params.search = search.trim();
     }
 
-    if (status) {
+    if (
+      typeof status === "string" &&
+      status !== ""
+    ) {
       params.status = status;
     }
 
-    if (date) {
+    if (
+      typeof date === "string" &&
+      date !== ""
+    ) {
       params.date = date;
     }
+
+    console.log(
+      "GET /admin/login-activities params:",
+      params
+    );
 
     const response = await api.get(
       "/admin/login-activities",
@@ -59,11 +79,16 @@ export async function getLoginActivities({
       }
     );
 
+    console.log(
+      "LOGIN ACTIVITIES RESPONSE:",
+      response.data
+    );
+
     return response.data;
   } catch (error) {
     console.error(
       "Login activities error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -77,7 +102,6 @@ export async function getLoginActivities({
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -101,7 +125,7 @@ export async function getLoginActivity(id) {
   } catch (error) {
     console.error(
       "Login activity details error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -115,7 +139,6 @@ export async function getLoginActivity(id) {
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -131,10 +154,13 @@ export async function getAIUsage({
 } = {}) {
   try {
     const params = {
-      page,
+      page: Number(page) || 1,
     };
 
-    if (search.trim()) {
+    if (
+      typeof search === "string" &&
+      search.trim() !== ""
+    ) {
       params.search = search.trim();
     }
 
@@ -157,7 +183,7 @@ export async function getAIUsage({
   } catch (error) {
     console.error(
       "AI usage analytics error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -171,7 +197,6 @@ export async function getAIUsage({
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -195,7 +220,7 @@ export async function getAIUsageActivity(id) {
   } catch (error) {
     console.error(
       "AI usage activity details error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -209,14 +234,6 @@ export async function getAIUsageActivity(id) {
     );
   }
 }
-
-
-/*
-|--------------------------------------------------------------------------
-| Admin Notifications
-|--------------------------------------------------------------------------
-*/
-
 
 /*
 |--------------------------------------------------------------------------
@@ -233,10 +250,13 @@ export async function getAdminNotifications({
 } = {}) {
   try {
     const params = {
-      page,
+      page: Number(page) || 1,
     };
 
-    if (search.trim()) {
+    if (
+      typeof search === "string" &&
+      search.trim() !== ""
+    ) {
       params.search = search.trim();
     }
 
@@ -263,7 +283,7 @@ export async function getAdminNotifications({
   } catch (error) {
     console.error(
       "Admin notifications error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -277,7 +297,6 @@ export async function getAdminNotifications({
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -301,7 +320,7 @@ export async function getAdminNotification(id) {
   } catch (error) {
     console.error(
       "Admin notification details error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -315,7 +334,6 @@ export async function getAdminNotification(id) {
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -362,7 +380,7 @@ export async function sendAdminNotification({
   } catch (error) {
     console.error(
       "Send admin notification error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -376,7 +394,6 @@ export async function sendAdminNotification({
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -415,7 +432,7 @@ export async function broadcastAdminNotification({
   } catch (error) {
     console.error(
       "Broadcast notification error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -430,14 +447,15 @@ export async function broadcastAdminNotification({
   }
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | Mark Admin Notification As Read
 |--------------------------------------------------------------------------
 */
 
-export async function markAdminNotificationAsRead(id) {
+export async function markAdminNotificationAsRead(
+  id
+) {
   try {
     if (!id) {
       throw new Error(
@@ -453,7 +471,7 @@ export async function markAdminNotificationAsRead(id) {
   } catch (error) {
     console.error(
       "Mark notification as read error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(
@@ -467,7 +485,6 @@ export async function markAdminNotificationAsRead(id) {
     );
   }
 }
-
 
 /*
 |--------------------------------------------------------------------------
@@ -491,7 +508,7 @@ export async function deleteAdminNotification(id) {
   } catch (error) {
     console.error(
       "Delete admin notification error:",
-      error.response?.data || error
+      error?.response?.data || error
     );
 
     throw new Error(

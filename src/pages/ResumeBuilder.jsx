@@ -451,13 +451,11 @@ export default function ResumeBuilder() {
         return;
       }
 
-      if (
-        error.response?.status === 403
-      ) {
+      if (error.response?.status === 403) {
         toast.error(
-          "Is resume ko update karne ki permission nahi hai."
+          error.response?.data?.message ||
+            "Aapko is resume ko update karne ki permission nahi hai."
         );
-
         return;
       }
 

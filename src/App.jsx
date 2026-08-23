@@ -35,6 +35,7 @@ import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
 import Upgrade from "./pages/Upgrade";
 import MySubscription from "./pages/MySubscription";
+import AdminLoginActivities from "./pages/AdminLoginActivities";
 import AdminUserSubscriptions from "./pages/AdminUserSubscriptions";
 import AdminSubscriptionPlans from "./pages/AdminSubscriptionPlans";
 
@@ -202,6 +203,11 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+            path="/admin/login-activities"
+            element={<AdminLoginActivities />}
+          />
 
         {/* =====================================================
             DASHBOARD

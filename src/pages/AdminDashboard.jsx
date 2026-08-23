@@ -337,6 +337,27 @@ return (
                     </p>
                   </div>
                 </button>
+                {/* Login Activities */}
+
+                <button
+                  type="button"
+                  className="admin-action-card"
+                  onClick={() =>
+                    navigate("/admin/login-activities")
+                  }
+                >
+                  <div className="admin-action-icon">
+                    👤🔐
+                  </div>
+
+                  <div className="admin-action-content">
+                    <h4>User Login Activities</h4>
+
+                    <p>
+                      View login device and time.
+                    </p>
+                  </div>
+                </button>
 
                 {/* Feedback */}
 

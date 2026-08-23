@@ -1,214 +1,313 @@
 export default function ProfessionalTemplate({ resume = {} }) {
-  const getArray = (value) => {
-    if (Array.isArray(value)) {
-      return value;
+  /*
+  |--------------------------------------------------------------------------
+  | SAFE VALUE
+  |--------------------------------------------------------------------------
+  */
+
+  const getValue = (value) => {
+    if (value === null || value === undefined) {
+      return "";
     }
 
-    if (!value) {
-      return [];
-    }
-
-    if (typeof value === "string") {
-      try {
-        const parsed = JSON.parse(value);
-
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return value
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
-      }
-    }
-
-    return [];
+    return String(value).trim();
   };
 
-  const name =
-    resume.name ||
-    resume.full_name ||
-    resume.fullName ||
+  /*
+  |--------------------------------------------------------------------------
+  | SUPPORT DATABASE + FRONTEND FIELD NAMES
+  |--------------------------------------------------------------------------
+  */
+
+  const fullName =
+    getValue(resume.full_name) ||
+    getValue(resume.fullName) ||
+    getValue(resume.name) ||
     "Your Name";
 
-  const role =
-    resume.role ||
-    resume.job_title ||
-    resume.jobTitle ||
-    resume.professional_title ||
-    "Professional Title";
+  const designation =
+    getValue(resume.designation) ||
+    getValue(resume.role) ||
+    getValue(resume.job_title) ||
+    getValue(resume.jobTitle) ||
+    "Professional";
 
-  const email = resume.email || "your-email@example.com";
-  const phone = resume.phone || resume.phone_number || "Phone not added";
-  const location = resume.location || resume.address || "Location not added";
+  const email = getValue(resume.email);
+
+  const phone =
+    getValue(resume.phone) ||
+    getValue(resume.phone_number);
+
+  /*
+  |--------------------------------------------------------------------------
+  | LOCATION
+  |--------------------------------------------------------------------------
+  */
+
+  const address = getValue(resume.address);
+  const city = getValue(resume.city);
+  const state = getValue(resume.state);
+  const country = getValue(resume.country);
+  const pincode = getValue(resume.pincode);
+
+  const locationParts = [
+    address,
+    city,
+    state,
+    country,
+    pincode,
+  ].filter(Boolean);
+
+  const location = locationParts.join(", ");
+
+  /*
+  |--------------------------------------------------------------------------
+  | SOCIAL LINKS
+  |--------------------------------------------------------------------------
+  */
+
+  const linkedin = getValue(resume.linkedin);
+  const github = getValue(resume.github);
+  const portfolio = getValue(resume.portfolio);
+
+  /*
+  |--------------------------------------------------------------------------
+  | SUMMARY
+  |--------------------------------------------------------------------------
+  */
 
   const summary =
-    resume.summary ||
-    resume.professional_summary ||
-    resume.objective ||
-    "Add your professional summary here.";
+    getValue(resume.summary) ||
+    getValue(resume.professional_summary) ||
+    getValue(resume.career_objective) ||
+    getValue(resume.careerObjective);
 
-  const skills = getArray(resume.skills);
-  const experience = getArray(resume.experience);
-  const projects = getArray(resume.projects);
-  const education = getArray(resume.education);
+  /*
+  |--------------------------------------------------------------------------
+  | OTHER RESUME DATA
+  |--------------------------------------------------------------------------
+  */
+
+  const education =
+    getValue(resume.education);
+
+  const skills =
+    getValue(resume.skills);
+
+  const projects =
+    getValue(resume.projects);
+
+  const experience =
+    getValue(resume.experience);
+
+  /*
+  |--------------------------------------------------------------------------
+  | TEXT FORMATTER
+  |--------------------------------------------------------------------------
+  | Converts multiline text into paragraphs.
+  */
+
+  const renderText = (text) => {
+    if (!text) {
+      return (
+        <p className="resume-empty-text">
+          No information added
+        </p>
+      );
+    }
+
+    return text
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line, index) => (
+        <p key={index}>{line}</p>
+      ));
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | SKILLS FORMATTER
+  |--------------------------------------------------------------------------
+  | Supports:
+  | HTML/CSS/JS
+  | HTML, CSS, JavaScript
+  | HTML
+  | CSS
+  | JavaScript
+  */
+
+  const skillList = skills
+    ? skills
+        .split(/[,|\n]/)
+        .map((skill) => skill.trim())
+        .filter(Boolean)
+    : [];
+
+  /*
+  |--------------------------------------------------------------------------
+  | TEMPLATE
+  |--------------------------------------------------------------------------
+  */
 
   return (
     <div
-      className="professional-resume-template"
       id="resume-template"
+      className="professional-resume-template"
     >
+      {/* =========================================================
+          HEADER
+      ========================================================= */}
+
       <header className="professional-resume-header">
-        <h1>{name}</h1>
-        <h2>{role}</h2>
+        <h1>{fullName}</h1>
+
+        <h2>{designation}</h2>
 
         <div className="professional-contact-row">
-          <span>{email}</span>
-          <span>{phone}</span>
-          <span>{location}</span>
+          {email && (
+            <span>
+              ✉ {email}
+            </span>
+          )}
+
+          {phone && (
+            <span>
+              ☎ {phone}
+            </span>
+          )}
+
+          {location && (
+            <span>
+              📍 {location}
+            </span>
+          )}
         </div>
+
+        {(linkedin ||
+          github ||
+          portfolio) && (
+          <div className="professional-social-row">
+            {linkedin && (
+              <span>
+                LinkedIn: {linkedin}
+              </span>
+            )}
+
+            {github && (
+              <span>
+                GitHub: {github}
+              </span>
+            )}
+
+            {portfolio && (
+              <span>
+                Portfolio: {portfolio}
+              </span>
+            )}
+          </div>
+        )}
       </header>
 
+      {/* =========================================================
+          CONTENT
+      ========================================================= */}
+
       <main className="professional-resume-content">
-        <section className="professional-resume-section">
-          <h2>Professional Summary</h2>
-          <p>{summary}</p>
-        </section>
 
-        <section className="professional-resume-section">
-          <h2>Skills</h2>
+        {/* =======================================================
+            PROFESSIONAL SUMMARY
+        ======================================================= */}
 
-          {skills.length > 0 ? (
-            <div className="professional-skills-list">
-              {skills.map((skill, index) => (
-                <span key={`${String(skill)}-${index}`}>
-                  {typeof skill === "string"
-                    ? skill
-                    : skill.name || skill.skill || "Skill"}
-                </span>
-              ))}
+        {summary && (
+          <section className="professional-resume-section">
+            <h2>Professional Summary</h2>
+
+            <div className="professional-summary">
+              {renderText(summary)}
             </div>
-          ) : (
-            <p className="resume-empty-text">No skills added</p>
-          )}
-        </section>
+          </section>
+        )}
 
-        <section className="professional-resume-section">
-          <h2>Experience</h2>
+        {/* =======================================================
+            SKILLS
+        ======================================================= */}
 
-          {experience.length > 0 ? (
-            experience.map((item, index) => (
-              <article
-                className="professional-resume-item"
-                key={item.id || index}
-              >
-                <div className="professional-item-header">
-                  <div>
-                    <h3>
-                      {item.title ||
-                        item.position ||
-                        item.job_title ||
-                        "Job Title"}
-                    </h3>
+        {skillList.length > 0 && (
+          <section className="professional-resume-section">
+            <h2>Skills</h2>
 
-                    <h4>
-                      {item.company ||
-                        item.company_name ||
-                        "Company Name"}
-                    </h4>
-                  </div>
-
-                  <span>
-                    {item.duration ||
-                      item.period ||
-                      item.date ||
-                      ""}
+            <div className="professional-skills-list">
+              {skillList.map(
+                (skill, index) => (
+                  <span
+                    key={`${skill}-${index}`}
+                  >
+                    {skill}
                   </span>
-                </div>
+                )
+              )}
+            </div>
+          </section>
+        )}
 
-                <p>
-                  {item.description ||
-                    item.responsibilities ||
-                    ""}
-                </p>
-              </article>
-            ))
-          ) : (
-            <p className="resume-empty-text">
-              No experience added
-            </p>
+        {/* =======================================================
+            EXPERIENCE
+        ======================================================= */}
+
+        {experience && (
+          <section className="professional-resume-section">
+            <h2>Experience</h2>
+
+            <div className="professional-text-section">
+              {renderText(experience)}
+            </div>
+          </section>
+        )}
+
+        {/* =======================================================
+            PROJECTS
+        ======================================================= */}
+
+        {projects && (
+          <section className="professional-resume-section">
+            <h2>Projects</h2>
+
+            <div className="professional-text-section">
+              {renderText(projects)}
+            </div>
+          </section>
+        )}
+
+        {/* =======================================================
+            EDUCATION
+        ======================================================= */}
+
+        {education && (
+          <section className="professional-resume-section">
+            <h2>Education</h2>
+
+            <div className="professional-text-section">
+              {renderText(education)}
+            </div>
+          </section>
+        )}
+
+        {/* =======================================================
+            EMPTY STATE
+        ======================================================= */}
+
+        {!summary &&
+          !skills &&
+          !experience &&
+          !projects &&
+          !education && (
+            <section className="professional-resume-section">
+              <p className="resume-empty-text">
+                Resume information has not been added yet.
+              </p>
+            </section>
           )}
-        </section>
-
-        <section className="professional-resume-section">
-          <h2>Projects</h2>
-
-          {projects.length > 0 ? (
-            projects.map((project, index) => (
-              <article
-                className="professional-resume-item"
-                key={project.id || index}
-              >
-                <h3>
-                  {project.title ||
-                    project.name ||
-                    "Project Title"}
-                </h3>
-
-                <p>
-                  {project.description ||
-                    project.details ||
-                    ""}
-                </p>
-              </article>
-            ))
-          ) : (
-            <p className="resume-empty-text">
-              No projects added
-            </p>
-          )}
-        </section>
-
-        <section className="professional-resume-section">
-          <h2>Education</h2>
-
-          {education.length > 0 ? (
-            education.map((item, index) => (
-              <article
-                className="professional-resume-item"
-                key={item.id || index}
-              >
-                <div className="professional-item-header">
-                  <div>
-                    <h3>
-                      {item.course ||
-                        item.degree ||
-                        item.qualification ||
-                        "Course Name"}
-                    </h3>
-
-                    <h4>
-                      {item.college ||
-                        item.institute ||
-                        item.school ||
-                        "College Name"}
-                    </h4>
-                  </div>
-
-                  <span>
-                    {item.year ||
-                      item.duration ||
-                      item.date ||
-                      ""}
-                  </span>
-                </div>
-              </article>
-            ))
-          ) : (
-            <p className="resume-empty-text">
-              No education added
-            </p>
-          )}
-        </section>
       </main>
     </div>
   );
