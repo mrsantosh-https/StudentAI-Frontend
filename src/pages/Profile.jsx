@@ -6,7 +6,12 @@ import api from "../services/api";
 import "../styles/profile.css";
 import toast from "react-hot-toast";
 
-const STORAGE_URL = "http://127.0.0.1:8000/storage";
+const API_BASE =
+  import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+
+const BACKEND_URL = API_BASE.replace(/\/api\/?$/, "");
+
+const STORAGE_URL = `${BACKEND_URL}/storage`;
 
 export default function Profile() {
   const { fetchUser } = useUser();
@@ -206,8 +211,8 @@ export default function Profile() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/profile/photo",
-        {
+        `${API_BASE}/profile/photo`,
+          {
           method: "POST",
           headers: {
             Accept: "application/json",
