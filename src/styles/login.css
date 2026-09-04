@@ -9,9 +9,18 @@
   justify-content: center;
   padding: 24px;
   background:
-    radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.18), transparent 35%),
-    linear-gradient(135deg, #f8fafc, #eef2ff);
+  
+    radial-gradient(
+      circle at 12% 15%,
+      rgba(59, 130, 246, 0.14),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 88% 85%,
+      rgba(139, 92, 246, 0.14),
+      transparent 32%
+    ),
+    linear-gradient(135deg, #5178c1, #f7f4ff);
 }
 
 .login-card {

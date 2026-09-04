@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import "../styles/coverLetter.css";
 import Swal from "sweetalert2";
+import SEO from "../components/SEO";
 import { generateCoverLetter } from "../services/gemini";
 
 export default function CoverLetter() {
@@ -85,7 +86,10 @@ export default function CoverLetter() {
 
       <main className="dashboard-main">
         <Topbar />
-
+        <SEO
+          title="AI Cover Letter Generator - StudentAI"
+          description="Generate professional and personalized cover letters using artificial intelligence."
+        />
         <div className="dashboard-content">
           <h2>🤖 AI Cover Letter Generator</h2>
 

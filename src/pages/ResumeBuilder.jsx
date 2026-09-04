@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import SEO from "../components/SEO";
 import api from "../services/api";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
@@ -702,7 +702,10 @@ useEffect(() => {
 
       <main className="dashboard-main">
         <Topbar />
-
+        <SEO
+          title="AI Resume Builder | Create ATS-Friendly Resume - StudentAI"
+          description="Create professional ATS-friendly resumes with AI using StudentAI Resume Builder."
+        />
         <div className="dashboard-content">
           <h2 className="mb-2">
             {id

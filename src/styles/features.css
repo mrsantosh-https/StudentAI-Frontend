@@ -1,7 +1,19 @@
 .features {
   width: 100%;
   padding: 80px 24px;
-  background: #f8fafc;
+   background:
+  
+    radial-gradient(
+      circle at 12% 15%,
+      rgba(59, 130, 246, 0.14),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 88% 85%,
+      rgba(139, 92, 246, 0.14),
+      transparent 32%
+    ),
+    linear-gradient(135deg, #5178c1, #f7f4ff);
   overflow: hidden;
 }
 

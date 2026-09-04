@@ -12,8 +12,8 @@
 
   /* Fixed navbar ke liye top space */
   padding: 92px 16px 28px;
-
   background:
+  
     radial-gradient(
       circle at 12% 15%,
       rgba(59, 130, 246, 0.14),
@@ -24,7 +24,7 @@
       rgba(139, 92, 246, 0.14),
       transparent 32%
     ),
-    linear-gradient(135deg, #eef4ff, #f7f4ff);
+    linear-gradient(135deg, #5178c1, #f7f4ff);
 
   overflow-x: hidden;
   box-sizing: border-box;

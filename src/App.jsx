@@ -4,9 +4,12 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import Payment from "./pages/Payment";
 import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
+import Features from "./components/Features";
 import Dashboard from "./pages/Dashboard";
 import Interview from "./pages/Interview";
 import MyResumes from "./pages/MyResumes";
@@ -21,6 +24,7 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import AICareerCoach from "./pages/AICareerCoach";
 import ResetPassword from "./pages/ResetPassword";
 import ResumeVersions from "./pages/ResumeVersions";
+import AdminFeedback from "./pages/AdminFeedback";
 import AdminAIAnalytics from "./pages/AdminAIAnalytics";
 import InterviewHistory from "./pages/InterviewHistory";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -34,8 +38,9 @@ import AdminNotifications from "./pages/AdminNotifications";
 import MockInterviewHistory from "./pages/MockInterviewHistory";
 import MockInterviewResult from "./pages/MockInterviewResult";
 import Upgrade from "./pages/Upgrade";
-import MySubscription from "./pages/MySubscription";
+// import MySubscription from "./pages/MySubscription";
 import AdminLoginActivities from "./pages/AdminLoginActivities";
+import AdminContactMessages from "./pages/AdminContactMessages";
 import AdminUserSubscriptions from "./pages/AdminUserSubscriptions";
 import AdminSubscriptionPlans from "./pages/AdminSubscriptionPlans";
 
@@ -71,7 +76,10 @@ function AppContent() {
 
   const showNavbar =
     location.pathname === "/login" ||
+    location.pathname === "/features" ||
     location.pathname === "/" ||
+    location.pathname === "/about" ||
+    location.pathname === "upgrade" ||
     location.pathname === "/signup";
 
   return (
@@ -89,7 +97,19 @@ function AppContent() {
           path="/"
           element={<Home />}
         />
-
+        <Route
+          path="/features"
+          element={<Features />}
+        />
+        <Route
+          path="/about"
+          element={<About />}
+        />
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+        
         <Route
           path="/login"
           element={<Login />}
@@ -148,6 +168,11 @@ function AppContent() {
           path="/admin/ai-usage"
           element={<AdminAIUsage />}
         />
+  
+        <Route
+          path="/admin/contact-messages"
+          element={<AdminContactMessages />}
+        />
         <Route
           path="/admin/dashboard"
           element={
@@ -195,15 +220,18 @@ function AppContent() {
           element={<AdminUserSubscriptions />}
         />
 
-        <Route
+        {/* <Route
           path="/my-subscription"
           element={
             <ProtectedRoute>
               <MySubscription />
             </ProtectedRoute>
           }
+        /> */}
+        <Route
+          path="/admin/feedback"
+          element={<AdminFeedback />}
         />
-
         <Route
             path="/admin/login-activities"
             element={<AdminLoginActivities />}

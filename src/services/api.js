@@ -6,9 +6,9 @@ export const API_URL =
 
 const api = axios.create({
   baseURL: API_URL,
+
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
   },
 });
 
@@ -22,9 +22,9 @@ api.interceptors.request.use(
 
     if (token) {
       config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
-    } else if (config.headers) {
-      delete config.headers.Authorization;
+
+      config.headers.Authorization =
+        `Bearer ${token}`;
     }
 
     return config;
@@ -42,6 +42,7 @@ api.interceptors.response.use(
   (response) => {
     return response;
   },
+
   (error) => {
     const status = error.response?.status;
 
@@ -51,12 +52,7 @@ api.interceptors.response.use(
         error.response?.data
       );
 
-      // Token invalid/expired
       localStorage.removeItem("token");
-
-      // IMPORTANT:
-      // Do not automatically redirect here.
-      // Your individual pages can handle 401.
     }
 
     if (status === 403) {

@@ -21,10 +21,18 @@
   z-index: 1000;
 }
 .sidebar-logo {
-  font-weight: 900;
-  margin-bottom: 36px;
-  font-size: 1.9rem;
-  letter-spacing: -1px;
+  display: flex;
+  font-size: 35px;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-logo-img {
+  width: 40;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 50%;
+
 }
 
 .sidebar-logo span {
@@ -100,6 +108,9 @@
     margin-block-start: 20px;
     margin-left: 20px;
     margin-right: 20px;
+}
+.topbar-title{
+margin-right: 50px;
 }
 
 .topbar-actions {
@@ -594,16 +605,6 @@ body.dark-mode .no-notification::before {
   box-shadow: 0 14px 30px rgba(239, 68, 68, 0.25);
    transition: .3s;
 }
-.dark-mode .topbar-search {
-  background: #1e293b !important;
-  color: #ffffff !important;
-  border: 1px solid #475569 !important;
-}
-
-.dark-mode .topbar-search::placeholder {
-  color: #cbd5e1 !important;
-}
-
 /* ==========================================================
    SIDEBAR MENU BUTTON
 ========================================================== */
@@ -658,10 +659,6 @@ body.dark-mode .no-notification::before {
 
   .dashboard-content {
     padding: 24px;
-  }
-
-  .topbar {
-    padding: 22px 28px;
   }
 }
 

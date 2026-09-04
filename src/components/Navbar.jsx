@@ -7,6 +7,11 @@ export default function Navbar() {
       <div className="container">
         <Link className="navbar-brand" to="/">
           Student<span>AI</span>
+          <img
+              src="/Logo.png"
+              alt="StudentAI Logo"
+              className="sidebar-logo-img"
+            />
         </Link>
 
         <button
@@ -25,9 +30,8 @@ export default function Navbar() {
               Home
             </Link>
           </li>
-            <li className="nav-item"><a className="nav-link" href="#">Features</a></li>
-            <li className="nav-item"><a className="nav-link" href="#">Pricing</a></li>
-            <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>
+            <li className="nav-item"><a className="nav-link" href="features">Features</a></li>
+            <li className="nav-item"><a className="nav-link" href="about">About</a></li>
           </ul>
 
           <div className="d-flex gap-2">

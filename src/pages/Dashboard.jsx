@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import { useUser } from "../context/UserContext";
 import DashboardCard from "../components/DashboardCard";
+import SEO from "../components/SEO";
 import api from "../services/api";
 
 import {
@@ -100,6 +101,11 @@ export default function Dashboard() {
       <main className="dashboard-main">
         <Topbar />
 
+         <SEO
+        title="StudentAI - AI Powered Career Platform for Students"
+        description="Build ATS-friendly resumes, generate cover letters, practice AI interviews, track jobs, and create your personalized career roadmap with StudentAI."
+        keywords="AI career platform, AI resume builder, ATS resume checker, cover letter generator, AI interview preparation, job tracker"
+      />
         <div className="dashboard-content">
           <h2 className="fw-bold">
             Welcome, {user?.name || "User"} 👋

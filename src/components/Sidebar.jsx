@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 import {
   FaMicrophoneAlt,
   FaShieldAlt,
+  FaEnvelope,
 } from "react-icons/fa";
 
 import "../styles/dashboardLayout.css";
@@ -45,12 +47,6 @@ export default function Sidebar() {
     setSidebarOpen(false);
   };
 
-  /*
-  |--------------------------------------------------------------------------
-  | JSX
-  |--------------------------------------------------------------------------
-  */
-
   return (
     <>
       {/* Overlay */}
@@ -70,7 +66,15 @@ export default function Sidebar() {
         {/* Logo */}
 
         <h3 className="sidebar-logo">
-          Student<span>AI</span>
+          <b>
+            Student<span>AI</span>
+          </b>
+
+          <img
+            src="/Logo.png"
+            alt="StudentAI Logo"
+            className="sidebar-logo-img"
+          />
         </h3>
 
         {/* Mobile Menu Button */}
@@ -99,6 +103,7 @@ export default function Sidebar() {
             🏠 Dashboard
           </NavLink>
 
+
           {/* Admin Dashboard */}
 
           {isAdmin && (
@@ -111,37 +116,6 @@ export default function Sidebar() {
             </NavLink>
           )}
 
-          {/* Notifications */}
-
-          {/* <NavLink
-            to="/notifications"
-            className={({ isActive }) =>
-              `sidebar-link ${
-                isActive ? "active" : ""
-              }`
-            }
-            onClick={closeSidebar}
-          >
-            <FaBell className="me-2" />
-            <span>Notifications</span>
-          </NavLink> */}
-
-          {/* Admin Notifications
-
-          {isAdmin && (
-            <NavLink
-              to="/admin/notifications"
-              className={({ isActive }) =>
-                `sidebar-link ${
-                  isActive ? "active" : ""
-                }`
-              }
-              onClick={closeSidebar}
-            >
-              <FaBell className="me-2" />
-              <span>Admin Notifications</span>
-            </NavLink>
-          )} */}
 
           {/* Profile */}
 
@@ -151,6 +125,7 @@ export default function Sidebar() {
           >
             👤 Profile
           </NavLink>
+
 
           {/* AI Career Coach */}
 
@@ -162,6 +137,7 @@ export default function Sidebar() {
             🤖 AI Career Coach
           </NavLink>
 
+
           {/* Resume Builder */}
 
           <NavLink
@@ -170,6 +146,7 @@ export default function Sidebar() {
           >
             📄 Resume Builder
           </NavLink>
+
 
           {/* My Resumes */}
 
@@ -180,6 +157,7 @@ export default function Sidebar() {
             📋 My Resumes
           </NavLink>
 
+
           {/* Job Tracker */}
 
           <NavLink
@@ -188,6 +166,7 @@ export default function Sidebar() {
           >
             💼 Job Tracker
           </NavLink>
+
 
           {/* Job Matcher */}
 
@@ -198,6 +177,7 @@ export default function Sidebar() {
             🎯 Job Matcher
           </NavLink>
 
+
           {/* Cover Letter */}
 
           <NavLink
@@ -206,6 +186,7 @@ export default function Sidebar() {
           >
             🤖 Cover Letter
           </NavLink>
+
 
           {/* AI Interview Assistant */}
 
@@ -216,6 +197,7 @@ export default function Sidebar() {
             🎤 AI Interview Assistant
           </NavLink>
 
+
           {/* Interview History */}
 
           <NavLink
@@ -224,6 +206,7 @@ export default function Sidebar() {
           >
             📜 Interview History
           </NavLink>
+
 
           {/* AI Mock Interview */}
 
@@ -237,8 +220,12 @@ export default function Sidebar() {
             onClick={closeSidebar}
           >
             <FaMicrophoneAlt className="me-2" />
-            <span>AI Mock Interview</span>
+
+            <span>
+              AI Mock Interview
+            </span>
           </NavLink>
+
 
           {/* Mock Interview History */}
 
@@ -252,10 +239,12 @@ export default function Sidebar() {
             onClick={closeSidebar}
           >
             <FaMicrophoneAlt className="me-2" />
+
             <span>
               AI Mock Interview History
             </span>
           </NavLink>
+
 
           {/* Career Roadmap */}
 
@@ -266,11 +255,11 @@ export default function Sidebar() {
             🗺 Career Roadmap
           </NavLink>
 
+
           {/* My Subscription */}
 
-          <NavLink
+          {/* <NavLink
             to="/my-subscription"
-            type="button"
             className="sidebar-nav-item"
             onClick={closeSidebar}
           >
@@ -281,7 +270,27 @@ export default function Sidebar() {
             <span>
               My Subscription
             </span>
+          </NavLink> */}
+
+
+          {/* Contact Us */}
+
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              `sidebar-link ${
+                isActive ? "active" : ""
+              }`
+            }
+            onClick={closeSidebar}
+          >
+            <FaEnvelope className="me-2" />
+
+            <span>
+              Contact Us
+            </span>
           </NavLink>
+
 
           {/* Settings */}
 
