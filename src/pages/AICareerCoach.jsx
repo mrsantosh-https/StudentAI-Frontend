@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Swal from "sweetalert2";
-
+import remarkGfm from "remark-gfm";
 import {
   FiClock,
   FiCopy,
@@ -879,7 +879,9 @@ export default function AICareerCoach() {
                               </div>
                             )}
 
-                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {message.text}
+                            </ReactMarkdown>
                           </div>
 
                           {isAi && !message.isWelcome && (

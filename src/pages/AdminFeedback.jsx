@@ -871,7 +871,7 @@ const AdminFeedback = () => {
                           {/* QUESTION */}
 
                           <td>
-                            <div className="question-text">
+                            <div className="question-text" title={item.question || "No question"}>
                               {item.question ||
                                 "No question"}
                             </div>
@@ -880,7 +880,7 @@ const AdminFeedback = () => {
                           {/* ANSWER */}
 
                           <td>
-                            <div className="answer-text">
+                            <div className="answer-text" title={item.answer || "No answer"}>
                               {item.answer ||
                                 "No answer"}
                             </div>

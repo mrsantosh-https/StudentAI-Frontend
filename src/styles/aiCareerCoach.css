@@ -2245,3 +2245,501 @@ CHATGPT INPUT
     transition: none !important;
   }
 }
+
+/* =========================================================
+   AI CAREER COACH
+   CHATGPT STYLE AI RESPONSE
+   Layout unchanged
+   ========================================================= */
+
+/* AI message */
+.chat-row.ai .chat-bubble {
+  background: #ffffff;
+  color: #1f2937;
+
+  border: 1px solid #e5e7eb;
+
+  padding: 18px 20px;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   FIRST / LAST ELEMENT
+   ========================================================= */
+
+.chat-row.ai .chat-bubble > :first-child {
+  margin-top: 0;
+}
+
+.chat-row.ai .chat-bubble > :last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   PARAGRAPH
+   ========================================================= */
+
+.chat-row.ai .chat-bubble p {
+  margin: 0 0 15px;
+
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+.chat-row.ai .chat-bubble h1,
+.chat-row.ai .chat-bubble h2,
+.chat-row.ai .chat-bubble h3,
+.chat-row.ai .chat-bubble h4,
+.chat-row.ai .chat-bubble h5,
+.chat-row.ai .chat-bubble h6 {
+  color: #111827;
+
+  font-weight: 700;
+
+  line-height: 1.35;
+
+  margin-top: 24px;
+  margin-bottom: 10px;
+}
+
+.chat-row.ai .chat-bubble h1 {
+  font-size: 25px;
+}
+
+.chat-row.ai .chat-bubble h2 {
+  font-size: 21px;
+}
+
+.chat-row.ai .chat-bubble h3 {
+  font-size: 18px;
+}
+
+.chat-row.ai .chat-bubble h4 {
+  font-size: 16px;
+}
+
+.chat-row.ai .chat-bubble h5,
+.chat-row.ai .chat-bubble h6 {
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   BOLD
+   ========================================================= */
+
+.chat-row.ai .chat-bubble strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   LISTS
+   ========================================================= */
+
+.chat-row.ai .chat-bubble ul,
+.chat-row.ai .chat-bubble ol {
+  margin: 10px 0 18px;
+  padding-left: 28px;
+}
+
+.chat-row.ai .chat-bubble ul {
+  list-style-type: disc;
+}
+
+.chat-row.ai .chat-bubble ol {
+  list-style-type: decimal;
+}
+
+.chat-row.ai .chat-bubble li {
+  margin: 6px 0;
+  padding-left: 4px;
+
+  line-height: 1.7;
+}
+
+
+/* Nested list */
+
+.chat-row.ai .chat-bubble ul ul {
+  list-style-type: circle;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.chat-row.ai .chat-bubble ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+.chat-row.ai .chat-bubble a {
+  color: #2563eb;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  border-bottom: 1px solid rgba(37, 99, 235, 0.25);
+
+  overflow-wrap: anywhere;
+}
+
+.chat-row.ai .chat-bubble a:hover {
+  color: #1d4ed8;
+
+  border-bottom-color: #1d4ed8;
+}
+
+
+/* =========================================================
+   INLINE CODE
+   ========================================================= */
+
+.chat-row.ai .chat-bubble code {
+  padding: 3px 7px;
+
+  border-radius: 6px;
+
+  background: #f1f5f9;
+
+  color: #b42318;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
+
+  font-size: 13px;
+
+  white-space: break-spaces;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   CODE BLOCK
+   ========================================================= */
+
+.chat-row.ai .chat-bubble pre {
+  margin: 18px 0;
+
+  padding: 16px;
+
+  background: #0f172a;
+
+  border: 1px solid #1e293b;
+
+  border-radius: 12px;
+
+  overflow-x: auto;
+
+  max-width: 100%;
+
+  box-sizing: border-box;
+}
+
+.chat-row.ai .chat-bubble pre code {
+  display: block;
+
+  padding: 0;
+
+  background: transparent;
+
+  color: #e2e8f0;
+
+  border: none;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  white-space: pre;
+
+  overflow-wrap: normal;
+
+  word-break: normal;
+}
+
+
+/* =========================================================
+   BLOCKQUOTE
+   ========================================================= */
+
+.chat-row.ai .chat-bubble blockquote {
+  margin: 18px 0;
+
+  padding: 12px 16px;
+
+  border-left: 4px solid #6366f1;
+
+  background: #f8faff;
+
+  color: #475569;
+
+  border-radius: 0 10px 10px 0;
+}
+
+.chat-row.ai .chat-bubble blockquote p {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   HORIZONTAL LINE
+   ========================================================= */
+
+.chat-row.ai .chat-bubble hr {
+  height: 1px;
+
+  margin: 22px 0;
+
+  border: 0;
+
+  background: #e5e7eb;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.chat-row.ai .chat-bubble table {
+  width: 100%;
+
+  margin: 18px 0;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  font-size: 14px;
+}
+
+.chat-row.ai .chat-bubble th,
+.chat-row.ai .chat-bubble td {
+  padding: 10px 13px;
+
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+
+  text-align: left;
+
+  vertical-align: top;
+
+  line-height: 1.55;
+
+  overflow-wrap: anywhere;
+}
+
+.chat-row.ai .chat-bubble th {
+  background: #f8fafc;
+
+  color: #1e293b;
+
+  font-weight: 700;
+}
+
+.chat-row.ai .chat-bubble tr:last-child td {
+  border-bottom: none;
+}
+
+.chat-row.ai .chat-bubble th:last-child,
+.chat-row.ai .chat-bubble td:last-child {
+  border-right: none;
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.chat-row.ai .chat-bubble img {
+  display: block;
+
+  max-width: 100%;
+
+  height: auto;
+
+  margin: 12px 0;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   AI RESPONSE WIDTH
+   ========================================================= */
+
+.chat-row.ai .chat-content {
+  min-width: 0;
+
+  max-width: 820px;
+}
+
+.chat-row.ai .chat-bubble {
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CHAT ACTIONS
+   ========================================================= */
+
+.chat-row.ai .chat-actions {
+  margin-top: 8px;
+
+  margin-left: 4px;
+}
+
+.chat-row.ai .chat-actions button {
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.chat-row.ai .chat-actions button:hover {
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LONG CONTENT PROTECTION
+   ========================================================= */
+
+.chat-row.ai .chat-bubble,
+.chat-row.ai .chat-bubble p,
+.chat-row.ai .chat-bubble li,
+.chat-row.ai .chat-bubble td,
+.chat-row.ai .chat-bubble th {
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   SPACING
+   ========================================================= */
+
+.chat-row.ai .chat-bubble p + ul,
+.chat-row.ai .chat-bubble p + ol {
+  margin-top: 5px;
+}
+
+.chat-row.ai .chat-bubble ul + p,
+.chat-row.ai .chat-bubble ol + p {
+  margin-top: 8px;
+}
+
+.chat-row.ai .chat-bubble h2 + p,
+.chat-row.ai .chat-bubble h3 + p {
+  margin-top: 3px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .chat-row.ai .chat-content {
+    max-width: calc(100% - 45px);
+  }
+
+  .chat-row.ai .chat-bubble {
+    padding: 15px 16px;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+  }
+
+  .chat-row.ai .chat-bubble p {
+    font-size: 14px;
+  }
+
+  .chat-row.ai .chat-bubble h1 {
+    font-size: 21px;
+  }
+
+  .chat-row.ai .chat-bubble h2 {
+    font-size: 19px;
+  }
+
+  .chat-row.ai .chat-bubble h3 {
+    font-size: 17px;
+  }
+
+  .chat-row.ai .chat-bubble pre {
+    padding: 13px;
+
+    border-radius: 9px;
+  }
+
+  .chat-row.ai .chat-bubble pre code {
+    font-size: 12px;
+  }
+
+  .chat-row.ai .chat-bubble table {
+    display: block;
+
+    overflow-x: auto;
+
+    white-space: nowrap;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .chat-row.ai .chat-content {
+    max-width: calc(100% - 38px);
+  }
+
+  .chat-row.ai .chat-bubble {
+    padding: 14px;
+
+    border-radius: 14px;
+  }
+
+  .chat-row.ai .chat-bubble ul,
+  .chat-row.ai .chat-bubble ol {
+    padding-left: 23px;
+  }
+
+}

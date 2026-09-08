@@ -744,8 +744,13 @@
 }
 
 .modal-answer {
-  max-height: 260px;
+  max-height: 420px;
   overflow-y: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
 }
 
 .modal-user {
@@ -966,4 +971,66 @@
   .feedback-modal-header h2 {
     font-size: 18px;
   }
+}
+/* =========================================================
+   COMPACT QUESTION & AI ANSWER
+   ========================================================= */
+
+.question-text,
+.answer-text {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* Question: maximum 3 lines */
+.question-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  line-height: 1.5;
+  max-height: 4.5em;
+  overflow: hidden;
+}
+
+/* AI Answer: maximum 4 lines */
+.answer-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  line-height: 1.5;
+  max-height: 6em;
+  overflow: hidden;
+}
+
+/* Keep table columns controlled */
+.feedback-table th:nth-child(2),
+.feedback-table td:nth-child(2) {
+  width: 260px;
+  max-width: 260px;
+}
+
+.feedback-table th:nth-child(3),
+.feedback-table td:nth-child(3) {
+  width: 420px;
+  max-width: 420px;
+}
+
+/* Prevent very long AI text from expanding table */
+.feedback-table td {
+  overflow: hidden;
+}
+
+.feedback-table {
+  table-layout: fixed;
+}
+
+.feedback-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
 }
