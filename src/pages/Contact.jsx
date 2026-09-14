@@ -207,7 +207,9 @@ export default function Contact() {
                         </h6>
 
                         <p>
-                          smartaistudentai@gmail.com
+                          <a href="mailto:YOUR-EMAIL@gmail.com">
+                            smartaistudentai@gmail.com
+                          </a>
                         </p>
 
                       </div>
