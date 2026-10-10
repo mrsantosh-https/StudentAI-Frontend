@@ -1,6 +1,11 @@
-/* =========================================
+/* =========================================================
+   MOCK HISTORY PAGE
+   Fully Responsive: Desktop / Laptop / Tablet / Mobile
+========================================================= */
+
+/* =========================================================
    GLOBAL RESET
-========================================= */
+========================================================= */
 
 *,
 *::before,
@@ -12,91 +17,119 @@ html,
 body,
 #root {
   width: 100%;
+  min-width: 0;
   min-height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 html {
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
   overflow-x: hidden;
+  background: #f4f7fb;
 }
 
-/* =========================================
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+/* =========================================================
    MAIN LAYOUT
-========================================= */
+========================================================= */
 
 .mock-history-layout {
   display: flex;
   width: 100%;
+  min-width: 0;
   min-height: 100vh;
   background: #f4f7fb;
 }
 
 .mock-history-main {
-  flex: 1;
+  flex: 1 1 auto;
   width: calc(100% - 260px);
   min-width: 0;
   min-height: 100vh;
   margin-left: 260px;
+  overflow-x: hidden;
 }
+
+/* =========================================================
+   PAGE CONTAINER
+========================================================= */
 
 .mock-history-page {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 32px 28px 50px;
+  padding: 32px 28px 55px;
 }
 
-/* =========================================
+/* =========================================================
    PAGE HEADER
-========================================= */
+========================================================= */
 
 .mock-history-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 26px;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 28px;
 }
 
 .mock-history-header > div {
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .mock-history-header h1 {
   margin: 0;
   color: #111827;
-  font-size: 30px;
+  font-size: clamp(23px, 2.5vw, 30px);
   font-weight: 750;
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
 
 .mock-history-header p {
-  margin: 7px 0 0;
+  max-width: 700px;
+  margin: 8px 0 0;
   color: #6b7280;
   font-size: 15px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
-/* =========================================
+/* =========================================================
    REFRESH BUTTON
-========================================= */
+========================================================= */
 
 .refresh-history-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   min-height: 44px;
   padding: 11px 18px;
-  border: none;
+  border: 0;
   border-radius: 10px;
   background: #4f46e5;
-  color: #ffffff;
+  color: #fff;
   font-family: inherit;
   font-size: 14px;
   font-weight: 650;
@@ -127,14 +160,15 @@ body {
   box-shadow: none;
 }
 
-/* =========================================
-   STATS SECTION
-========================================= */
+/* =========================================================
+   STATS
+========================================================= */
 
 .mock-history-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
+  width: 100%;
   margin-bottom: 24px;
 }
 
@@ -147,8 +181,9 @@ body {
   justify-content: center;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -172,21 +207,22 @@ body {
 
 .history-stat-card strong {
   color: #111827;
-  font-size: 28px;
+  font-size: clamp(23px, 3vw, 28px);
   font-weight: 750;
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
 
-/* =========================================
+/* =========================================================
    SEARCH TOOLBAR
-========================================= */
+========================================================= */
 
 .mock-history-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  width: 100%;
   margin-bottom: 22px;
 }
 
@@ -199,14 +235,13 @@ body {
   border: 1px solid #d1d5db;
   border-radius: 11px;
   outline: none;
-  background: #ffffff;
+  background: #fff;
   color: #111827;
   font-family: inherit;
   font-size: 15px;
   transition:
     border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .mock-history-toolbar input::placeholder {
@@ -223,39 +258,38 @@ body {
 }
 
 .mock-history-toolbar span {
-  flex-shrink: 0;
+  flex: 0 0 auto;
   color: #6b7280;
   font-size: 14px;
   line-height: 1.4;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
-/* =========================================
+/* =========================================================
    HISTORY GRID
-========================================= */
+========================================================= */
 
 .mock-history-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
-  align-items: stretch;
+  width: 100%;
 }
 
-/* =========================================
+/* =========================================================
    HISTORY CARD
-========================================= */
+========================================================= */
 
 .mock-history-card {
   display: flex;
   width: 100%;
   min-width: 0;
-  height: 100%;
   min-height: 340px;
   padding: 22px;
   flex-direction: column;
   border: 1px solid #e5e7eb;
   border-radius: 17px;
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
   overflow: hidden;
   transition:
@@ -270,21 +304,24 @@ body {
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.11);
 }
 
-/* =========================================
+/* =========================================================
    CARD TOP
-========================================= */
+========================================================= */
 
 .history-card-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 15px;
+  width: 100%;
+  min-width: 0;
   margin-bottom: 18px;
 }
 
 .history-card-top > div:first-child {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  overflow: hidden;
 }
 
 .history-role {
@@ -311,9 +348,9 @@ body {
   white-space: nowrap;
 }
 
-/* =========================================
-   SCORE BADGE
-========================================= */
+/* =========================================================
+   SCORE
+========================================================= */
 
 .history-score {
   display: inline-flex;
@@ -321,7 +358,7 @@ body {
   justify-content: center;
   min-width: 68px;
   height: 38px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   padding: 0 11px;
   border-radius: 999px;
   font-size: 14px;
@@ -345,19 +382,17 @@ body {
   color: #b91c1c;
 }
 
-/* =========================================
+/* =========================================================
    QUESTION BOX
-========================================= */
+========================================================= */
 
 .history-question {
-  flex: 1;
   width: 100%;
   min-width: 0;
   min-height: 120px;
   max-height: 120px;
   padding: 16px;
   overflow: hidden;
-  border: 1px solid transparent;
   border-radius: 12px;
   background: #f8fafc;
 }
@@ -380,21 +415,23 @@ body {
   color: #374151;
   font-size: 14px;
   line-height: 1.6;
-  text-overflow: ellipsis;
   overflow-wrap: anywhere;
   word-break: break-word;
-  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  
 }
 
-/* =========================================
+/* =========================================================
    CARD FOOTER
-========================================= */
+========================================================= */
 
 .history-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 15px;
+  width: 100%;
+  min-width: 0;
   margin-top: auto;
   padding-top: 18px;
 }
@@ -408,42 +445,32 @@ body {
 }
 
 .history-card-footer button {
-  flex-shrink: 0;
+  flex: 0 0 auto;
   padding: 5px 0;
-  border: none;
+  border: 0;
   background: transparent;
   color: #4f46e5;
   font-family: inherit;
   font-size: 14px;
   font-weight: 700;
-  line-height: 1.4;
   cursor: pointer;
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
 }
 
-.history-card-footer button:hover {
-  color: #3730a3;
-  transform: translateX(1px);
-}
-
-/* =========================================
-   VIEW RESULT BUTTON
-========================================= */
+/* =========================================================
+   VIEW RESULT
+========================================================= */
 
 .view-result-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 38px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   padding: 9px 14px;
-  border: none;
+  border: 0;
   border-radius: 9px;
   background: #4f46e5;
-  color: #ffffff;
-  font-family: inherit;
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
@@ -451,34 +478,25 @@ body {
   white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 6px 14px rgba(79, 70, 229, 0.2);
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 .view-result-btn:hover {
   background: #4338ca;
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.28);
+  color: #fff;
 }
 
-.view-result-btn:active {
-  transform: translateY(0);
-}
-
-/* =========================================
-   EMPTY / LOADING STATE
-========================================= */
+/* =========================================================
+   EMPTY / LOADING
+========================================================= */
 
 .history-state-box {
   width: 100%;
   padding: 70px 20px;
   border: 1px dashed #cbd5e1;
   border-radius: 18px;
-  background: #ffffff;
+  background: #fff;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .history-state-box h2 {
@@ -494,7 +512,6 @@ body {
   color: #6b7280;
   font-size: 15px;
   line-height: 1.65;
-  overflow-wrap: anywhere;
 }
 
 .empty-history-icon {
@@ -518,9 +535,9 @@ body {
   }
 }
 
-/* =========================================
+/* =========================================================
    MODAL OVERLAY
-========================================= */
+========================================================= */
 
 .history-modal-overlay {
   position: fixed;
@@ -533,43 +550,30 @@ body {
   overflow-y: auto;
   background: rgba(15, 23, 42, 0.68);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
-/* =========================================
+/* =========================================================
    MODAL
-========================================= */
+========================================================= */
 
 .history-modal {
   width: min(100%, 720px);
-  max-height: 88vh;
+  max-height: min(88vh, 850px);
   margin: auto;
   padding: 26px;
   overflow-x: hidden;
   overflow-y: auto;
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 18px;
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
   scrollbar-width: thin;
-  scrollbar-color: #94a3b8 transparent;
 }
 
-.history-modal::-webkit-scrollbar {
-  width: 6px;
-}
-
-.history-modal::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.history-modal::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: #94a3b8;
-}
-
-/* =========================================
+/* =========================================================
    MODAL HEADER
-========================================= */
+========================================================= */
 
 .history-modal-header {
   display: flex;
@@ -579,6 +583,7 @@ body {
 }
 
 .history-modal-header > div {
+  flex: 1;
   min-width: 0;
 }
 
@@ -604,33 +609,26 @@ body {
   justify-content: center;
   width: 38px;
   height: 38px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   padding: 0;
-  border: none;
+  border: 0;
   border-radius: 50%;
   background: #f1f5f9;
   color: #334155;
   font-size: 25px;
   line-height: 1;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
 }
 
-.history-modal-close:hover {
-  background: #e2e8f0;
-  transform: rotate(4deg);
-}
-
-/* =========================================
+/* =========================================================
    MODAL SCORE
-========================================= */
+========================================================= */
 
 .history-modal-score {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  max-width: 100%;
   margin: 20px 0;
   padding: 8px 14px;
   border-radius: 999px;
@@ -638,12 +636,12 @@ body {
   color: #4338ca;
   font-size: 14px;
   font-weight: 750;
-  line-height: 1;
+  line-height: 1.2;
 }
 
-/* =========================================
+/* =========================================================
    DETAIL SECTION
-========================================= */
+========================================================= */
 
 .history-detail-section {
   width: 100%;
@@ -652,6 +650,7 @@ body {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: #f8fafc;
+  overflow-wrap: anywhere;
 }
 
 .history-detail-section h3 {
@@ -676,44 +675,35 @@ body {
   background: #ecfdf5;
 }
 
-/* =========================================
-   MODAL DONE BUTTON
-========================================= */
+/* =========================================================
+   MODAL DONE
+========================================================= */
 
 .history-modal-done {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 46px;
   padding: 11px 18px;
-  border: none;
+  border: 0;
   border-radius: 10px;
   background: #4f46e5;
-  color: #ffffff;
-  font-family: inherit;
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.2);
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
-.history-modal-done:hover {
-  background: #4338ca;
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(79, 70, 229, 0.28);
-}
-
-/* =========================================
+/* =========================================================
    DARK MODE
-========================================= */
+========================================================= */
 
 body.dark .mock-history-layout,
-.dark .mock-history-layout,
+.dark .mock-history-layout {
+  background: #0f172a;
+}
+
 body.dark .mock-history-main,
 .dark .mock-history-main {
   background: #0f172a;
@@ -729,21 +719,6 @@ body.dark .history-modal,
 .dark .history-modal {
   border-color: #334155;
   background: #1e293b;
-}
-
-body.dark .history-stat-card,
-.dark .history-stat-card,
-body.dark .mock-history-card,
-.dark .mock-history-card {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.24);
-}
-
-body.dark .history-stat-card:hover,
-.dark .history-stat-card:hover,
-body.dark .mock-history-card:hover,
-.dark .mock-history-card:hover {
-  border-color: #4f46e5;
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34);
 }
 
 body.dark .mock-history-header h1,
@@ -784,7 +759,7 @@ body.dark .mock-history-toolbar input,
 .dark .mock-history-toolbar input {
   border-color: #475569;
   background: #334155;
-  color: #ffffff;
+  color: #fff;
 }
 
 body.dark .mock-history-toolbar input::placeholder,
@@ -792,24 +767,12 @@ body.dark .mock-history-toolbar input::placeholder,
   color: #94a3b8;
 }
 
-body.dark .mock-history-toolbar input:hover,
-.dark .mock-history-toolbar input:hover {
-  border-color: #64748b;
-}
-
-body.dark .mock-history-toolbar input:focus,
-.dark .mock-history-toolbar input:focus {
-  border-color: #818cf8;
-  background: #334155;
-  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15);
-}
-
 body.dark .history-question,
 .dark .history-question,
 body.dark .history-detail-section,
 .dark .history-detail-section {
-  border-color: #475569;
   background: #334155;
+  border-color: #475569;
 }
 
 body.dark .history-question p,
@@ -834,20 +797,10 @@ body.dark .history-modal-close,
   color: #f8fafc;
 }
 
-body.dark .history-modal-close:hover,
-.dark .history-modal-close:hover {
-  background: #475569;
-}
-
 body.dark .history-modal-score,
 .dark .history-modal-score {
   background: #312e81;
   color: #c7d2fe;
-}
-
-body.dark .history-state-box,
-.dark .history-state-box {
-  border-color: #475569;
 }
 
 body.dark .history-loader,
@@ -856,13 +809,29 @@ body.dark .history-loader,
   border-top-color: #818cf8;
 }
 
-/* =========================================
-   LARGE LAPTOP
-========================================= */
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1400px) {
+  .mock-history-page {
+    max-width: 1320px;
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+
+  .mock-history-grid {
+    gap: 24px;
+  }
+}
+
+/* =========================================================
+   LAPTOP
+========================================================= */
 
 @media (max-width: 1200px) {
   .mock-history-page {
-    max-width: 1050px;
+    max-width: 1100px;
     padding: 30px 24px 45px;
   }
 
@@ -875,9 +844,9 @@ body.dark .history-loader,
   }
 }
 
-/* =========================================
-   TABLET / SIDEBAR COLLAPSE
-========================================= */
+/* =========================================================
+   TABLET / SIDEBAR COLLAPSED
+========================================================= */
 
 @media (max-width: 991.98px) {
   .mock-history-main {
@@ -895,18 +864,13 @@ body.dark .history-loader,
   }
 
   .mock-history-card {
-    min-height: 300px;
-  }
-
-  .history-question {
-    min-height: 105px;
-    max-height: 105px;
+    min-height: 310px;
   }
 }
 
-/* =========================================
+/* =========================================================
    TABLET
-========================================= */
+========================================================= */
 
 @media (max-width: 768px) {
   .mock-history-page {
@@ -915,24 +879,16 @@ body.dark .history-loader,
 
   .mock-history-header {
     gap: 16px;
-    margin-bottom: 22px;
-  }
-
-  .mock-history-header h1 {
-    font-size: 27px;
   }
 
   .mock-history-stats {
-    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .history-stat-card {
-    min-height: 112px;
-    padding: 19px;
-  }
-
-  .history-stat-card strong {
-    font-size: 25px;
+    min-height: 105px;
+    padding: 17px;
   }
 
   .mock-history-toolbar {
@@ -940,7 +896,7 @@ body.dark .history-loader,
   }
 
   .mock-history-card {
-    padding: 20px;
+    padding: 19px;
   }
 
   .history-modal {
@@ -948,22 +904,27 @@ body.dark .history-loader,
   }
 }
 
-/* =========================================
+/* =========================================================
    MOBILE
-========================================= */
+========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .mock-history-page {
-    padding: 22px 14px 34px;
+    padding: 20px 14px 32px;
   }
 
   .mock-history-header {
     align-items: stretch;
     flex-direction: column;
+    gap: 14px;
   }
 
   .mock-history-header h1 {
-    font-size: 25px;
+    font-size: 24px;
+  }
+
+  .mock-history-header p {
+    font-size: 14px;
   }
 
   .refresh-history-btn {
@@ -972,10 +933,11 @@ body.dark .history-loader,
 
   .mock-history-stats {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .history-stat-card {
-    min-height: 100px;
+    min-height: 90px;
   }
 
   .mock-history-toolbar {
@@ -985,123 +947,11 @@ body.dark .history-loader,
 
   .mock-history-toolbar input {
     width: 100%;
+    height: 45px;
   }
 
   .mock-history-toolbar span {
     white-space: normal;
-  }
-
-  .mock-history-card {
-    min-height: 310px;
-    padding: 18px;
-    border-radius: 15px;
-  }
-
-  .history-card-footer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .history-card-footer span {
-    width: 100%;
-  }
-
-  .history-card-footer button,
-  .view-result-btn {
-    width: 100%;
-  }
-
-  .history-card-footer button {
-    min-height: 40px;
-    border-radius: 8px;
-    background: #eef2ff;
-  }
-
-  body.dark .history-card-footer button,
-  .dark .history-card-footer button {
-    background: #312e81;
-    color: #c7d2fe;
-  }
-
-  .history-modal-overlay {
-    align-items: flex-start;
-    padding: 14px;
-  }
-
-  .history-modal {
-    width: 100%;
-    max-height: calc(100vh - 28px);
-    padding: 20px;
-    border-radius: 15px;
-  }
-
-  .history-modal-header h2 {
-    font-size: 21px;
-  }
-
-  .history-detail-section {
-    padding: 16px;
-  }
-}
-
-/* =========================================
-   SMALL MOBILE
-========================================= */
-
-@media (max-width: 576px) {
-  .mock-history-page {
-    padding: 20px 12px 30px;
-  }
-
-  .mock-history-header {
-    margin-bottom: 20px;
-  }
-
-  .mock-history-header h1 {
-    font-size: 23px;
-  }
-
-  .mock-history-header p {
-    font-size: 14px;
-  }
-
-  .refresh-history-btn {
-    min-height: 42px;
-    font-size: 13px;
-  }
-
-  .mock-history-stats {
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .history-stat-card {
-    min-height: 92px;
-    padding: 17px;
-    border-radius: 14px;
-  }
-
-  .history-stat-card span {
-    margin-bottom: 7px;
-    font-size: 13px;
-  }
-
-  .history-stat-card strong {
-    font-size: 23px;
-  }
-
-  .mock-history-toolbar {
-    margin-bottom: 18px;
-  }
-
-  .mock-history-toolbar input {
-    height: 44px;
-    padding: 0 13px;
-    font-size: 14px;
-  }
-
-  .mock-history-toolbar span {
-    font-size: 13px;
   }
 
   .mock-history-grid {
@@ -1109,14 +959,13 @@ body.dark .history-loader,
   }
 
   .mock-history-card {
-    min-height: 290px;
-    padding: 16px;
-    border-radius: 14px;
+    min-height: auto;
+    padding: 17px;
+    border-radius: 15px;
   }
 
   .history-card-top {
     gap: 10px;
-    margin-bottom: 15px;
   }
 
   .history-role {
@@ -1128,20 +977,16 @@ body.dark .history-loader,
   }
 
   .history-score {
-    min-width: 60px;
+    min-width: 58px;
     height: 34px;
-    padding: 0 9px;
+    padding: 0 8px;
     font-size: 12px;
   }
 
   .history-question {
-    min-height: 112px;
-    max-height: 112px;
+    min-height: 110px;
+    max-height: 110px;
     padding: 14px;
-  }
-
-  .history-question span {
-    font-size: 11px;
   }
 
   .history-question p {
@@ -1149,48 +994,50 @@ body.dark .history-loader,
   }
 
   .history-card-footer {
+    align-items: stretch;
+    flex-direction: column;
     gap: 10px;
-    padding-top: 15px;
   }
 
+  .history-card-footer span {
+    width: 100%;
+  }
+
+  .history-card-footer button,
   .view-result-btn {
+    width: 100%;
     min-height: 40px;
-    font-size: 13px;
+  }
+
+  .history-card-footer button {
+    border-radius: 8px;
+    background: #eef2ff;
   }
 
   .history-state-box {
-    padding: 48px 16px;
-    border-radius: 15px;
+    padding: 50px 16px;
   }
 
-  .history-state-box h2 {
-    font-size: 19px;
-  }
-
-  .history-state-box p {
-    font-size: 14px;
-  }
-
-  .empty-history-icon {
-    font-size: 40px;
-  }
+  /* MODAL */
 
   .history-modal-overlay {
-    padding: 10px;
+    align-items: flex-start;
+    padding: 12px;
   }
 
   .history-modal {
-    max-height: calc(100vh - 20px);
-    padding: 17px;
-    border-radius: 13px;
+    width: 100%;
+    max-height: calc(100vh - 24px);
+    padding: 18px;
+    border-radius: 15px;
   }
 
   .history-modal-header {
-    gap: 12px;
+    gap: 10px;
   }
 
   .history-modal-header h2 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .history-modal-header p {
@@ -1198,19 +1045,13 @@ body.dark .history-loader,
   }
 
   .history-modal-close {
-    width: 34px;
-    height: 34px;
-    font-size: 22px;
-  }
-
-  .history-modal-score {
-    margin: 16px 0;
-    font-size: 13px;
+    width: 35px;
+    height: 35px;
+    font-size: 21px;
   }
 
   .history-detail-section {
-    margin-bottom: 14px;
-    padding: 14px;
+    padding: 15px;
   }
 
   .history-detail-section h3 {
@@ -1219,26 +1060,20 @@ body.dark .history-loader,
 
   .history-detail-section p {
     font-size: 13px;
-    line-height: 1.65;
-  }
-
-  .history-modal-done {
-    min-height: 44px;
-    font-size: 13px;
   }
 }
 
-/* =========================================
-   EXTRA SMALL MOBILE
-========================================= */
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .mock-history-page {
-    padding: 16px 9px 26px;
+    padding: 18px 11px 28px;
   }
 
   .mock-history-header h1 {
-    font-size: 21px;
+    font-size: 22px;
   }
 
   .mock-history-header p {
@@ -1249,12 +1084,20 @@ body.dark .history-loader,
     padding: 15px;
   }
 
+  .history-stat-card span {
+    font-size: 13px;
+  }
+
   .history-stat-card strong {
-    font-size: 21px;
+    font-size: 22px;
   }
 
   .mock-history-card {
-    padding: 14px;
+    padding: 15px;
+  }
+
+  .history-card-top {
+    align-items: flex-start;
   }
 
   .history-role {
@@ -1268,25 +1111,129 @@ body.dark .history-loader,
   }
 
   .history-question {
+    min-height: 105px;
+    max-height: 105px;
     padding: 12px;
   }
 
+  .history-question span {
+    font-size: 10px;
+  }
+
+  .history-question p {
+    font-size: 12.5px;
+  }
+
+  .history-modal-overlay {
+    padding: 8px;
+  }
+
   .history-modal {
-    padding: 14px;
+    max-height: calc(100vh - 16px);
+    padding: 15px;
+    border-radius: 13px;
   }
 
   .history-modal-header h2 {
     font-size: 18px;
   }
 
+  .history-modal-header p {
+    font-size: 12px;
+  }
+
+  .history-modal-close {
+    width: 32px;
+    height: 32px;
+    font-size: 19px;
+  }
+
   .history-detail-section {
     padding: 12px;
   }
+
+  .history-detail-section p {
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .history-modal-done {
+    min-height: 43px;
+    font-size: 13px;
+  }
 }
 
-/* =========================================
+/* =========================================================
+   EXTRA SMALL — 320px / 360px
+========================================================= */
+
+@media (max-width: 360px) {
+  .mock-history-page {
+    padding: 15px 8px 24px;
+  }
+
+  .mock-history-header h1 {
+    font-size: 20px;
+  }
+
+  .refresh-history-btn {
+    min-height: 40px;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .history-stat-card {
+    min-height: 84px;
+    padding: 13px;
+  }
+
+  .history-stat-card strong {
+    font-size: 20px;
+  }
+
+  .mock-history-card {
+    padding: 13px;
+  }
+
+  .history-card-top {
+    gap: 7px;
+  }
+
+  .history-role {
+    font-size: 14px;
+  }
+
+  .history-card-top p {
+    font-size: 12px;
+  }
+
+  .history-score {
+    min-width: 50px;
+    height: 30px;
+    padding: 0 6px;
+    font-size: 10px;
+  }
+
+  .history-question {
+    padding: 11px;
+  }
+
+  .history-question p {
+    font-size: 12px;
+  }
+
+  .history-modal {
+    padding: 13px;
+  }
+
+  .history-modal-header h2 {
+    font-size: 17px;
+  }
+}
+
+/* =========================================================
    LANDSCAPE MOBILE
-========================================= */
+========================================================= */
 
 @media (max-height: 650px) and (orientation: landscape) {
   .mock-history-page {
@@ -1294,7 +1241,7 @@ body.dark .history-loader,
   }
 
   .mock-history-header {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
 
   .history-modal-overlay {
@@ -1307,9 +1254,9 @@ body.dark .history-loader,
   }
 }
 
-/* =========================================
-   TOUCH DEVICE FIX
-========================================= */
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
 
 @media (hover: none) {
   .history-stat-card:hover,
@@ -1322,19 +1269,17 @@ body.dark .history-loader,
   }
 }
 
-/* =========================================
+/* =========================================================
    REDUCED MOTION
-========================================= */
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .mock-history-layout *,
-  .mock-history-layout *::before,
-  .mock-history-layout *::after {
+  *,
+  *::before,
+  *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
-
-

@@ -367,7 +367,7 @@ export default function MockInterview() {
 
                 <div className="mock-score">
                   {result.score}
-                  <span>/10</span>
+                  <span>/5</span>
                 </div>
               </div>
 
@@ -375,7 +375,7 @@ export default function MockInterview() {
                 <div className="mock-average-score">
                   <span>Overall Average Score</span>
 
-                  <strong>{averageScore}/10</strong>
+                  <strong>{averageScore}/5</strong>
                 </div>
               )}
 
@@ -409,7 +409,7 @@ export default function MockInterview() {
               {completed && (
                 <div className="mock-completed-actions">
                   <div className="mock-completed-message">
-                    🎉 Your 10-question mock interview has been
+                    🎉 Your 5-question mock interview has been
                     completed.
                   </div>
 
