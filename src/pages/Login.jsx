@@ -6,7 +6,7 @@ import api from "../services/api";
 import "../styles/login.css";
 
 export default function Login() {
-  const { fetchUser,setUser } = useUser();
+  const { fetchUser } = useUser();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
