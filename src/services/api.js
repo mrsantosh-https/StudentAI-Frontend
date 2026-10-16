@@ -8,11 +8,12 @@ export const API_URL =
 
 const api = axios.create({
   baseURL: API_URL,
-
+  
   headers: {
     Accept: "application/json",
   },
 });
+console.log("StudentAI API URL:", API_URL);
 
 // =========================================================
 // REQUEST INTERCEPTOR
