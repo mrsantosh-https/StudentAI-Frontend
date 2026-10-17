@@ -4,7 +4,7 @@ export const API_URL =
   // import.meta.env.VITE_API_URL ||
   // "http://127.0.0.1:8000/api";
   import.meta.env.VITE_API_URL ||
-  "https://studentai-backend.dockhosting.dev";
+  "https://studentai-backend.dockhosting.dev/api";
 
 const api = axios.create({
   baseURL: API_URL,
