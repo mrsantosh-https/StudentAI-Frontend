@@ -21,6 +21,13 @@ import "../styles/dashboardCard.css";
 
 const tools = [
   {
+    icon: "🤖",
+    title: "Job Tracker",
+    description: "Track applications, interviews and offers.",
+    link: "/ai-career-coach",
+    color: "#0f172a",
+  },
+  {
     icon: "📄",
     title: "Resume Builder",
     description: "Build ATS-friendly resumes with AI.",
@@ -47,13 +54,6 @@ const tools = [
     description: "Get a personalized roadmap.",
     link: "/career-roadmap",
     color: "#f97316",
-  },
-  {
-    icon: "💼",
-    title: "Job Tracker",
-    description: "Track applications, interviews and offers.",
-    link: "/job-tracker",
-    color: "#0f172a",
   },
 ];
 
