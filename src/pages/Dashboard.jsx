@@ -55,6 +55,13 @@ const tools = [
     link: "/career-roadmap",
     color: "#f97316",
   },
+   {
+    icon: "💼",
+    title: "Job Tracker",
+    description: "Track applications, interviews and offers.",
+    link: "/job-tracker",
+    color: "#0f172a",
+  },
 ];
 
 const usageData = [
@@ -147,10 +154,10 @@ export default function Dashboard() {
             <div className="row g-3">
               <div className="col-md-3">
                 <a
-                  href="/resume-builder"
+                  href="/ai-career-coach"
                   className="btn btn-primary w-100 py-3"
                 >
-                  📄 Resume Builder
+                 🤖 AI CarrierCoach
                 </a>
               </div>
 
