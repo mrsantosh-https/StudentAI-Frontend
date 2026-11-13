@@ -22,8 +22,8 @@ import "../styles/dashboardCard.css";
 const tools = [
   {
     icon: "🤖",
-    title: "Job Tracker",
-    description: "Track applications, interviews and offers.",
+    title: "AI CarrierCoach",
+    description: "Ask anything your AI Carrier Coach",
     link: "/ai-career-coach",
     color: "#0f172a",
   },
